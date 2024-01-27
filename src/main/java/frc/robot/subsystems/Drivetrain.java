@@ -4,8 +4,10 @@ import com.ctre.phoenix6.hardware.TalonFX;
 
 import java.io.File;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 import swervelib.SwerveDrive;
@@ -25,7 +27,7 @@ public class Drivetrain extends SubsystemBase {
         SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
 
         try {
-            swerveDrive = new SwerveParser(directory).createSwerveDrive(DriveConstants.MAX_SPEED,0.001191827468785471, 0.03872186620818967);
+            swerveDrive = new SwerveParser(directory).createSwerveDrive(DriveConstants.MAX_SPEED);
         } catch(Exception e) {
             throw new RuntimeException(e);
         }
@@ -44,6 +46,16 @@ public class Drivetrain extends SubsystemBase {
             this.isFieldRelative,
             false
         );
+    }
+
+    public void setOneModule() {
+        swerveDrive.setModuleStates(
+        new SwerveModuleState[] {
+            new SwerveModuleState(),
+            new SwerveModuleState(),
+            new SwerveModuleState(),
+            new SwerveModuleState()
+        }, false);
     }
 
     public void setChassisSpeeds(ChassisSpeeds chassisSpeeds) {
