@@ -16,4 +16,8 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
+  public static class DriveConstants {
+    public static final int MAX_SPEED = 4;
+    public static final double MAX_ROT_SPEED = 2 * Math.PI;
+  }
 }
