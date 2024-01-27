@@ -14,6 +14,7 @@ import swervelib.SwerveDrive;
 import swervelib.parser.SwerveParser;
 import swervelib.telemetry.SwerveDriveTelemetry;
 import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Drivetrain extends SubsystemBase {
     
@@ -28,6 +29,7 @@ public class Drivetrain extends SubsystemBase {
 
         try {
             swerveDrive = new SwerveParser(directory).createSwerveDrive(DriveConstants.MAX_SPEED);
+            // swerveDrive.pushOffsetsToControllers();
         } catch(Exception e) {
             throw new RuntimeException(e);
         }
@@ -49,13 +51,23 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void setOneModule() {
-        swerveDrive.setModuleStates(
-        new SwerveModuleState[] {
+        SwerveModuleState[] states = new SwerveModuleState[] {
             new SwerveModuleState(),
             new SwerveModuleState(),
             new SwerveModuleState(),
             new SwerveModuleState()
-        }, false);
+        };
+
+        SmartDashboard.putNumber("Desired State1", states[0].angle.getDegrees());
+        SwerveModuleState[] states2 = swerveDrive.kinematics.toSwerveModuleStates(swerveDrive.kinematics.toChassisSpeeds(states));
+        SmartDashboard.putNumber("Desired State2", states2[0].angle.getDegrees());
+
+        SmartDashboard.putNumber("Absolution Position", Rotation2d.fromDegrees(swerveDrive.getModules()[0].getAbsolutePosition()).getDegrees());
+        SwerveModuleState state0 = SwerveModuleState.optimize(states[0], Rotation2d.fromDegrees(swerveDrive.getModules()[0].getAbsolutePosition()));
+        SmartDashboard.putNumber("Desired State3", state0.angle.getDegrees());
+        
+
+        swerveDrive.setModuleStates(states, false);
     }
 
     public void setChassisSpeeds(ChassisSpeeds chassisSpeeds) {
