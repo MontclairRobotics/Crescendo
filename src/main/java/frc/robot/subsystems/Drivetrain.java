@@ -35,6 +35,16 @@ public class Drivetrain extends SubsystemBase {
     public void drive(Translation2d translation, double rotation) {
         swerveDrive.drive(translation, rotation, this.isFieldRelative, false); // Open loop is disabled since it shouldn't be used most of the time.
     }
+    
+    public void newDrive(Translation2d translation, double rotation) {
+        swerveDrive.drive(new Translation2d(
+            -Math.pow(translation.getX(), 3) * swerveDrive.getMaximumVelocity(),
+            -Math.pow(translation.getY(), 3) * swerveDrive.getMaximumVelocity()),
+            -Math.pow(rotation, 3) * swerveDrive.getMaximumAngularVelocity(),
+            this.isFieldRelative,
+            false
+        );
+    }
 
     public void setChassisSpeeds(ChassisSpeeds chassisSpeeds) {
         swerveDrive.setChassisSpeeds(chassisSpeeds);

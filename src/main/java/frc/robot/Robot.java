@@ -83,7 +83,7 @@ public class Robot extends TimedRobot {
 
     double rot = controller.getRightX() * DriveConstants.MAX_ROT_SPEED;
     Translation2d translation = new Translation2d(xSpeed,ySpeed);
-    drivetrain.drive(translation, rot);
+    drivetrain.newDrive(translation, rot);
   }
 
   @Override
