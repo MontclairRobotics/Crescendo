@@ -25,7 +25,7 @@ public class Drivetrain extends SubsystemBase {
         SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
 
         try {
-            swerveDrive = new SwerveParser(directory).createSwerveDrive(DriveConstants.MAX_SPEED,2, 2);
+            swerveDrive = new SwerveParser(directory).createSwerveDrive(DriveConstants.MAX_SPEED,0.001191827468785471, 0.03872186620818967);
         } catch(Exception e) {
             throw new RuntimeException(e);
         }
