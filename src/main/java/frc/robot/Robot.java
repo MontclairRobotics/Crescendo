@@ -78,12 +78,18 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    double xSpeed = controller.getLeftX() * DriveConstants.MAX_SPEED;
-    double ySpeed = controller.getLeftY() * DriveConstants.MAX_SPEED;
-
-    double rot = controller.getRightX() * DriveConstants.MAX_ROT_SPEED;
+    double xSpeed = -MathUtil.applyDeadband(controller.getLeftX(), 0.02) * DriveConstants.MAX_SPEED;
+    double ySpeed = -MathUtil.applyDeadband(controller.getLeftY(), 0.02) * DriveConstants.MAX_SPEED;
+    double rot = MathUtil.applyDeadband(controller.getRightX(), 0.02) * DriveConstants.MAX_ROT_SPEED;
+    
     Translation2d translation = new Translation2d(xSpeed,ySpeed);
-    drivetrain.newDrive(translation, rot);
+
+    if (controller.getCircleButton()) {
+      drivetrain.zeroGyro();
+    }
+
+    drivetrain.drive(translation, rot);
+    
   }
 
   @Override
