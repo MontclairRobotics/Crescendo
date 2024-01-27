@@ -49,7 +49,7 @@ public class Drivetrain extends SubsystemBase {
             false
         );
     }
-
+    
     public void setOneModule() {
         SwerveModuleState[] states = new SwerveModuleState[] {
             new SwerveModuleState(),
@@ -79,5 +79,9 @@ public class Drivetrain extends SubsystemBase {
     }
     public boolean getIsFieldRelative(boolean relative) {
         return this.isFieldRelative;
+    }
+
+    public void zeroGyro() {
+        this.swerveDrive.zeroGyro();
     }
 }

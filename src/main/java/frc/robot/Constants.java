@@ -18,6 +18,6 @@ public final class Constants {
   }
   public static class DriveConstants {
     public static final int MAX_SPEED = 4;
-    public static final double MAX_ROT_SPEED = 2 * Math.PI;
+    public static final double MAX_ROT_SPEED = 4 * Math.PI;
   }
 }
