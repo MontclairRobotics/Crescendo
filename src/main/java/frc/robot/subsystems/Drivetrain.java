@@ -18,9 +18,9 @@ public class Drivetrain extends SubsystemBase {
     private final SwerveDrive swerveDrive;
     private boolean isFieldRelative;
     
-    public Drivetrain(File directory, boolean isFieldRelative) {
+    public Drivetrain(File directory) {
 
-        this.isFieldRelative = isFieldRelative;
+        this.isFieldRelative = true;
 
         SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
 
