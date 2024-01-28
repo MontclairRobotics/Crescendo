@@ -39,34 +39,16 @@ public class Drivetrain extends SubsystemBase {
     public void drive(Translation2d translation, double rotation) {
         swerveDrive.drive(translation, rotation, this.isFieldRelative, false); // Open loop is disabled since it shouldn't be used most of the time.
     }
+
     
-    public void newDrive(Translation2d translation, double rotation) {
-        swerveDrive.drive(new Translation2d(
-            -Math.pow(translation.getX(), 3) * swerveDrive.getMaximumVelocity(),
-            -Math.pow(translation.getY(), 3) * swerveDrive.getMaximumVelocity()),
-            -Math.pow(rotation, 3) * swerveDrive.getMaximumAngularVelocity(),
-            this.isFieldRelative,
-            false
-        );
-    }
-    
-    public void setOneModule() {
+    public void pidTest() {
         SwerveModuleState[] states = new SwerveModuleState[] {
             new SwerveModuleState(),
             new SwerveModuleState(),
             new SwerveModuleState(),
             new SwerveModuleState()
         };
-
-        SmartDashboard.putNumber("Desired State1", states[0].angle.getDegrees());
-        SwerveModuleState[] states2 = swerveDrive.kinematics.toSwerveModuleStates(swerveDrive.kinematics.toChassisSpeeds(states));
-        SmartDashboard.putNumber("Desired State2", states2[0].angle.getDegrees());
-
-        SmartDashboard.putNumber("Absolution Position", Rotation2d.fromDegrees(swerveDrive.getModules()[0].getAbsolutePosition()).getDegrees());
-        SwerveModuleState state0 = SwerveModuleState.optimize(states[0], Rotation2d.fromDegrees(swerveDrive.getModules()[0].getAbsolutePosition()));
-        SmartDashboard.putNumber("Desired State3", state0.angle.getDegrees());
         
-
         swerveDrive.setModuleStates(states, false);
     }
 
