@@ -7,6 +7,7 @@ package frc.robot;
 import java.io.File;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.PS5Controller;
@@ -28,8 +29,8 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
-  private PS5Controller controller = new PS5Controller(0);
-  public Drivetrain drivetrain = new Drivetrain(new File(Filesystem.getDeployDirectory(), "swerve/"));
+  public static PS5Controller controller = new PS5Controller(0);
+  public static Drivetrain drivetrain = new Drivetrain(new File(Filesystem.getDeployDirectory(), "swerve/"));
 
   @Override
   public void robotInit() {
@@ -37,8 +38,7 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
 
-     
-
+    
 
   }
 
@@ -87,15 +87,8 @@ public class Robot extends TimedRobot {
     double ySpeed = MathUtil.applyDeadband(Math.pow(controller.getLeftX(), 3), 0.02) * DriveConstants.MAX_SPEED;
     double rot = MathUtil.applyDeadband(controller.getRightX(), 0.02) * DriveConstants.MAX_ROT_SPEED;
     Translation2d translation = new Translation2d(xSpeed,ySpeed);
-    if (controller.getCircleButton()) {
-      // drivetrain.zeroGyro();
-      drivetrain.drivePid();
-    }
     
-    
-    drivetrain.drive(translation, rot);
-
-    // drivetrain.pidTest();
+    drivetrain.driveFromInputs(translation, rot);
 
   }
 

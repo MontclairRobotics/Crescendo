@@ -9,9 +9,12 @@ import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.ExampleSubsystem;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.PS5Controller;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -40,7 +43,11 @@ public class RobotContainer {
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
 
+    new Trigger(() -> Robot.controller.getCrossButton()).onTrue(Commands555.driveToSetpointRelative(new Translation2d(0.5, 0)));
 
+    new Trigger(() -> Robot.controller.getTouchpadPressed()).onTrue(Commands.runOnce(() -> Robot.drivetrain.getSwerveDrive().zeroGyro()));
+
+    new Trigger(() -> Robot.controller.getSquareButton()).onTrue(Commands555.goToAngle(Rotation2d.fromDegrees(90)));
    
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.

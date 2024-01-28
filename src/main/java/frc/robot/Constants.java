@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import frc.robot.util.frc.Tunable;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -16,8 +18,24 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
+
+
+
   public static class DriveConstants {
     public static final int MAX_SPEED = 4;
     public static final double MAX_ROT_SPEED = 4 * Math.PI;
+
+
+    public static class ThetaPID {
+      public static final Tunable<Double> kP = Tunable.of(0.54, "drive.theta.kp");
+      public static final Tunable<Double> kI = Tunable.of(0.02, "drive.theta.ki");
+      public static final Tunable<Double> kD = Tunable.of(0.08, "drive.theta.kd");
+    }
+
+    public static class PosPID {
+      public static final Tunable<Double> kP = Tunable.of(3.1, "drive.pos.kp");
+      public static final Tunable<Double> kI = Tunable.of(0.0, "drive.pos.ki");
+      public static final Tunable<Double> kD = Tunable.of(0.25, "drive.pos.kd");
+    }
   }
 }
