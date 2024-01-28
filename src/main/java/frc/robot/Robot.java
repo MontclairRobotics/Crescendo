@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.PS5Controller;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.Drivetrain;
 
@@ -35,6 +36,10 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+
+     
+
+
   }
 
   @Override
@@ -78,14 +83,16 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    double xSpeed = MathUtil.applyDeadband(controller.getLeftX(), 0.02) * DriveConstants.MAX_SPEED;
-    double ySpeed = -MathUtil.applyDeadband(controller.getLeftY(), 0.02) * DriveConstants.MAX_SPEED;
-
+    double xSpeed = MathUtil.applyDeadband(Math.pow(controller.getLeftY(), 3), 0.02) * DriveConstants.MAX_SPEED;
+    double ySpeed = MathUtil.applyDeadband(Math.pow(controller.getLeftX(), 3), 0.02) * DriveConstants.MAX_SPEED;
     double rot = MathUtil.applyDeadband(controller.getRightX(), 0.02) * DriveConstants.MAX_ROT_SPEED;
     Translation2d translation = new Translation2d(xSpeed,ySpeed);
     if (controller.getCircleButton()) {
-      drivetrain.zeroGyro();
+      // drivetrain.zeroGyro();
+      drivetrain.drivePid();
     }
+    
+    
     drivetrain.drive(translation, rot);
 
     // drivetrain.pidTest();
