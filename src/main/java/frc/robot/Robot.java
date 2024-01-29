@@ -28,8 +28,7 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
-  private PS5Controller controller = new PS5Controller(0);
-  public Drivetrain drivetrain = new Drivetrain(new File(Filesystem.getDeployDirectory(), "swerve/"));
+  
 
   @Override
   public void robotInit() {
@@ -83,6 +82,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+<<<<<<< Updated upstream
     double xSpeed = MathUtil.applyDeadband(Math.pow(controller.getLeftY(), 3), 0.02) * DriveConstants.MAX_SPEED;
     double ySpeed = MathUtil.applyDeadband(Math.pow(controller.getLeftX(), 3), 0.02) * DriveConstants.MAX_SPEED;
     double rot = MathUtil.applyDeadband(controller.getRightX(), 0.02) * DriveConstants.MAX_ROT_SPEED;
@@ -97,6 +97,8 @@ public class Robot extends TimedRobot {
 
     // drivetrain.pidTest();
 
+=======
+>>>>>>> Stashed changes
   }
 
   @Override

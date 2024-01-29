@@ -4,6 +4,10 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.ReplanningConfig;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -18,6 +22,27 @@ public final class Constants {
   }
   public static class DriveConstants {
     public static final int MAX_SPEED = 4;
+<<<<<<< Updated upstream
     public static final double MAX_ROT_SPEED = 4 * Math.PI;
+=======
+    public static final double MAX_ROT_SPEED = 2 * Math.PI;
+    // Max Acceleration in M/s^2
+    public static final double MAX_ACCELERATION = 2.0;
+    // Max angular acceleration in Rad/S^2
+    public static final double MAX_ANGULAR_ACCELERATION = 1.5;
+
+  }
+  public static class PathPlannerConstants {
+    public static final HolonomicPathFollowerConfig PATH_FOLLOWER_CONFIG = new HolonomicPathFollowerConfig(Constants.DriveConstants.MAX_SPEED, 
+    0.43, 
+    new ReplanningConfig()
+    );
+
+    // TODO: Double check and see if these values are incorrect.
+    public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(
+      DriveConstants.MAX_SPEED, DriveConstants.MAX_ACCELERATION,
+      DriveConstants.MAX_ROT_SPEED, DriveConstants.MAX_ANGULAR_ACCELERATION
+      );
+>>>>>>> Stashed changes
   }
 }
