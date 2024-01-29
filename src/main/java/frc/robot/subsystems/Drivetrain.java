@@ -108,7 +108,7 @@ public class Drivetrain extends SubsystemBase {
         
         Translation2d translation = new Translation2d(ySpeed,xSpeed);
         
-        this.drive(translation, rot);
+        this.drive(translation, rot * DriveConstants.MAX_ROT_SPEED);
     }
     
 
