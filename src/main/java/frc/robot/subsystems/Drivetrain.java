@@ -1,13 +1,8 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix6.hardware.TalonFX;
 
-import com.pathplanner.lib.commands.FollowPathHolonomic;
-
+import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.PIDConstants;
-import com.pathplanner.lib.util.ReplanningConfig;
 
 
 import java.io.File;
@@ -33,7 +28,7 @@ public class Drivetrain extends SubsystemBase {
     
     private final SwerveDrive swerveDrive;
     private boolean isFieldRelative;
-
+    // private AHRS navX;
     
     public Drivetrain(File directory) {
 
@@ -46,6 +41,8 @@ public class Drivetrain extends SubsystemBase {
         } catch(Exception e) {
             throw new RuntimeException(e);
         }
+
+        // navX = (AHRS) swerveDrive.swerveDriveConfiguration.imu.getIMU();
 
     }
 
@@ -84,6 +81,9 @@ public class Drivetrain extends SubsystemBase {
     public SwerveDrive getSwerveDrive() {
         return this.swerveDrive;
     }
+    // public AHRS getNavX() {
+    //     //return this.navX;
+    // }
     public void resetOdometry() {
         this.swerveDrive.resetOdometry(new Pose2d(0.0,0.0, new Rotation2d(0.0)));
     }
@@ -111,6 +111,7 @@ public class Drivetrain extends SubsystemBase {
         
         this.drive(translation, rot);
     }
+    
 
 }
 

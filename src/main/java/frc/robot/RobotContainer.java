@@ -75,6 +75,9 @@ public class RobotContainer {
       Commands555.driveToRobotRelativePoint(targetPose, currentRotation.rotateBy(new Rotation2d(90)));
 
     }));
+    driverController.touchpad().onTrue(new InstantCommand(() -> {
+      drivetrain.getSwerveDrive().zeroGyro();
+    }));
   }
 
   /**

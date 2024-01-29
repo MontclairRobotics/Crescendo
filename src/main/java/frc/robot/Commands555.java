@@ -36,7 +36,7 @@ public class Commands555 {
      * @param targetPose field-relative pose2d to drive the robot to.
      */
     public static Command driveToFieldRelativePoint(Pose2d targetPose) {
-        return AutoBuilder.pathfindToPose(targetPose, PathPlannerConstants.PATH_CONSTRAINTS);
+        return AutoBuilder.pathfindToPose(targetPose, PathPlannerConstants.PATH_CONSTRAINTS, 0.0, 0.0);
     }
 
     /* - - - - - - - - - -
