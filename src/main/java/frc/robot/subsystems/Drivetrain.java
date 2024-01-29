@@ -88,26 +88,25 @@ public class Drivetrain extends SubsystemBase {
         this.swerveDrive.resetOdometry(new Pose2d(0.0,0.0, new Rotation2d(0.0)));
     }
     public void setupPathPlanner() {
-        AutoBuilder.configureHolonomic(
-            this.swerveDrive::getPose, // Robot pose supplier
-            this.swerveDrive::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
-            this.swerveDrive::getRobotVelocity, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-            this.swerveDrive::setChassisSpeeds, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
-            Constants.PathPlannerConstants.PATH_FOLLOWER_CONFIG,
-            () -> {
-            Optional<Alliance> alliance = DriverStation.getAlliance();
-            return alliance.isPresent() ? alliance.get() == DriverStation.Alliance.Red : false;
-            },
-            this 
-        );
+        // AutoBuilder.configureHolonomic(
+        //     this.swerveDrive::getPose, // Robot pose supplier
+        //     this.swerveDrive::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
+        //     this.swerveDrive::getRobotVelocity, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+        //     this.swerveDrive::setChassisSpeeds, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+        //     Constants.PathPlannerConstants.PATH_FOLLOWER_CONFIG,
+        //     () -> {
+        //     Optional<Alliance> alliance = DriverStation.getAlliance();
+        //     return alliance.isPresent() ? alliance.get() == DriverStation.Alliance.Red : false;
+        //     },
+        //     this 
+        // );
     }
 
-    public void setInputFromController(Translation2d turn, Translation2d drive) {
-        double xSpeed = -MathUtil.applyDeadband(drive.getX(), 0.02) * DriveConstants.MAX_SPEED;
-        double ySpeed = -MathUtil.applyDeadband(drive.getY(), 0.02) * DriveConstants.MAX_SPEED;
-        double rot = MathUtil.applyDeadband(turn.getX(), 0.02) * DriveConstants.MAX_ROT_SPEED;
-
-        Translation2d translation = new Translation2d(xSpeed,ySpeed);
+    public void setInputFromController(double rot, Translation2d drive) {
+        double xSpeed = MathUtil.applyDeadband(drive.getX(), 0.02) * DriveConstants.MAX_SPEED;
+        double ySpeed = MathUtil.applyDeadband(drive.getY(), 0.02) * DriveConstants.MAX_SPEED;
+        
+        Translation2d translation = new Translation2d(ySpeed,xSpeed);
         
         this.drive(translation, rot);
     }

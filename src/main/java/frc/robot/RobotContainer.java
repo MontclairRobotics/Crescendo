@@ -45,17 +45,14 @@ public class RobotContainer {
     drivetrain.setupPathPlanner();
     
     drivetrain.setDefaultCommand(Commands.run(() -> {
-      if (DriverStation.isAutonomous()) {
-        drivetrain.setChassisSpeeds(new ChassisSpeeds(0,0,0));
-        return;
-      } else {
-        drivetrain.setInputFromController(
-          new Translation2d(driverController.getRightX(),driverController.getRightY()), 
-          new Translation2d(driverController.getLeftX(),driverController.getRightX())
-        );
+      
+      drivetrain.setInputFromController(
+         driverController.getRightX(), 
+          new Translation2d(driverController.getLeftX(),driverController.getLeftY())
+      );
 
-      }
-    }));
+      
+    }, drivetrain));
     configureBindings();
   }
 
@@ -68,17 +65,17 @@ public class RobotContainer {
       Commands555.driveToRobotRelativePoint(targetPose, currentRotation);
 
     }));
-    driverController.circle().onTrue(new InstantCommand(() -> {
+    driverController.circle().onTrue(Commands.runOnce(() -> {
 
       Translation2d targetPose = new Translation2d(0.33,0);
       Rotation2d currentRotation = drivetrain.getSwerveDrive().getOdometryHeading();
       Commands555.driveToRobotRelativePoint(targetPose, currentRotation.rotateBy(new Rotation2d(90)));
 
     }));
-    driverController.touchpad().onTrue(new InstantCommand(() -> {
+    driverController.touchpad().onTrue(Commands.runOnce(() -> {
       drivetrain.getSwerveDrive().zeroGyro();
     }));
-    driverController.triangle().onTrue(new InstantCommand(() -> {
+    driverController.triangle().onTrue(Commands.runOnce(() -> {
       Translation2d targetPose = new Translation2d(0.33,0);
       Rotation2d currentRotation = drivetrain.getSwerveDrive().getOdometryHeading();
       Commands555.driveToRobotRelativePoint(targetPose, currentRotation);
