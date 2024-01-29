@@ -89,17 +89,6 @@ public class Drivetrain extends SubsystemBase {
         this.swerveDrive.zeroGyro();
     }
 
-<<<<<<< Updated upstream
-    // public Command getPath(String filePath) {
-    //     PathPlannerPath path = PathPlannerPath.fromPathFile(filePath);
-
-    //     return new FollowPathHolonomic(
-    //         path,
-
-    //     );
-    // }
-}
-=======
     public SwerveDrive getSwerveDrive() {
         return this.swerveDrive;
     }
@@ -132,4 +121,4 @@ public class Drivetrain extends SubsystemBase {
     }
 
 }
->>>>>>> Stashed changes
+

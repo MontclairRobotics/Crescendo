@@ -22,9 +22,7 @@ public final class Constants {
   }
   public static class DriveConstants {
     public static final int MAX_SPEED = 4;
-<<<<<<< Updated upstream
-    public static final double MAX_ROT_SPEED = 4 * Math.PI;
-=======
+
     public static final double MAX_ROT_SPEED = 2 * Math.PI;
     // Max Acceleration in M/s^2
     public static final double MAX_ACCELERATION = 2.0;
@@ -43,6 +41,6 @@ public final class Constants {
       DriveConstants.MAX_SPEED, DriveConstants.MAX_ACCELERATION,
       DriveConstants.MAX_ROT_SPEED, DriveConstants.MAX_ANGULAR_ACCELERATION
       );
->>>>>>> Stashed changes
+
   }
 }
