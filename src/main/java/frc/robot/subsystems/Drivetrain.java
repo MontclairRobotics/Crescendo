@@ -47,7 +47,9 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void drive(Translation2d translation, double rotation) {
-        swerveDrive.drive(translation, rotation, this.isFieldRelative, false); // Open loop is disabled since it shouldn't be used most of the time.
+        // System.out.println("x: " + translation.getX());
+        // System.out.println("y: " + translation.getY());
+        swerveDrive.drive(translation, rotation, this.isFieldRelative, true); // Open loop is disabled since it shouldn't be used most of the time.
     }
 
     
@@ -65,6 +67,14 @@ public class Drivetrain extends SubsystemBase {
 
     public void setChassisSpeeds(ChassisSpeeds chassisSpeeds) {
         swerveDrive.setChassisSpeeds(chassisSpeeds);
+    }
+
+    @Override
+    public void periodic() {
+        // for (int i = 0; i < 4; i++) {
+        //         System.out.println(swerveDrive.swerveModules[i].getDriveMotor().getVelocity());
+        // }
+        // swerveDrive.drive(new ChassisSpeeds(4, 0, 0));
     }
 
     public void setIsFieldRelative(boolean relative) {
@@ -88,23 +98,24 @@ public class Drivetrain extends SubsystemBase {
         this.swerveDrive.resetOdometry(new Pose2d(0.0,0.0, new Rotation2d(0.0)));
     }
     public void setupPathPlanner() {
-        // AutoBuilder.configureHolonomic(
-        //     this.swerveDrive::getPose, // Robot pose supplier
-        //     this.swerveDrive::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
-        //     this.swerveDrive::getRobotVelocity, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-        //     this.swerveDrive::setChassisSpeeds, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
-        //     Constants.PathPlannerConstants.PATH_FOLLOWER_CONFIG,
-        //     () -> {
-        //     Optional<Alliance> alliance = DriverStation.getAlliance();
-        //     return alliance.isPresent() ? alliance.get() == DriverStation.Alliance.Red : false;
-        //     },
-        //     this 
-        // );
+        AutoBuilder.configureHolonomic(
+            this.swerveDrive::getPose, // Robot pose supplier
+            this.swerveDrive::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
+            this.swerveDrive::getRobotVelocity, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+            this.swerveDrive::setChassisSpeeds, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+            Constants.PathPlannerConstants.PATH_FOLLOWER_CONFIG,
+            () -> {
+            Optional<Alliance> alliance = DriverStation.getAlliance();
+            return alliance.isPresent() ? alliance.get() == DriverStation.Alliance.Red : false;
+            },
+            this 
+        );
     }
 
     public void setInputFromController(double rot, Translation2d drive) {
-        double xSpeed = MathUtil.applyDeadband(drive.getX(), 0.02) * DriveConstants.MAX_SPEED;
-        double ySpeed = MathUtil.applyDeadband(drive.getY(), 0.02) * DriveConstants.MAX_SPEED;
+        double xSpeed = MathUtil.applyDeadband(drive.getX(), 0.05) * DriveConstants.MAX_SPEED;
+        double ySpeed = MathUtil.applyDeadband(drive.getY(), 0.05) * DriveConstants.MAX_SPEED;
+        double thetaSpeed = MathUtil.applyDeadband(rot, 0.05) * DriveConstants.MAX_ROT_SPEED;
         
         Translation2d translation = new Translation2d(ySpeed,xSpeed);
         

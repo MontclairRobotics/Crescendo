@@ -45,9 +45,10 @@ public class RobotContainer {
     drivetrain.setupPathPlanner();
     
     drivetrain.setDefaultCommand(Commands.run(() -> {
-      
+        // System.out.println(driverController.getLeftX());
       drivetrain.setInputFromController(
          driverController.getRightX(), 
+       
           new Translation2d(driverController.getLeftX(),driverController.getLeftY())
       );
 
@@ -75,11 +76,13 @@ public class RobotContainer {
     driverController.touchpad().onTrue(Commands.runOnce(() -> {
       drivetrain.getSwerveDrive().zeroGyro();
     }));
-    driverController.triangle().onTrue(Commands.runOnce(() -> {
+    driverController.triangle().onTrue(Commands.run(() -> {
+      System.out.println("BUTTON PRESSED");
       Translation2d targetPose = new Translation2d(0.33,0);
       Rotation2d currentRotation = drivetrain.getSwerveDrive().getOdometryHeading();
       Commands555.driveToRobotRelativePoint(targetPose, currentRotation);
-    }));
+     
+    }, drivetrain));
   }
 
   /**
