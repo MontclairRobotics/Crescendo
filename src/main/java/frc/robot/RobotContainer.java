@@ -62,14 +62,14 @@ public class RobotContainer {
     driverController.cross().onTrue(new InstantCommand(() -> {
 
       Translation2d targetPose = new Translation2d(0.33, 0.33);
-      Rotation2d currentRotation = drivetrain.getSwerveDrive().getOdometryHeading();
+      Rotation2d currentRotation = drivetrain.getRotation();
       Commands555.driveToRobotRelativePoint(targetPose, currentRotation);
 
     }));
     driverController.circle().onTrue(Commands.runOnce(() -> {
 
       Translation2d targetPose = new Translation2d(0.33,0);
-      Rotation2d currentRotation = drivetrain.getSwerveDrive().getOdometryHeading();
+      Rotation2d currentRotation = drivetrain.getRotation();
       Commands555.driveToRobotRelativePoint(targetPose, currentRotation.rotateBy(new Rotation2d(90)));
 
     }));
@@ -79,7 +79,7 @@ public class RobotContainer {
     driverController.triangle().onTrue(Commands.run(() -> {
       System.out.println("BUTTON PRESSED");
       Translation2d targetPose = new Translation2d(0.33,0);
-      Rotation2d currentRotation = drivetrain.getSwerveDrive().getOdometryHeading();
+      Rotation2d currentRotation = drivetrain.getRotation();
       Commands555.driveToRobotRelativePoint(targetPose, currentRotation);
      
     }, drivetrain));

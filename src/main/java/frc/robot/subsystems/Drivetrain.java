@@ -43,6 +43,7 @@ public class Drivetrain extends SubsystemBase {
         }
 
         // navX = (AHRS) swerveDrive.swerveDriveConfiguration.imu.getIMU();
+        
 
     }
 
@@ -96,6 +97,9 @@ public class Drivetrain extends SubsystemBase {
     // }
     public void resetOdometry() {
         this.swerveDrive.resetOdometry(new Pose2d(0.0,0.0, new Rotation2d(0.0)));
+    }
+    public Rotation2d getRotation() {
+        return this.swerveDrive.getOdometryHeading();
     }
     public void setupPathPlanner() {
         AutoBuilder.configureHolonomic(
