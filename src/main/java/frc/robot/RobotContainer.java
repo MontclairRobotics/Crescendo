@@ -78,6 +78,11 @@ public class RobotContainer {
     driverController.touchpad().onTrue(new InstantCommand(() -> {
       drivetrain.getSwerveDrive().zeroGyro();
     }));
+    driverController.triangle().onTrue(new InstantCommand(() -> {
+      Translation2d targetPose = new Translation2d(0.33,0);
+      Rotation2d currentRotation = drivetrain.getSwerveDrive().getOdometryHeading();
+      Commands555.driveToRobotRelativePoint(targetPose, currentRotation);
+    }));
   }
 
   /**

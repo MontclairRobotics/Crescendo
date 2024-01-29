@@ -23,16 +23,17 @@ public final class Constants {
 
   }
   public static class PathPlannerConstants {
-    public static final HolonomicPathFollowerConfig PATH_FOLLOWER_CONFIG = new HolonomicPathFollowerConfig(Constants.DriveConstants.MAX_SPEED, 
-    0.43, 
-    new ReplanningConfig()
+    public static final HolonomicPathFollowerConfig PATH_FOLLOWER_CONFIG = new HolonomicPathFollowerConfig(
+      Constants.DriveConstants.MAX_SPEED, 
+      0.43, 
+      new ReplanningConfig()
     );
-
-    // TODO: Double check and see if these values are incorrect.
     public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(
       DriveConstants.MAX_SPEED, DriveConstants.MAX_ACCELERATION,
       DriveConstants.MAX_ROT_SPEED, DriveConstants.MAX_ANGULAR_ACCELERATION
-      );
+    );
+    public static final double GOAL_END_VELOCITY = 0.0;
+    public static final double ROTATION_DELAY_DISTANCE = 0.0;
 
   }
   public static class VisionConstants {

@@ -27,8 +27,8 @@ public class Commands555 {
         return AutoBuilder.pathfindToPose(
             targetPose,
             PathPlannerConstants.PATH_CONSTRAINTS,
-            0.0, // Goal end velocity in meters/sec
-            0.0 // Rotation delay distance in meters. This is how far the robot should travel before attempting to rotate.
+            PathPlannerConstants.GOAL_END_VELOCITY,
+            PathPlannerConstants.ROTATION_DELAY_DISTANCE 
         );      
     }
     /**
@@ -36,8 +36,14 @@ public class Commands555 {
      * @param targetPose field-relative pose2d to drive the robot to.
      */
     public static Command driveToFieldRelativePoint(Pose2d targetPose) {
-        return AutoBuilder.pathfindToPose(targetPose, PathPlannerConstants.PATH_CONSTRAINTS, 0.0, 0.0);
+        return AutoBuilder.pathfindToPose(
+            targetPose, PathPlannerConstants.PATH_CONSTRAINTS, 
+            PathPlannerConstants.GOAL_END_VELOCITY, 
+            PathPlannerConstants.ROTATION_DELAY_DISTANCE
+        );
     }
+
+
 
     /* - - - - - - - - - -
      Intake Commands
