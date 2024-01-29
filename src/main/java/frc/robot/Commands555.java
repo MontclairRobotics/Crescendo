@@ -17,7 +17,7 @@ public class Commands555 {
      * @param targetTranslation Field-relative Translation2d to drive the robot to.
      * @param theta Target angle for end position.
      */
-    Command driveToRobotRelativePoint(Translation2d targetTranslation, Rotation2d theta) {
+    public static Command driveToRobotRelativePoint(Translation2d targetTranslation, Rotation2d theta) {
         Pose2d currentRobotPosition = RobotContainer.drivetrain.getSwerveDrive().getPose();
         Rotation2d currentOdometryHeading = RobotContainer.drivetrain.getSwerveDrive().getOdometryHeading();
 
@@ -37,7 +37,7 @@ public class Commands555 {
      * Drive to a field-relative point given a targetPose
      * @param targetPose field-relative pose2d to drive the robot to.
      */
-    Command driveToFieldRelativePoint(Pose2d targetPose) {
+    public static Command driveToFieldRelativePoint(Pose2d targetPose) {
         return AutoBuilder.pathfindToPose(targetPose, PathPlannerConstants.PATH_CONSTRAINTS);
     }
 

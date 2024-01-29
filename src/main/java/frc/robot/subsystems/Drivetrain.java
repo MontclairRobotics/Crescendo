@@ -68,10 +68,7 @@ public class Drivetrain extends SubsystemBase {
         
         swerveDrive.setModuleStates(states, false);
     }
-    public void drivePid() {
-        Translation2d target = new Translation2d(.1, .33);
-        
-    }
+
 
     public void setChassisSpeeds(ChassisSpeeds chassisSpeeds) {
         swerveDrive.setChassisSpeeds(chassisSpeeds);
@@ -106,7 +103,7 @@ public class Drivetrain extends SubsystemBase {
             return alliance.isPresent() ? alliance.get() == DriverStation.Alliance.Red : false;
             },
             this 
-            );
+        );
     }
 
     public void setInputFromController(Translation2d turn, Translation2d drive) {

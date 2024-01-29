@@ -10,7 +10,9 @@ import frc.robot.subsystems.Drivetrain;
 
 
 import java.io.File;
+import java.time.Instant;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -20,6 +22,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -28,7 +31,8 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   
 
-  private static PS5Controller driverController = new PS5Controller(0);
+  private static CommandPS5Controller driverController = new CommandPS5Controller(0);
+  
   public static Drivetrain drivetrain = new Drivetrain(new File(Filesystem.getDeployDirectory(), "swerve/"));
   
   
@@ -60,14 +64,20 @@ public class RobotContainer {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     // new Trigger(m_exampleSubsystem::exampleCondition)
     //     .onTrue(new ExampleCommand(m_exampleSubsystem));
+    driverController.cross().onTrue(new InstantCommand(() -> {
 
+      Translation2d targetPose = new Translation2d(0.33, 0.33);
+      Rotation2d currentRotation = drivetrain.getSwerveDrive().getOdometryHeading();
+      Commands555.driveToRobotRelativePoint(targetPose, currentRotation);
 
-   
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    
+    }));
+    driverController.circle().onTrue(new InstantCommand(() -> {
 
-   
+      Translation2d targetPose = new Translation2d(0.33,0);
+      Rotation2d currentRotation = drivetrain.getSwerveDrive().getOdometryHeading();
+      Commands555.driveToRobotRelativePoint(targetPose, currentRotation.rotateBy(new Rotation2d(90)));
+
+    }));
   }
 
   /**
