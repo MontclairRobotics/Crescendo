@@ -4,47 +4,79 @@
 
 package frc.robot;
 
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.ExampleSubsystem;
-import edu.wpi.first.wpilibj.PS5Controller;
-import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.Sprocket;
+import java.io.File;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
+
 
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+
+  private static CommandPS5Controller driverController = new CommandPS5Controller(0);
+  
+  public static Drivetrain drivetrain = new Drivetrain(new File(Filesystem.getDeployDirectory(), "swerve/"));
+  
+  // Subsystems
+  public static Intake intake = new Intake();
+  public static Shooter shooter = new Shooter();
+  public static Sprocket sprocket = new Sprocket();
 
   
-
-  // Replace with CommandPS4Controller or CommandJoystick if needed
   
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     
+    drivetrain.setupPathPlanner();
     
-    // Configure the trigger bindings
+    drivetrain.setDefaultCommand(Commands.run(() -> {
+      // System.out.println(driverController.getLeftX());
+      // drivetrain.setInputFromController(
+      //    driverController.getRightX(), 
+       
+      //     new Translation2d(driverController.getLeftX(),driverController.getLeftY())
+      // );
+      drivetrain.setInputFromController(driverController);
+
+      
+    }, drivetrain));
     configureBindings();
   }
 
 
   private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new Trigger(m_exampleSubsystem::exampleCondition)
-        .onTrue(new ExampleCommand(m_exampleSubsystem));
+    driverController.cross().onTrue(new InstantCommand(() -> {
 
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    
+      Translation2d targetPose = new Translation2d(0.33, 0.33);
+      Rotation2d currentRotation = drivetrain.getRotation();
+      Commands555.driveToRobotRelativePoint(targetPose, currentRotation);
 
-   
+    }));
+    driverController.circle().onTrue(Commands.runOnce(() -> {
+
+      Translation2d targetPose = new Translation2d(0.33,0);
+      Rotation2d currentRotation = drivetrain.getRotation();
+      Commands555.driveToRobotRelativePoint(targetPose, currentRotation.rotateBy(new Rotation2d(90)));
+
+    }));
+    driverController.touchpad().onTrue(Commands.runOnce(() -> {
+      drivetrain.getSwerveDrive().zeroGyro();
+    }));
+    driverController.triangle().onTrue(Commands.run(() -> {
+      System.out.println("BUTTON PRESSED");
+      Translation2d targetPose = new Translation2d(0.33,0);
+      Rotation2d currentRotation = drivetrain.getRotation();
+      Commands555.driveToRobotRelativePoint(targetPose, currentRotation);
+     
+    }, drivetrain));
   }
 
   /**
@@ -53,7 +85,11 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
+    // TODO: Actual auto command.
+    return Commands.run(() -> {
+      return;
+    }); 
+
+    
   }
 }

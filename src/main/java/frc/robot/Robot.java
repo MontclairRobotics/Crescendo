@@ -4,17 +4,10 @@
 
 package frc.robot;
 
-import java.io.File;
-
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.PS5Controller;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.Constants.DriveConstants;
-import frc.robot.subsystems.Drivetrain;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -27,8 +20,7 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
-  private PS5Controller controller = new PS5Controller(0);
-  public Drivetrain drivetrain = new Drivetrain(new File(Filesystem.getDeployDirectory(), "swerve/"));
+  
 
   @Override
   public void robotInit() {
@@ -78,18 +70,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    double xSpeed = -MathUtil.applyDeadband(controller.getLeftX(), 0.02) * DriveConstants.MAX_SPEED;
-    double ySpeed = -MathUtil.applyDeadband(controller.getLeftY(), 0.02) * DriveConstants.MAX_SPEED;
-    double rot = MathUtil.applyDeadband(controller.getRightX(), 0.02) * DriveConstants.MAX_ROT_SPEED;
-    
-    Translation2d translation = new Translation2d(xSpeed,ySpeed);
 
-    if (controller.getCircleButton()) {
-      drivetrain.zeroGyro();
-    }
-
-    drivetrain.drive(translation, rot);
-    
   }
 
   @Override
