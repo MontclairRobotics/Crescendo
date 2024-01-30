@@ -76,7 +76,17 @@ public class Sprocket extends SubsystemBase {
         pid.setMeasurement(getAngle());
         pid.update();
 
-
-
+        if(bottomLimitSwitch.get()) {
+            stop();
+            pid.cancel();
+            encoder.setPosition(SubsystemConstants.ENCODER_MIN_ANGLE);
+        }
+        else if(topLimitSwitch.get()) {
+            stop();
+            pid.cancel();
+            encoder.setPosition(SubsystemConstants.ENCODER_MAX_ANGLE);
+        }
+        
+        motor.set(pid.getSpeed() + SubsystemConstants.FF_VOLTAGE);
     }
 }
