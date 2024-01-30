@@ -6,6 +6,7 @@ package frc.robot;
 
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 public final class Constants {
@@ -23,17 +24,28 @@ public final class Constants {
 
   }
   public static class PathPlannerConstants {
+    // TODO: Add correct PID values
+    public static final PIDConstants ANGULAR_PID_CONSTANTS = new PIDConstants(3.0,0.0,0.0);
+    public static final PIDConstants TRANSLATION_PID_CONSTANTS = new PIDConstants(3.0,0.0,0.0);
+
     public static final HolonomicPathFollowerConfig PATH_FOLLOWER_CONFIG = new HolonomicPathFollowerConfig(
+      TRANSLATION_PID_CONSTANTS,
+      ANGULAR_PID_CONSTANTS,
       Constants.DriveConstants.MAX_SPEED, 
       0.43, 
       new ReplanningConfig()
     );
+    
     public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(
       DriveConstants.MAX_SPEED, DriveConstants.MAX_ACCELERATION,
       DriveConstants.MAX_ROT_SPEED, DriveConstants.MAX_ANGULAR_ACCELERATION
     );
+    
     public static final double GOAL_END_VELOCITY = 0.0;
     public static final double ROTATION_DELAY_DISTANCE = 0.0;
+
+    
+    
 
   }
   public static class VisionConstants {

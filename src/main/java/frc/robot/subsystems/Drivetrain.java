@@ -1,7 +1,5 @@
 package frc.robot.subsystems;
 
-
-import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
 
 
@@ -123,7 +121,7 @@ public class Drivetrain extends SubsystemBase {
         
         Translation2d translation = new Translation2d(ySpeed,xSpeed);
         
-        this.drive(translation, rot * DriveConstants.MAX_ROT_SPEED);
+        this.drive(translation, thetaSpeed);
     }
     
 

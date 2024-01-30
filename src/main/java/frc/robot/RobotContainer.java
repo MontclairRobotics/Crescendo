@@ -5,15 +5,12 @@
 package frc.robot;
 
 import frc.robot.subsystems.Drivetrain;
-import frc.robot.subsystems.Fliptop;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Sprocket;
 import java.io.File;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -31,7 +28,6 @@ public class RobotContainer {
   
   // Subsystems
   public static Intake intake = new Intake();
-  public static Fliptop fliptop = new Fliptop();
   public static Shooter shooter = new Shooter();
   public static Sprocket sprocket = new Sprocket();
 

@@ -60,16 +60,6 @@ public class Commands555 {
         return Commands.runOnce(RobotContainer.intake::stop, RobotContainer.intake).withName("intake stop");
     }
     /* - - - - - - - - - -
-     Fliptop Commands
-    - - - - - - - - - - */
-    public static Command foward() {
-        return Commands.runOnce(RobotContainer.fliptop::forward, RobotContainer.fliptop).withName("fliptop forward");
-    }
-
-    public static Command backward() {
-        return Commands.runOnce(RobotContainer.fliptop::backward, RobotContainer.fliptop).withName("fliptop backward");
-    }
-    /* - - - - - - - - - -
      Sprocket Commands
     - - - - - - - - - - */
     public static Command goUp() {
