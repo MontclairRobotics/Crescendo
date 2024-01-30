@@ -20,8 +20,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 
 public class RobotContainer {
 
-  
-
   private static CommandPS5Controller driverController = new CommandPS5Controller(0);
   
   public static Drivetrain drivetrain = new Drivetrain(new File(Filesystem.getDeployDirectory(), "swerve/"));
@@ -36,7 +34,6 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    
     
     drivetrain.setupPathPlanner();
     

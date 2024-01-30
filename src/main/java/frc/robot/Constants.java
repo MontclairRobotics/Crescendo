@@ -64,10 +64,26 @@ public final class Constants {
 
     public static final int ANGLE_MOTOR_PORT = 106;
   }
+  
   public static class SubsystemConstants {
     public static final double FLIPTOP_SPEED = 0.5;
     public static final double INTAKE_SPEED = 0.5;
     public static final double EJECT_SPEED = 0.5;
     public static final double ANGLE_MOVE_SPEED = 0.5;
+
+    //TODO: Angle PID Constants: (!!!!!!)
+    public static final double angleKP = 0.0;
+    public static final double angleKI = 0.0;
+    public static final double angleKD = 0.0;
+
+    //TODO: All of these constants are basically guessed!!
+    public static final double angleSpeed = 0.5; //Speed of the angle changing
+    public static final double sprocketRotationsPerDegree = 1.26983333;
+    public static final double encoderMinAngle = 0.0;
+    public static final double encoderMaxAngle = 75.787;
+
+    //TODO: needs to be set
+    public static final int bottomLimitSwitch = 0;
   }
+    
 }
