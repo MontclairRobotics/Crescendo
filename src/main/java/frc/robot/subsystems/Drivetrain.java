@@ -13,7 +13,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import frc.robot.Constants;
@@ -26,7 +25,7 @@ import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 
 
 public class Drivetrain extends SubsystemBase {
@@ -103,15 +102,6 @@ public class Drivetrain extends SubsystemBase {
         );
     }
 
-    // public void setInputFromController(double rot, Translation2d drive) {
-    //     double xSpeed = MathUtil.applyDeadband(drive.getX(), 0.05) * DriveConstants.MAX_SPEED;
-    //     double ySpeed = MathUtil.applyDeadband(drive.getY(), 0.05) * DriveConstants.MAX_SPEED;
-    //     double thetaSpeed = MathUtil.applyDeadband(rot, 0.05) * DriveConstants.MAX_ROT_SPEED;
-        
-    //     Translation2d translation = new Translation2d(ySpeed,xSpeed);
-        
-    //     this.drive(translation, thetaSpeed);
-    // }
     public void setInputFromController(CommandPS5Controller controller) {
         double thetaSpeed = MathUtil.applyDeadband(controller.getRightX(), 0.05) * DriveConstants.MAX_ROT_SPEED;
 
