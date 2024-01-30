@@ -19,10 +19,11 @@ public class Sprocket extends SubsystemBase {
     private final CANSparkMax motor = new CANSparkMax(Ports.ANGLE_MOTOR_PORT, MotorType.kBrushless);
     public final PIDController pidController = new PIDController(SubsystemConstants.angleKP, SubsystemConstants.angleKI, SubsystemConstants.angleKD);
     public final PIDMechanism pid;
-    private final double speed = SubsystemConstants.angleSpeed;
+    private final double speed = SubsystemConstants.ANGLE_SPEED;
     RelativeEncoder encoder;
 
-    public LimitSwitch bottomLimitSwitch = new LimitSwitch(SubsystemConstants.bottomLimitSwitch, false);
+    public LimitSwitch bottomLimitSwitch = new LimitSwitch(SubsystemConstants.BOTTOM_LIMIT_SWITCH, false);
+    public LimitSwitch topLimitSwitch = new LimitSwitch(SubsystemConstants.TOP_LIMIT_SWITCH, false);
 
     public Sprocket() {
 
@@ -31,17 +32,20 @@ public class Sprocket extends SubsystemBase {
         pid = new PIDMechanism(pidController);
 
         encoder = motor.getEncoder();
-        encoder.setPositionConversionFactor(SubsystemConstants.sprocketRotationsPerDegree);
-        encoder.setPosition(SubsystemConstants.encoderMinAngle);
+        encoder.setPositionConversionFactor(SubsystemConstants.SPROCKET_ROTATIONS_PER_DEGREE);
+        encoder.setPosition(SubsystemConstants.ENCODER_MIN_ANGLE);
     }
+
     // Move sprocket up
     public void goUp() {
         pid.setSpeed(speed);
     }
+
     // Move sprocket down
     public void goDown() {
         pid.setSpeed(-speed);
     }
+
     // Stop sprocket
     public void stop() {
         pid.setSpeed(0.0);
@@ -49,7 +53,7 @@ public class Sprocket extends SubsystemBase {
 
     // Go to angle! Yay!
     public void goToAngle(double angle) {
-        
+        pid.setTarget(angle);
     }
 
     public void stopPID() {
@@ -76,7 +80,18 @@ public class Sprocket extends SubsystemBase {
         pid.setMeasurement(getAngle());
         pid.update();
 
-
+        if(bottomLimitSwitch.get()) {
+            stop();
+            pid.cancel();
+            encoder.setPosition(SubsystemConstants.ENCODER_MIN_ANGLE);
+        }
+        else if(topLimitSwitch.get()) {
+            stop();
+            pid.cancel();
+            encoder.setPosition(SubsystemConstants.ENCODER_MAX_ANGLE);
+        }
+        
+        motor.set(pid.getSpeed() + SubsystemConstants.FF_VOLTAGE);
 
     }
 }
