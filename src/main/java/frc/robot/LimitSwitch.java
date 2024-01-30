@@ -1,8 +1,6 @@
 package frc.robot;
 
-import edu.wpi.first.hal.SimBoolean;
-import edu.wpi.first.hal.SimDevice;
-import edu.wpi.first.hal.SimDevice.Direction;
+
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DigitalInput;

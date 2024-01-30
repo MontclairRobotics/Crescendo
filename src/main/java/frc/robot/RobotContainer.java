@@ -38,12 +38,13 @@ public class RobotContainer {
     drivetrain.setupPathPlanner();
     
     drivetrain.setDefaultCommand(Commands.run(() -> {
-        // System.out.println(driverController.getLeftX());
-      drivetrain.setInputFromController(
-         driverController.getRightX(), 
+      // System.out.println(driverController.getLeftX());
+      // drivetrain.setInputFromController(
+      //    driverController.getRightX(), 
        
-          new Translation2d(driverController.getLeftX(),driverController.getLeftY())
-      );
+      //     new Translation2d(driverController.getLeftX(),driverController.getLeftY())
+      // );
+      drivetrain.setInputFromController(driverController);
 
       
     }, drivetrain));

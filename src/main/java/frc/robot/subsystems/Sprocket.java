@@ -1,11 +1,12 @@
 package frc.robot.subsystems;
 
-import frc.robot.Constants;
+
 import frc.robot.LimitSwitch;
 import frc.robot.PIDMechanism;
 import frc.robot.Constants.*;
 
-import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
+
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
