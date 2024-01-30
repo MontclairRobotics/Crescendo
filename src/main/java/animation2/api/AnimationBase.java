@@ -1,8 +1,7 @@
 package animation2.api;
 
-import frc.robot.LED;
-
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import frc.robot.subsystems.LED;
 
 /**
  * A class which implements a simple animation that contains its own buffer.

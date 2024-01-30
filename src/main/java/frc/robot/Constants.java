@@ -88,6 +88,10 @@ public final class Constants {
     public static final int TOP_LIMIT_SWITCH = 1;
 
     public static final double FF_VOLTAGE = 0.6; //TODO: stolen from ChargedUp elevator feedforward  }
-    
-}
+  }
+  
+  public static class LEDConstants{
+    public static final int LED_PWM_PORT = 0;
+  }
+
 }
