@@ -8,6 +8,8 @@ import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Sprocket;
+import frc.robot.vision.Limelight;
+
 import java.io.File;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -28,6 +30,7 @@ public class RobotContainer {
   public static Intake intake = new Intake();
   public static Shooter shooter = new Shooter();
   public static Sprocket sprocket = new Sprocket();
+  public static Limelight limelight = new Limelight("limelight");
 
   
   
@@ -38,12 +41,6 @@ public class RobotContainer {
     drivetrain.setupPathPlanner();
     
     drivetrain.setDefaultCommand(Commands.run(() -> {
-      // System.out.println(driverController.getLeftX());
-      // drivetrain.setInputFromController(
-      //    driverController.getRightX(), 
-       
-      //     new Translation2d(driverController.getLeftX(),driverController.getLeftY())
-      // );
       drivetrain.setInputFromController(driverController);
 
       

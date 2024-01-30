@@ -44,4 +44,11 @@ public class Limelight {
         
         LimelightHelpers.setPipelineIndex(cameraName, type.getPipe());
     }
+    public double getObjectTX() {
+        return LimelightHelpers.getLimelightNTDouble(cameraName, "tx");
+    }
+    public double getObjectTY() {
+        return LimelightHelpers.getLimelightNTDouble(cameraName, "ty");
+    }
+    
 }

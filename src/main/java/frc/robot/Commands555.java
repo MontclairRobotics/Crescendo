@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.PathPlannerConstants;
+import frc.robot.vision.Limelight;
 
 public class Commands555 {
     /**
@@ -83,6 +84,21 @@ public class Commands555 {
     }
     public static Command reverseShooter() {
         return Commands.runOnce(RobotContainer.shooter::reverseShooter, RobotContainer.shooter).withName("shooter reverse");
+    }
+    public static Command alignTo() {
+        Pose2d currentRobotPose = RobotContainer.drivetrain.getSwerveDrive().getPose();
+
+        // getObjectTX returns a degree offset between -29.8 & 29.8 degrees. Add this to our current heading to get the true target angle
+        Rotation2d targetAngle = new Rotation2d(currentRobotPose.getRotation().getDegrees() + RobotContainer.limelight.getObjectTX());
+        
+
+        Pose2d targetRobotPose = new Pose2d(currentRobotPose.getX(), currentRobotPose.getY(), targetAngle);
+        return AutoBuilder.pathfindToPose(
+            targetRobotPose,
+            PathPlannerConstants.PATH_CONSTRAINTS,
+            PathPlannerConstants.GOAL_END_VELOCITY,
+            PathPlannerConstants.ROTATION_DELAY_DISTANCE
+        ); 
     }
 
 }
