@@ -6,11 +6,14 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import java.io.File;
 import java.util.Optional;
 
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import frc.robot.Constants;
@@ -19,8 +22,12 @@ import swervelib.SwerveDrive;
 import swervelib.parser.SwerveParser;
 import swervelib.telemetry.SwerveDriveTelemetry;
 import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 
 public class Drivetrain extends SubsystemBase {
     
@@ -46,7 +53,9 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void drive(Translation2d translation, double rotation) {
+
         swerveDrive.drive(translation, rotation, this.isFieldRelative, true);
+
     }
 
     public void setChassisSpeeds(ChassisSpeeds chassisSpeeds) {
@@ -68,6 +77,7 @@ public class Drivetrain extends SubsystemBase {
     public void zeroGyro() {
         this.swerveDrive.zeroGyro();
     }
+
 
     public SwerveDrive getSwerveDrive() {
         return this.swerveDrive;
@@ -113,6 +123,9 @@ public class Drivetrain extends SubsystemBase {
         this.drive(targetTranslation, thetaSpeed);
     }
     
+
+}
+
 
 }
 
