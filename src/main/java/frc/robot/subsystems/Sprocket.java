@@ -19,10 +19,11 @@ public class Sprocket extends SubsystemBase {
     private final CANSparkMax motor = new CANSparkMax(Ports.ANGLE_MOTOR_PORT, MotorType.kBrushless);
     public final PIDController pidController = new PIDController(SubsystemConstants.angleKP, SubsystemConstants.angleKI, SubsystemConstants.angleKD);
     public final PIDMechanism pid;
-    private final double speed = SubsystemConstants.angleSpeed;
+    private final double speed = SubsystemConstants.ANGLE_SPEED;
     RelativeEncoder encoder;
 
-    public LimitSwitch bottomLimitSwitch = new LimitSwitch(SubsystemConstants.bottomLimitSwitch, false);
+    public LimitSwitch bottomLimitSwitch = new LimitSwitch(SubsystemConstants.BOTTOM_LIMIT_SWITCH, false);
+    public LimitSwitch topLimitSwitch = new LimitSwitch(SubsystemConstants.BOTTOM_LIMIT_SWITCH, false);
 
     public Sprocket() {
 
@@ -31,8 +32,8 @@ public class Sprocket extends SubsystemBase {
         pid = new PIDMechanism(pidController);
 
         encoder = motor.getEncoder();
-        encoder.setPositionConversionFactor(SubsystemConstants.sprocketRotationsPerDegree);
-        encoder.setPosition(SubsystemConstants.encoderMinAngle);
+        encoder.setPositionConversionFactor(SubsystemConstants.SPROCKET_ROTATIONS_PER_DEGREE);
+        encoder.setPosition(SubsystemConstants.ENCODER_MIN_ANGLE);
     }
     // Move sprocket up
     public void goUp() {

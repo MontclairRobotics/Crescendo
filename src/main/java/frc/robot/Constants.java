@@ -77,13 +77,16 @@ public final class Constants {
     public static final double angleKD = 0.0;
 
     //TODO: All of these constants are basically guessed!!
-    public static final double angleSpeed = 0.5; //Speed of the angle changing
-    public static final double sprocketRotationsPerDegree = 1.26983333;
-    public static final double encoderMinAngle = 0.0;
-    public static final double encoderMaxAngle = 75.787;
+    public static final double ANGLE_SPEED = 0.5; //Speed of the angle changing
+    public static final double SPROCKET_ROTATIONS_PER_DEGREE = 1.26983333;
+    public static final double ENCODER_MIN_ANGLE = 0.0;
+    public static final double ENCODER_MAX_ANGLE = 75.787;
 
     //TODO: needs to be set
-    public static final int bottomLimitSwitch = 0;
-  }
+    public static final int BOTTOM_LIMIT_SWITCH = 0;
+    public static final int TOP_LIMIT_SWITCH = 1;
+
+    public static final double FF_VOLTAGE = 0.6; //TODO: stolen from ChargedUp elevator feedforward  }
     
+}
 }
