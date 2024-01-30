@@ -22,9 +22,14 @@ public class Shooter extends SubsystemBase {
     }
     
     // shoot
-    public void shoot() {
-        motor1.set(SubsystemConstants.EJECT_SPEED);
-        motor2.set(SubsystemConstants.EJECT_SPEED);
+    public void shootSpeaker() {
+        motor1.set(SubsystemConstants.SPEAKER_EJECT_SPEED);
+        motor2.set(SubsystemConstants.SPEAKER_EJECT_SPEED);
+    }
+
+    public void shootAmp() {
+        motor1.set(SubsystemConstants.AMP_EJECT_SPEED);
+        motor2.set(SubsystemConstants.AMP_EJECT_SPEED);
     }
 
     // stop shooting
@@ -34,7 +39,7 @@ public class Shooter extends SubsystemBase {
     }
     // reverse shooter, in case shooter jams, etc.
     public void reverseShooter() {
-        motor1.set(-SubsystemConstants.EJECT_SPEED);
-        motor2.set(-SubsystemConstants.EJECT_SPEED);
+        motor1.set(-SubsystemConstants.SPEAKER_EJECT_SPEED);
+        motor2.set(-SubsystemConstants.SPEAKER_EJECT_SPEED);
     }
 }

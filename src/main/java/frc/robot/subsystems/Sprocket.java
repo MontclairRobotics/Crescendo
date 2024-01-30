@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 
 import frc.robot.LimitSwitch;
 import frc.robot.PIDMechanism;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.*;
 
 
@@ -12,6 +13,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Sprocket extends SubsystemBase {
@@ -49,8 +51,8 @@ public class Sprocket extends SubsystemBase {
     }
 
     // Go to angle! Yay!
-    public void goToAngle(double angle) {
-        
+    public Command goToAngle(double angle) {
+        return pid.goToSetpoint(() -> angle, RobotContainer.sprocket);
     }
 
     public void stopPID() {
