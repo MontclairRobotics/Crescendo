@@ -3,10 +3,15 @@ package frc.robot.subsystems;
 import java.util.Optional;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Commands555;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 
@@ -25,4 +30,36 @@ public class Auto extends SubsystemBase {
             this 
         );
     }
+    
+    public SequentialCommandGroup getPathSequence(String autoString) {
+       
+        SequentialCommandGroup finalPath = new SequentialCommandGroup();
+        String[] pathSequence = autoString.split(".");
+
+        for (String wantedPath : pathSequence) {
+
+            PathPlannerPath path = PathPlannerPath.fromPathFile(wantedPath);
+            finalPath.addCommands(AutoBuilder.followPath(path));
+            
+            char decidingChar = wantedPath.charAt(2);
+
+            if (Character.isDigit(decidingChar)) {
+                finalPath.addCommands(Commands555.shoot());
+            } else {
+                finalPath.addCommands(Commands555.alignTo(),Commands555.eat()); 
+            }
+            
+        }
+
+        return finalPath;
+
+    }
+    
+
+
+    // 1-a.a-1.1-g.g-1
+    // 1-a    a-1   1-g    g-1
+    // 
+
+    
 }
