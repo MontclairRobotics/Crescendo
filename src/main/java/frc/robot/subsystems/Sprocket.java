@@ -5,7 +5,7 @@ import frc.robot.LimitSwitch;
 import frc.robot.PIDMechanism;
 import frc.robot.Constants.*;
 
-
+import org.littletonrobotics.junction.AutoLogOutput;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -60,7 +60,7 @@ public class Sprocket extends SubsystemBase {
     public boolean isPIDActive() {
         return pid.active();
     }
-
+    @AutoLogOutput
     public double getAngle() {
         if(encoder.getPosition() < 0) {
             return 0.0;
