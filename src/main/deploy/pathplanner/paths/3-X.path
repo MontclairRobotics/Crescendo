@@ -1,0 +1,81 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+<<<<<<<< HEAD:src/main/deploy/pathplanner/paths/3-X.path
+        "x": 0.72,
+        "y": 6.72
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.0123400444296413,
+        "y": 7.336798657568694
+========
+        "x": 1.84,
+        "y": 7.62
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.25295628369716,
+        "y": 7.423522328523405
+>>>>>>>> 426a67984a536da9288973782c9344ea8aea7dbc:src/main/deploy/pathplanner/paths/X-C.path
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+<<<<<<<< HEAD:src/main/deploy/pathplanner/paths/3-X.path
+        "x": 1.84,
+        "y": 7.62
+      },
+      "prevControl": {
+        "x": 0.6210883671856793,
+        "y": 7.0766297540466265
+========
+        "x": 2.907787820212085,
+        "y": 6.986334537481157
+      },
+      "prevControl": {
+        "x": 2.8090909839295235,
+        "y": 7.063356075783493
+>>>>>>>> 426a67984a536da9288973782c9344ea8aea7dbc:src/main/deploy/pathplanner/paths/X-C.path
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.45,
+      "rotationDegrees": 0,
+      "rotateFast": true
+    }
+  ],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": null,
+  "previewStartingState": {
+<<<<<<<< HEAD:src/main/deploy/pathplanner/paths/3-X.path
+    "rotation": 59.5,
+========
+    "rotation": -90.0,
+>>>>>>>> 426a67984a536da9288973782c9344ea8aea7dbc:src/main/deploy/pathplanner/paths/X-C.path
+    "velocity": 0
+  },
+  "useDefaultConstraints": false
+}

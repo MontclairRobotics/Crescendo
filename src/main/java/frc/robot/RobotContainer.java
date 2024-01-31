@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import frc.robot.subsystems.Auto;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
@@ -31,6 +32,7 @@ public class RobotContainer {
   public static Shooter shooter = new Shooter();
   public static Sprocket sprocket = new Sprocket();
   public static Limelight limelight = new Limelight("limelight");
+  public static Auto auto = new Auto();
 
   
   
@@ -38,7 +40,7 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     
-    drivetrain.setupPathPlanner();
+    auto.setupPathPlanner();
     
     drivetrain.setDefaultCommand(Commands.run(() -> {
       drivetrain.setInputFromController(driverController);

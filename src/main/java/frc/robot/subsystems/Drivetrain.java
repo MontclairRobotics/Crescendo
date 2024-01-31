@@ -25,12 +25,9 @@ import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
-
-
-
 public class Drivetrain extends SubsystemBase {
     
-    private final SwerveDrive swerveDrive;
+    public final SwerveDrive swerveDrive;
     private boolean isFieldRelative;
     // private AHRS navX;
     
@@ -87,20 +84,7 @@ public class Drivetrain extends SubsystemBase {
     public Rotation2d getRotation() {
         return this.swerveDrive.getOdometryHeading();
     }
-    public void setupPathPlanner() {
-        AutoBuilder.configureHolonomic(
-            this.swerveDrive::getPose, // Robot pose supplier
-            this.swerveDrive::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
-            this.swerveDrive::getRobotVelocity, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-            this.swerveDrive::setChassisSpeeds, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
-            Constants.PathPlannerConstants.PATH_FOLLOWER_CONFIG,
-            () -> {
-                Optional<Alliance> alliance = DriverStation.getAlliance();
-                return alliance.isPresent() ? alliance.get() == DriverStation.Alliance.Red : false;
-            },
-            this 
-        );
-    }
+    
 
     public void setInputFromController(CommandPS5Controller controller) {
         double thetaSpeed = MathUtil.applyDeadband(controller.getRightX(), 0.05) * DriveConstants.MAX_ROT_SPEED;
