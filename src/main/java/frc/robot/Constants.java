@@ -99,15 +99,15 @@ public static class AutoConstants {
 
     /*    |X|(AMP)
      * 
-     * \ 3    A               D
-     *  \                     E
-     SPKR| 2  B               F
-     *  /           ╱|        G
-     * / 1    C     ╲|        H
-     *
-     * 
-     * 
-     *     
+     * \ 3    A        |       D
+     *  \              |       
+     SPKR| 2  B        |       E
+     *  /           ╱| |       
+     * / 1    C     ╲| |       F
+     *                 |
+     *                 |       G
+     *                 |
+     *                 |       H
      * (human player)
      */
 }

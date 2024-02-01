@@ -40,11 +40,11 @@ public class Auto extends SubsystemBase {
             char char1 = autoString.charAt(i);
             char char2 = autoString.charAt(i+1);
             if (Constants.AutoConstants.notes.contains(char1) && Constants.AutoConstants.notes.contains(char2)) {
-                RobotContainer.auto.setFeedback("Insert criticism here");
+                //RobotContainer.auto.setFeedback("Insert criticism here");
                 return false;
             }
             if (Constants.AutoConstants.scoringLocations.contains(char1) && Constants.AutoConstants.scoringLocations.contains(char2)) {
-                RobotContainer.auto.setFeedback("Insert criticism here");
+                //RobotContainer.auto.setFeedback("Insert criticism here");
                 return false;
             }
         }
@@ -64,7 +64,7 @@ public class Auto extends SubsystemBase {
             if (Constants.AutoConstants.lane3.contains(char1) && Constants.AutoConstants.lane3.contains(char2)) {
                 return true;
             }
-            RobotContainer.auto.setFeedback("Insert criticism here")
+            //RobotContainer.auto.setFeedback("Insert criticism here");
             return false;
         }
     }
