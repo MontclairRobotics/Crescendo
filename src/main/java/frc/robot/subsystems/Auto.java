@@ -1,9 +1,11 @@
 package frc.robot.subsystems;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.path.PathPlannerTrajectory;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
@@ -17,7 +19,7 @@ import frc.robot.RobotContainer;
 
 public class Auto extends SubsystemBase {
     
-
+    private ArrayList<PathPlannerTrajectory> trajectories = new ArrayList<PathPlannerTrajectory>();
     private String feedbackValue = "Enter a command!";
 
     public void setupPathPlanner() {
@@ -52,6 +54,7 @@ public class Auto extends SubsystemBase {
 
             PathPlannerPath path = PathPlannerPath.fromPathFile(wantedPath);
             finalPath.addCommands(AutoBuilder.followPath(path));
+            trajectories.add(path.getTrajectory());
             
             char decidingChar = wantedPath.charAt(2);
 
