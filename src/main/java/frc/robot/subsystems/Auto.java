@@ -54,12 +54,6 @@ public class Auto extends SubsystemBase {
         return finalPath;
 
     }
-    
-
-
-    // 1-a.a-1.1-g.g-1
-    // 1-a    a-1   1-g    g-1
-    // 
 
     
 }

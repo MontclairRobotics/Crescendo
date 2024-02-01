@@ -43,10 +43,6 @@ public final class Constants {
     
     public static final double GOAL_END_VELOCITY = 0.0;
     public static final double ROTATION_DELAY_DISTANCE = 0.0;
-
-    
-    
-
   }
   public static class VisionConstants {
     public static final double TARGET_DEBOUNCE_TIME = 0.2;
