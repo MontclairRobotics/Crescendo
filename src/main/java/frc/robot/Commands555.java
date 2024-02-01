@@ -90,7 +90,6 @@ public class Commands555 {
 
         // getObjectTX returns a degree offset between -29.8 & 29.8 degrees. Add this to our current heading to get the true target angle
         Rotation2d targetAngle = new Rotation2d(currentRobotPose.getRotation().getDegrees() + RobotContainer.limelight.getObjectTX());
-        
 
         Pose2d targetRobotPose = new Pose2d(currentRobotPose.getX(), currentRobotPose.getY(), targetAngle);
         return AutoBuilder.pathfindToPose(

@@ -50,11 +50,9 @@ public class Auto extends SubsystemBase {
             }
             
         }
-        // 1-a.a-1.1-g-g-1.
-        //return finalPath;
+
         return Commands.sequence(finalPath);
 
     }
 
-    
 }
