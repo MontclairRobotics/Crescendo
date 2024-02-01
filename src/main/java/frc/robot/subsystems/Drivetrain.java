@@ -15,6 +15,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
+import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.DriveConstants;
 import swervelib.SwerveDrive;
 import swervelib.parser.SwerveParser;
@@ -69,7 +71,8 @@ public class Drivetrain extends SubsystemBase {
     public void periodic() {
         Logger.recordOutput("Drivetrain/Module-Positions",getSwerveDrive().getModulePositions());
         Logger.recordOutput("Drivetrain/Gyro-Rotation",getSwerveDrive().getGyroRotation3d());
-        Logger.recordOutput("Drivetrain/Pose",getSwerveDrive().getPose());
+        Logger.recordOutput("Drivetrain/Pose",getSwerveDrive().getPose());        
+        RobotContainer.field.setRobotPose(swerveDrive.getPose());
     }
 
     public void setIsFieldRelative(boolean relative) {
@@ -114,4 +117,7 @@ public class Drivetrain extends SubsystemBase {
     
 
 }
+
+
+
 
