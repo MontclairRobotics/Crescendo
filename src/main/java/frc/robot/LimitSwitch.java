@@ -19,13 +19,15 @@ public class LimitSwitch implements Sendable
      */
 
     private final boolean invert;
-    public final DigitalInput dio;
+    public DigitalInput dio;
     private boolean value;
 
     public LimitSwitch(int channel, boolean invert)
     {
         this.invert = invert;
-        dio = new DigitalInput(channel);
+        if (RobotBase.isReal()) {
+            dio = new DigitalInput(channel);
+        }
     }
 
     public boolean get() 

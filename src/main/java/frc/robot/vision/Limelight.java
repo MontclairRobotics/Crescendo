@@ -5,9 +5,10 @@ import org.littletonrobotics.junction.AutoLogOutput;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
 
-public class Limelight {
+public class Limelight extends SubsystemBase {
     private String cameraName;
     private Debouncer targetDebouncer = new Debouncer(VisionConstants.TARGET_DEBOUNCE_TIME, DebounceType.kFalling);
     
@@ -55,5 +56,5 @@ public class Limelight {
     public double getObjectTY() {
         return LimelightHelpers.getLimelightNTDouble(cameraName, "ty");
     }
-    
+
 }

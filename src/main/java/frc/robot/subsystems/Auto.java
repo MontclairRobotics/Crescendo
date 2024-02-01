@@ -16,6 +16,10 @@ import frc.robot.Constants;
 import frc.robot.RobotContainer;
 
 public class Auto extends SubsystemBase {
+    
+
+    private String feedbackValue = "Enter a command!";
+
     public void setupPathPlanner() {
         AutoBuilder.configureHolonomic(
             RobotContainer.drivetrain.swerveDrive::getPose, // Robot pose supplier
@@ -31,6 +35,14 @@ public class Auto extends SubsystemBase {
         );
     }
     
+    public void setFeedback(String feedback) {
+        feedbackValue = feedback;
+    }
+
+    public String getFeedback() {
+        return feedbackValue;
+    }
+
     public Command getPathSequence(String autoString) {
        
         SequentialCommandGroup finalPath = new SequentialCommandGroup();
@@ -46,7 +58,7 @@ public class Auto extends SubsystemBase {
             if (Character.isDigit(decidingChar)) {
                 finalPath.addCommands(Commands555.shoot());
             } else {
-                finalPath.addCommands(Commands555.alignTo(),Commands555.eat()); 
+                finalPath.addCommands(Commands555.alignTo(RobotContainer.intakeLimelight),Commands555.eat()); 
             }
             
         }
