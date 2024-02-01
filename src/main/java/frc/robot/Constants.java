@@ -4,6 +4,10 @@
 
 package frc.robot;
 
+import java.util.Arrays;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
@@ -83,6 +87,28 @@ public final class Constants {
     public static final int TOP_LIMIT_SWITCH = 1;
 
     public static final double FF_VOLTAGE = 0.6; //TODO: stolen from ChargedUp elevator feedforward  }
-    
+}
+
+public static class AutoConstants {
+
+    public static final Set<Character> notes = Arrays.stream(new Character[] {'A','B','C','D','E','F','G','H'}).collect(Collectors.toSet());
+    public static final Set<Character> scoringLocations = Arrays.stream(new Character[] {'1','2','3','X'}).collect(Collectors.toSet());
+    public static final Set<Character> lane3 = Arrays.stream(new Character[] {'A','3','D', 'E'}).collect(Collectors.toSet());
+    public static final Set<Character> lane2 = Arrays.stream(new Character[] {'B', '2','F','G','E'}).collect(Collectors.toSet());
+    public static final Set<Character> lane1 = Arrays.stream(new Character[] {'C','1','X', 'G', 'H'}).collect(Collectors.toSet());
+
+    /*    |X|(AMP)
+     * 
+     * \ 3    A               D
+     *  \                     E
+     SPKR| 2  B               F
+     *  /           ╱|        G
+     * / 1    C     ╲|        H
+     *
+     * 
+     * 
+     *     
+     * (human player)
+     */
 }
 }
