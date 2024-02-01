@@ -61,9 +61,10 @@ public class Auto extends SubsystemBase {
             if (Constants.AutoConstants.lane2.contains(char1) && Constants.AutoConstants.lane2.contains(char2)) {
                 return true;
             }
-            if (Constants.AutoConstants.lane1.contains(char1) && Constants.AutoConstants.lane1.contains(char2)) {
+            if (Constants.AutoConstants.lane3.contains(char1) && Constants.AutoConstants.lane3.contains(char2)) {
                 return true;
             }
+            RobotContainer.auto.setFeedback("Insert criticism here")
             return false;
         }
     }
