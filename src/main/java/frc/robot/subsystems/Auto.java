@@ -31,7 +31,7 @@ public class Auto extends SubsystemBase {
         );
     }
     
-    public SequentialCommandGroup getPathSequence(String autoString) {
+    public Command getPathSequence(String autoString) {
        
         SequentialCommandGroup finalPath = new SequentialCommandGroup();
         String[] pathSequence = autoString.split(".");
@@ -50,8 +50,9 @@ public class Auto extends SubsystemBase {
             }
             
         }
-
-        return finalPath;
+        // 1-a.a-1.1-g-g-1.
+        //return finalPath;
+        return Commands.sequence(finalPath);
 
     }
 
