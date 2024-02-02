@@ -2,10 +2,6 @@ package frc.robot.subsystems;
 
 import java.util.ArrayList;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.Arrays;
-import java.util.HashSet;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
@@ -32,7 +28,7 @@ public class Auto extends SubsystemBase {
             RobotContainer.drivetrain.swerveDrive::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
             RobotContainer.drivetrain.swerveDrive::getRobotVelocity, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
             RobotContainer.drivetrain.swerveDrive::setChassisSpeeds, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
-            Constants.PathPlannerConstants.PATH_FOLLOWER_CONFIG,
+            Constants.AutoConstants.PATH_FOLLOWER_CONFIG,
             () -> {
                 Optional<Alliance> alliance = DriverStation.getAlliance();
                 return alliance.isPresent() ? alliance.get() == DriverStation.Alliance.Red : false;
@@ -57,10 +53,13 @@ public class Auto extends SubsystemBase {
         return true;
     }
 
-    public boolean stayingInLane(String autoString) {
+    public boolean isStayingInLane(String autoString) {
+        
         for (int i = 0; i < autoString.length()-1; i++) {
+
             char char1 = autoString.charAt(i);
             char char2 = autoString.charAt(i+1);
+            
             if (Constants.AutoConstants.lane1.contains(char1) && Constants.AutoConstants.lane1.contains(char2)) {
                 return true;
             }
@@ -73,6 +72,7 @@ public class Auto extends SubsystemBase {
             //RobotContainer.auto.setFeedback("Insert criticism here");
             return false;
         }
+        return false;
     }
     
     public void setFeedback(String feedback) {
@@ -92,7 +92,7 @@ public class Auto extends SubsystemBase {
 
             PathPlannerPath path = PathPlannerPath.fromPathFile(wantedPath);
             finalPath.addCommands(AutoBuilder.followPath(path));
-            trajectories.add(path.getTrajectory());
+            trajectories.add(path.getTrajectory(RobotContainer.drivetrain.getSwerveDrive().getRobotVelocity(), RobotContainer.drivetrain.getRotation()));
             
             char decidingChar = wantedPath.charAt(2);
 

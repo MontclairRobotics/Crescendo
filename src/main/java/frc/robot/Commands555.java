@@ -8,7 +8,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.Constants.PathPlannerConstants;
+import frc.robot.Constants.AutoConstants;
 import frc.robot.vision.Limelight;
 
 
@@ -28,9 +28,9 @@ public class Commands555 {
 
         return AutoBuilder.pathfindToPose(
             targetPose,
-            PathPlannerConstants.PATH_CONSTRAINTS,
-            PathPlannerConstants.GOAL_END_VELOCITY,
-            PathPlannerConstants.ROTATION_DELAY_DISTANCE 
+            AutoConstants.PATH_CONSTRAINTS,
+            AutoConstants.GOAL_END_VELOCITY,
+            AutoConstants.ROTATION_DELAY_DISTANCE 
         );      
     }
     /**
@@ -39,9 +39,9 @@ public class Commands555 {
      */
     public static Command driveToFieldRelativePoint(Pose2d targetPose) {
         return AutoBuilder.pathfindToPose(
-            targetPose, PathPlannerConstants.PATH_CONSTRAINTS, 
-            PathPlannerConstants.GOAL_END_VELOCITY, 
-            PathPlannerConstants.ROTATION_DELAY_DISTANCE
+            targetPose, AutoConstants.PATH_CONSTRAINTS, 
+            AutoConstants.GOAL_END_VELOCITY, 
+            AutoConstants.ROTATION_DELAY_DISTANCE
         );
     }
 
@@ -83,9 +83,11 @@ public class Commands555 {
     public static Command stopShooter() {
         return Commands.runOnce(RobotContainer.shooter::stop, RobotContainer.shooter).withName("shooter stop");
     }
+
     public static Command reverseShooter() {
         return Commands.runOnce(RobotContainer.shooter::reverseShooter, RobotContainer.shooter).withName("shooter reverse");
     }
+    
     public static Command alignTo(Limelight limelight) {
         Pose2d currentRobotPose = RobotContainer.drivetrain.getSwerveDrive().getPose();
 
@@ -95,9 +97,9 @@ public class Commands555 {
         Pose2d targetRobotPose = new Pose2d(currentRobotPose.getX(), currentRobotPose.getY(), targetAngle);
         return AutoBuilder.pathfindToPose(
             targetRobotPose,
-            PathPlannerConstants.PATH_CONSTRAINTS,
-            PathPlannerConstants.GOAL_END_VELOCITY,
-            PathPlannerConstants.ROTATION_DELAY_DISTANCE
+            AutoConstants.PATH_CONSTRAINTS,
+            AutoConstants.GOAL_END_VELOCITY,
+            AutoConstants.ROTATION_DELAY_DISTANCE
         ); 
     }
 

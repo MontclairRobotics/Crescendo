@@ -27,27 +27,9 @@ public final class Constants {
     public static final double MAX_ANGULAR_ACCELERATION = 1.5;
 
   }
-  public static class PathPlannerConstants {
-    // TODO: Add correct PID values
-    public static final PIDConstants ANGULAR_PID_CONSTANTS = new PIDConstants(3.0,0.0,0.0);
-    public static final PIDConstants TRANSLATION_PID_CONSTANTS = new PIDConstants(3.0,0.0,0.0);
-
-    public static final HolonomicPathFollowerConfig PATH_FOLLOWER_CONFIG = new HolonomicPathFollowerConfig(
-      TRANSLATION_PID_CONSTANTS,
-      ANGULAR_PID_CONSTANTS,
-      Constants.DriveConstants.MAX_SPEED, 
-      0.43, 
-      new ReplanningConfig()
-    );
+  
     
-    public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(
-      DriveConstants.MAX_SPEED, DriveConstants.MAX_ACCELERATION,
-      DriveConstants.MAX_ROT_SPEED, DriveConstants.MAX_ANGULAR_ACCELERATION
-    );
-    
-    public static final double GOAL_END_VELOCITY = 0.0;
-    public static final double ROTATION_DELAY_DISTANCE = 0.0;
-  }
+  
   public static class VisionConstants {
     public static final double TARGET_DEBOUNCE_TIME = 0.2;
   }
@@ -97,6 +79,24 @@ public static class AutoConstants {
     public static final Set<Character> lane2 = Arrays.stream(new Character[] {'B', '2','F','G','E'}).collect(Collectors.toSet());
     public static final Set<Character> lane1 = Arrays.stream(new Character[] {'C','1','X', 'G', 'H'}).collect(Collectors.toSet());
 
+    public static final PIDConstants ANGULAR_PID_CONSTANTS = new PIDConstants(3.0,0.0,0.0);
+    public static final PIDConstants TRANSLATION_PID_CONSTANTS = new PIDConstants(3.0,0.0,0.0);
+
+    public static final HolonomicPathFollowerConfig PATH_FOLLOWER_CONFIG = new HolonomicPathFollowerConfig(
+      TRANSLATION_PID_CONSTANTS,
+      ANGULAR_PID_CONSTANTS,
+      Constants.DriveConstants.MAX_SPEED, 
+      0.43, 
+      new ReplanningConfig()
+    );
+    
+    public static final PathConstraints PATH_CONSTRAINTS = new PathConstraints(
+      DriveConstants.MAX_SPEED, DriveConstants.MAX_ACCELERATION,
+      DriveConstants.MAX_ROT_SPEED, DriveConstants.MAX_ANGULAR_ACCELERATION
+    );
+    
+    public static final double GOAL_END_VELOCITY = 0.0;
+    public static final double ROTATION_DELAY_DISTANCE = 0.0;
     /*    |X|(AMP)
      * 
      * \ 3    A        |       D
