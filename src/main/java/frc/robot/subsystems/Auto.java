@@ -2,6 +2,10 @@ package frc.robot.subsystems;
 
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.Arrays;
+import java.util.HashSet;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
@@ -35,6 +39,40 @@ public class Auto extends SubsystemBase {
             },
             this 
         );
+    } 
+    
+    public boolean isValidPathSequence(String autoString) {
+        for (int i = 0; i < autoString.length()-1; i++) {
+            char char1 = autoString.charAt(i);
+            char char2 = autoString.charAt(i+1);
+            if (Constants.AutoConstants.notes.contains(char1) && Constants.AutoConstants.notes.contains(char2)) {
+                //RobotContainer.auto.setFeedback("Insert criticism here");
+                return false;
+            }
+            if (Constants.AutoConstants.scoringLocations.contains(char1) && Constants.AutoConstants.scoringLocations.contains(char2)) {
+                //RobotContainer.auto.setFeedback("Insert criticism here");
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean stayingInLane(String autoString) {
+        for (int i = 0; i < autoString.length()-1; i++) {
+            char char1 = autoString.charAt(i);
+            char char2 = autoString.charAt(i+1);
+            if (Constants.AutoConstants.lane1.contains(char1) && Constants.AutoConstants.lane1.contains(char2)) {
+                return true;
+            }
+            if (Constants.AutoConstants.lane2.contains(char1) && Constants.AutoConstants.lane2.contains(char2)) {
+                return true;
+            }
+            if (Constants.AutoConstants.lane3.contains(char1) && Constants.AutoConstants.lane3.contains(char2)) {
+                return true;
+            }
+            //RobotContainer.auto.setFeedback("Insert criticism here");
+            return false;
+        }
     }
     
     public void setFeedback(String feedback) {
