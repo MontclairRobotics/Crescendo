@@ -76,12 +76,13 @@ public final class Constants {
 
 public static class AutoConstants {
 
-    public static final Set<Character> notes = Arrays.stream(new Character[] {'A','B','C','D','E','F','G','H'}).collect(Collectors.toSet());
-    public static final Set<Character> scoringLocations = Arrays.stream(new Character[] {'1','2','3','4'}).collect(Collectors.toSet());
-    public static final Set<Character> lane3 = Arrays.stream(new Character[] {'A','3','D', 'E'}).collect(Collectors.toSet());
-    public static final Set<Character> lane2 = Arrays.stream(new Character[] {'B', '2','F','G','E'}).collect(Collectors.toSet());
-    public static final Set<Character> lane1 = Arrays.stream(new Character[] {'C','1','4', 'G', 'H'}).collect(Collectors.toSet());
+    public static final Set<Character> NOTES = Arrays.stream(new Character[] {'A','B','C','D','E','F','G','H'}).collect(Collectors.toSet());
+    public static final Set<Character> SCORING_LOCATIONS = Arrays.stream(new Character[] {'1','2','3','4'}).collect(Collectors.toSet());
+    public static final Set<Character> LANE3 = Arrays.stream(new Character[] {'A','3','D', 'E'}).collect(Collectors.toSet());
+    public static final Set<Character> LANE2 = Arrays.stream(new Character[] {'B', '2','F','G','E'}).collect(Collectors.toSet());
+    public static final Set<Character> LANE1 = Arrays.stream(new Character[] {'C','1','4', 'G', 'H'}).collect(Collectors.toSet());
     public static final Set<Character> ALL_POINTS = Arrays.stream(new Character[] {'A','B','C','D','E','F','G','H', '1','2','3','4'}).collect(Collectors.toSet());
+    public static final Set<Character> STARTING_POINTS = Arrays.stream(new Character[] {'1','2','3'}).collect(Collectors.toSet());
 
     public static final PIDConstants ANGULAR_PID_CONSTANTS = new PIDConstants(3.0,0.0,0.0);
     public static final PIDConstants TRANSLATION_PID_CONSTANTS = new PIDConstants(3.0,0.0,0.0);
