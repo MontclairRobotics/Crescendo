@@ -132,6 +132,14 @@ public class Commands555 {
             goToAngle(SubsystemConstants.ENCODER_MIN_ANGLE)
         );
     }
+    public static Command receiveHumanPlayerNote() {
+        return Commands.sequence(
+            alignTo(RobotContainer.shooterLimelight),
+            goToAngle(SubsystemConstants.SPEAKER_SCORE_ANGLE),
+            reverseShooter(),
+            goToAngle(SubsystemConstants.ENCODER_MIN_ANGLE)
+        );
+    }
 
 
 }
