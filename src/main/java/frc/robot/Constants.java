@@ -50,7 +50,8 @@ public final class Constants {
   public static class SubsystemConstants {
     public static final double FLIPTOP_SPEED = 0.5;
     public static final double INTAKE_SPEED = 0.5;
-    public static final double EJECT_SPEED = 0.5;
+    public static final double SPEAKER_EJECT_SPEED = 0.5;
+    public static final double AMP_EJECT_SPEED = 0.1;
     public static final double ANGLE_MOVE_SPEED = 0.5;
 
     //TODO: Angle PID Constants: (!!!!!!)
@@ -111,5 +112,11 @@ public static class AutoConstants {
      *                 |       H
      * (human player)
      */
+  }
+  
+  public static class LEDConstants{
+    public static final int LED_PWM_PORT = 0;
+  }
+
 }
 }

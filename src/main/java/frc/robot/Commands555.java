@@ -73,11 +73,19 @@ public class Commands555 {
     public static Command stopSprocket() {
         return Commands.runOnce(RobotContainer.sprocket::stop, RobotContainer.sprocket).withName("sprocket stop");
     }
+    public static Command gotToAngle(double angle) {
+        return RobotContainer.sprocket.goToAngle(angle);
+    }
+
     /* - - - - - - - - - -
      Shooter Commands
     - - - - - - - - - - */
-    public static Command shoot() {
-        return Commands.runOnce(RobotContainer.shooter::shoot, RobotContainer.shooter).withName("shooter shoot");
+    public static Command shootSpeaker() {
+        return Commands.runOnce(RobotContainer.shooter::shootSpeaker, RobotContainer.shooter).withName("shoot speaker");
+    }
+
+    public static Command shootAmp() {
+        return Commands.runOnce(RobotContainer.shooter::shootAmp, RobotContainer.shooter).withName("shoot amp");
     }
     
     public static Command stopShooter() {
@@ -102,5 +110,6 @@ public class Commands555 {
             AutoConstants.ROTATION_DELAY_DISTANCE
         ); 
     }
+
 
 }
