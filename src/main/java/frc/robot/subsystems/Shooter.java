@@ -41,7 +41,6 @@ public class Shooter extends SubsystemBase {
     public void reverseShooter() {
         motor1.set(-SubsystemConstants.SPEAKER_EJECT_SPEED);
         motor2.set(-SubsystemConstants.SPEAKER_EJECT_SPEED);
-    
       
     }
 }
