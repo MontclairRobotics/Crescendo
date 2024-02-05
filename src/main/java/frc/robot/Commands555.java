@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.*;
 import frc.robot.vision.Limelight;
 
 
@@ -73,7 +74,7 @@ public class Commands555 {
     public static Command stopSprocket() {
         return Commands.runOnce(RobotContainer.sprocket::stop, RobotContainer.sprocket).withName("sprocket stop");
     }
-    public static Command gotToAngle(double angle) {
+    public static Command goToAngle(double angle) {
         return RobotContainer.sprocket.goToAngle(angle);
     }
 
@@ -107,8 +108,33 @@ public class Commands555 {
             targetRobotPose,
             AutoConstants.PATH_CONSTRAINTS,
             AutoConstants.GOAL_END_VELOCITY,
-            AutoConstants.ROTATION_DELAY_DISTANCE
+            AutoConstants.ROTATION_DELAY_DISTANCE 
         ); 
+    }
+
+    public static Command scoreAmp() {
+        return Commands.sequence(
+            alignTo(RobotContainer.shooterLimelight),
+            goToAngle(SubsystemConstants.AMP_SCORE_ANGLE),
+            shootAmp(),
+            goToAngle(SubsystemConstants.ENCODER_MIN_ANGLE)
+        );
+    }
+    public static Command scoreSpeaker() {
+        return Commands.sequence(
+            alignTo(RobotContainer.shooterLimelight),
+            goToAngle(SubsystemConstants.SPEAKER_SCORE_ANGLE),
+            shootSpeaker(),
+            goToAngle(SubsystemConstants.ENCODER_MIN_ANGLE)
+        );
+    }
+    public static Command receiveHumanPlayerNote() {
+        return Commands.sequence(
+            alignTo(RobotContainer.shooterLimelight),
+            goToAngle(SubsystemConstants.SPEAKER_SCORE_ANGLE),
+            reverseShooter(),
+            goToAngle(SubsystemConstants.ENCODER_MIN_ANGLE)
+        );
     }
 
 

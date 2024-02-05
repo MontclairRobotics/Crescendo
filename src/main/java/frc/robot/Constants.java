@@ -36,10 +36,9 @@ public final class Constants {
     // Max angular acceleration in Rad/S^2
     public static final double MAX_ANGULAR_ACCELERATION = 1.5;
 
+    public static final double DRIVE_BASE_RADIUS = 0.43;
+
   }
-  
-    
-  
   public static class VisionConstants {
     public static final double TARGET_DEBOUNCE_TIME = 0.2;
   }
@@ -74,6 +73,9 @@ public final class Constants {
     public static final double SPROCKET_ROTATIONS_PER_DEGREE = 1.26983333;
     public static final double ENCODER_MIN_ANGLE = 0.0;
     public static final double ENCODER_MAX_ANGLE = 75.787;
+    public static final double SPEAKER_SCORE_ANGLE = -1;
+    public static final double AMP_SCORE_ANGLE = -1;
+
 
     //TODO: needs to be set
     public static final int BOTTOM_LIMIT_SWITCH = 0;
@@ -84,12 +86,13 @@ public final class Constants {
 
 public static class AutoConstants {
 
-    public static final Set<Character> notes = Arrays.stream(new Character[] {'A','B','C','D','E','F','G','H'}).collect(Collectors.toSet());
-    public static final Set<Character> scoringLocations = Arrays.stream(new Character[] {'1','2','3','X'}).collect(Collectors.toSet());
-    public static final Set<Character> lane3 = Arrays.stream(new Character[] {'A','3','D', 'E'}).collect(Collectors.toSet());
-    public static final Set<Character> lane2 = Arrays.stream(new Character[] {'B', '2','F','G','E'}).collect(Collectors.toSet());
-    public static final Set<Character> lane1 = Arrays.stream(new Character[] {'C','1','X', 'G', 'H'}).collect(Collectors.toSet());
-    public static final Set<Character> ALL_POINTS = Arrays.stream(new Character[] {'A','B','C','D','E','F','G','H', '1','2','3','X'}).collect(Collectors.toSet());
+    public static final Set<Character> NOTES = Arrays.stream(new Character[] {'A','B','C','D','E','F','G','H'}).collect(Collectors.toSet());
+    public static final Set<Character> SCORING_LOCATIONS = Arrays.stream(new Character[] {'1','2','3','4'}).collect(Collectors.toSet());
+    public static final Set<Character> LANE3 = Arrays.stream(new Character[] {'A','3','D', 'E'}).collect(Collectors.toSet());
+    public static final Set<Character> LANE2 = Arrays.stream(new Character[] {'B', '2','F','G','E'}).collect(Collectors.toSet());
+    public static final Set<Character> LANE1 = Arrays.stream(new Character[] {'C','1','4', 'G', 'H'}).collect(Collectors.toSet());
+    public static final Set<Character> ALL_POINTS = Arrays.stream(new Character[] {'A','B','C','D','E','F','G','H', '1','2','3','4'}).collect(Collectors.toSet());
+    public static final Set<Character> STARTING_POINTS = Arrays.stream(new Character[] {'1','2','3'}).collect(Collectors.toSet());
 
     public static final PIDConstants ANGULAR_PID_CONSTANTS = new PIDConstants(3.0,0.0,0.0);
     public static final PIDConstants TRANSLATION_PID_CONSTANTS = new PIDConstants(3.0,0.0,0.0);
@@ -98,7 +101,7 @@ public static class AutoConstants {
       TRANSLATION_PID_CONSTANTS,
       ANGULAR_PID_CONSTANTS,
       Constants.DriveConstants.MAX_SPEED, 
-      0.43, 
+      Constants.DriveConstants.DRIVE_BASE_RADIUS, 
       new ReplanningConfig()
     );
     
