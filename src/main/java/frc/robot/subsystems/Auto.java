@@ -89,30 +89,27 @@ public class Auto extends SubsystemBase {
         return feedbackValue;
     }
 
-    //1A1G2B --> 1A A1 1G G2 2B
     public Command getPathSequence(String autoString) {
-       
+
         SequentialCommandGroup finalPath = new SequentialCommandGroup();
-        String[] pathSequence = autoString.split(".");
 
-        for (String wantedPath : pathSequence) {
+        for (int i = 0; i < autoString.length()-1; i++) {
 
-            PathPlannerPath path = PathPlannerPath.fromPathFile(wantedPath);
+            char current = autoString.charAt(i);
+            char next = autoString.charAt(i+1);
+
+            PathPlannerPath path = PathPlannerPath.fromPathFile("" + current + next);
             finalPath.addCommands(AutoBuilder.followPath(path));
-            trajectories.add(path.getTrajectory(RobotContainer.drivetrain.getSwerveDrive().getRobotVelocity(), RobotContainer.drivetrain.getRotation()));
-            
-            char decidingChar = wantedPath.charAt(2);
 
-            if (Character.isDigit(decidingChar)) {
+            trajectories.add(path.getTrajectory(RobotContainer.drivetrain.getSwerveDrive().getRobotVelocity(), RobotContainer.drivetrain.getRotation()));
+
+            if (Character.isDigit(next)) {
                 finalPath.addCommands(Commands555.shoot());
             } else {
-                finalPath.addCommands(Commands555.alignTo(RobotContainer.intakeLimelight),Commands555.eat()); 
+                finalPath.addCommands(Commands555.alignTo(RobotContainer.intakeLimelight),Commands555.eat());
             }
-            
         }
-
         return Commands.sequence(finalPath);
-
     }
 
 }
