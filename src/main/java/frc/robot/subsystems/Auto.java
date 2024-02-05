@@ -104,7 +104,7 @@ public class Auto extends SubsystemBase {
             char decidingChar = wantedPath.charAt(2);
 
             if (Character.isDigit(decidingChar)) {
-                finalPath.addCommands(Commands555.shoot());
+                finalPath.addCommands(Commands555.shootSpeaker()); //TODO add actual things
             } else {
                 finalPath.addCommands(Commands555.alignTo(RobotContainer.intakeLimelight),Commands555.eat()); 
             }

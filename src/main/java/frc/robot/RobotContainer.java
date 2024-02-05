@@ -7,16 +7,21 @@ package frc.robot;
 import frc.robot.subsystems.Auto;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.LED;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Sprocket;
 import frc.robot.vision.Limelight;
 
 import java.io.File;
+import java.util.concurrent.locks.Condition;
 
-
+import animation2.AllianceAnimation;
+import animation2.WipeTransition;
+import animation2.api.Animation;
+import animation2.api.ConditionalAnimation;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -27,10 +32,10 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 
-
 public class RobotContainer {
 
   private static CommandPS5Controller driverController = new CommandPS5Controller(0);
+  private static CommandPS5Controller operatorController = new CommandPS5Controller(1);
   
   
   public static Drivetrain drivetrain = new Drivetrain(new File(Filesystem.getDeployDirectory(), "swerve/"));
@@ -42,6 +47,7 @@ public class RobotContainer {
   public static Limelight intakeLimelight = new Limelight("intakeLimelight");
   public static Limelight shooterLimelight = new Limelight("shooterLimelight");
   public static Auto auto = new Auto();
+  public static LED led = new LED(new ConditionalAnimation(getTeleopDefaultAnim()).addCase(DriverStation::isDisabled, getDisabledAnimation()), new WipeTransition());
 
   public static final Field2d field = new Field2d();
 
@@ -89,6 +95,14 @@ public class RobotContainer {
       Commands555.driveToRobotRelativePoint(targetPose, currentRotation);
      
     }, drivetrain));
+  }
+
+  public static Animation getTeleopDefaultAnim() {
+    return new AllianceAnimation();
+  }
+
+  public static Animation getDisabledAnimation() {
+    return Constants.LEDConstants.DEMO_REEL;
   }
 
   public void setupAutoTab() {

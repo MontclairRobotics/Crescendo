@@ -13,6 +13,16 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import animation2.AnimationReel;
+import animation2.CircusAnimation;
+import animation2.MagicAnimation;
+import animation2.QuickSlowFlash;
+import animation2.RaceAnimation;
+import animation2.RainbowAnimation;
+import animation2.WipeTransition;
+import animation2.api.Animation;
+import edu.wpi.first.wpilibj.util.Color;
+
 public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
@@ -104,8 +114,8 @@ public static class AutoConstants {
      * \ 3    A        |       D
      *  \              |       
      SPKR| 2  B        |       E
-     *  /           ╱| |       
-     * / 1    C     ╲| |       F
+     *  /           /| |       
+     * / 1    C     \| |       F
      *                 |
      *                 |       G
      *                 |
@@ -116,7 +126,20 @@ public static class AutoConstants {
   
   public static class LEDConstants{
     public static final int LED_PWM_PORT = 0;
+    public static final double TRANSITION_TIME = 1;
+    public static final double REEL_TIME = 10;
+
+    public static final Animation DEMO_REEL = new AnimationReel(REEL_TIME, TRANSITION_TIME, new WipeTransition(), 
+    
+    MagicAnimation.fire(),
+    new CircusAnimation().randomized(),
+    new RainbowAnimation().randomized(),
+    MagicAnimation.galaxy(),
+    new QuickSlowFlash(Color.kAquamarine),
+    new RaceAnimation(Color.kIndigo).randomized()
+    
+    );
   }
 
 }
-}
+
