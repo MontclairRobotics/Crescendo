@@ -26,10 +26,9 @@ public final class Constants {
     // Max angular acceleration in Rad/S^2
     public static final double MAX_ANGULAR_ACCELERATION = 1.5;
 
+    public static final double DRIVE_BASE_RADIUS = 0.43;
+
   }
-  
-    
-  
   public static class VisionConstants {
     public static final double TARGET_DEBOUNCE_TIME = 0.2;
   }
@@ -91,7 +90,7 @@ public static class AutoConstants {
       TRANSLATION_PID_CONSTANTS,
       ANGULAR_PID_CONSTANTS,
       Constants.DriveConstants.MAX_SPEED, 
-      0.43, 
+      Constants.DriveConstants.DRIVE_BASE_RADIUS, 
       new ReplanningConfig()
     );
     

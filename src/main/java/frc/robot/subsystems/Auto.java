@@ -90,7 +90,7 @@ public class Auto extends SubsystemBase {
     }
 
     public Command getPathSequence(String autoString) {
-
+        
         SequentialCommandGroup finalPath = new SequentialCommandGroup();
 
         for (int i = 0; i < autoString.length()-1; i++) {
@@ -105,9 +105,9 @@ public class Auto extends SubsystemBase {
 
             if (Character.isDigit(next)) {
                 if (next == '4') {
-                    finalPath.addCommands(Commands555.shootAmp());
+                    finalPath.addCommands(Commands555.scoreAmp());
                 } else {
-                    finalPath.addCommands(Commands555.shootSpeaker());
+                    finalPath.addCommands(Commands555.scoreSpeaker());
                 }
                 
             } else {
