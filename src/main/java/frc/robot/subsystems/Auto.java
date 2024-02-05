@@ -104,7 +104,12 @@ public class Auto extends SubsystemBase {
             trajectories.add(path.getTrajectory(RobotContainer.drivetrain.getSwerveDrive().getRobotVelocity(), RobotContainer.drivetrain.getRotation()));
 
             if (Character.isDigit(next)) {
-                finalPath.addCommands(Commands555.shoot());
+                if (next == '4') {
+                    finalPath.addCommands(Commands555.shootAmp());
+                } else {
+                    finalPath.addCommands(Commands555.shootSpeaker());
+                }
+                
             } else {
                 finalPath.addCommands(Commands555.alignTo(RobotContainer.intakeLimelight),Commands555.eat());
             }
