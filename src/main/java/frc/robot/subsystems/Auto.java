@@ -37,7 +37,7 @@ public class Auto extends SubsystemBase {
             this 
         );
     } 
-    
+    //1A2
     public boolean isValidPathSequence(String autoString) {
         if (!(Constants.AutoConstants.scoringLocations.contains(autoString.charAt(0)))) {
             RobotContainer.auto.setFeedback("That's not a real starting spot.");
@@ -89,6 +89,7 @@ public class Auto extends SubsystemBase {
         return feedbackValue;
     }
 
+    //1A1G2B --> 1A A1 1G G2 2B
     public Command getPathSequence(String autoString) {
        
         SequentialCommandGroup finalPath = new SequentialCommandGroup();
