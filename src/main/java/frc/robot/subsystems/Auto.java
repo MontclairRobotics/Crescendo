@@ -70,11 +70,10 @@ public class Auto extends SubsystemBase {
         if (autoString.charAt(0) == '3') lane = Constants.AutoConstants.lane3;
         else return false;
         
-        for (int i = 0; i < autoString.length()-1; i++) {
+        for (int i = 0; i < autoString.length(); i++) {
 
-            char char1 = autoString.charAt(i);
-            char char2 = autoString.charAt(i+1);
-            if (!(lane.contains(char1) && lane.contains(char2))) {
+            char character = autoString.charAt(i);
+            if (!lane.contains(character)) {
                 setFeedback("STAY IN YOUR LANE!!!");
                 return false;
             } 
