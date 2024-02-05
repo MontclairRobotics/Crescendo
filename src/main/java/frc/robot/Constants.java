@@ -64,6 +64,9 @@ public final class Constants {
     public static final double SPROCKET_ROTATIONS_PER_DEGREE = 1.26983333;
     public static final double ENCODER_MIN_ANGLE = 0.0;
     public static final double ENCODER_MAX_ANGLE = 75.787;
+    public static final double SPEAKER_SCORE_ANGLE = -1;
+    public static final double AMP_SCORE_ANGLE = -1;
+
 
     //TODO: needs to be set
     public static final int BOTTOM_LIMIT_SWITCH = 0;
