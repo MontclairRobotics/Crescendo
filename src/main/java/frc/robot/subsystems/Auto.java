@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.Set;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
@@ -38,15 +39,23 @@ public class Auto extends SubsystemBase {
     } 
     
     public boolean isValidPathSequence(String autoString) {
+        if (!(Constants.AutoConstants.scoringLocations.contains(autoString.charAt(0)))) {
+            RobotContainer.auto.setFeedback("That's not a real starting spot.");
+            return false;
+        }
         for (int i = 0; i < autoString.length()-1; i++) {
             char char1 = autoString.charAt(i);
             char char2 = autoString.charAt(i+1);
             if (Constants.AutoConstants.notes.contains(char1) && Constants.AutoConstants.notes.contains(char2)) {
-                //RobotContainer.auto.setFeedback("Insert criticism here");
+                setFeedback("Don't go from a note to a note.");
                 return false;
             }
             if (Constants.AutoConstants.scoringLocations.contains(char1) && Constants.AutoConstants.scoringLocations.contains(char2)) {
-                //RobotContainer.auto.setFeedback("Insert criticism here");
+                setFeedback("Don't go between scoring locations.");
+                return false;
+            }
+            if (!(Constants.AutoConstants.ALL_POINTS.contains(char1) && Constants.AutoConstants.ALL_POINTS.contains(char2))) {
+                setFeedback("You probably made a typo, or you're stupid");
                 return false;
             }
         }
@@ -54,25 +63,23 @@ public class Auto extends SubsystemBase {
     }
 
     public boolean isStayingInLane(String autoString) {
+
+        Set<Character> lane ;
+        if (autoString.charAt(0) == '1') lane = Constants.AutoConstants.lane1;
+        if (autoString.charAt(0) == '2') lane = Constants.AutoConstants.lane2;
+        if (autoString.charAt(0) == '3') lane = Constants.AutoConstants.lane3;
+        else return false;
         
         for (int i = 0; i < autoString.length()-1; i++) {
 
             char char1 = autoString.charAt(i);
             char char2 = autoString.charAt(i+1);
-            
-            if (Constants.AutoConstants.lane1.contains(char1) && Constants.AutoConstants.lane1.contains(char2)) {
-                return true;
-            }
-            if (Constants.AutoConstants.lane2.contains(char1) && Constants.AutoConstants.lane2.contains(char2)) {
-                return true;
-            }
-            if (Constants.AutoConstants.lane3.contains(char1) && Constants.AutoConstants.lane3.contains(char2)) {
-                return true;
-            }
-            //RobotContainer.auto.setFeedback("Insert criticism here");
-            return false;
+            if (!(lane.contains(char1) && lane.contains(char2))) {
+                setFeedback("STAY IN YOUR LANE!!!");
+                return false;
+            } 
         }
-        return false;
+        return true;
     }
     
     public void setFeedback(String feedback) {
