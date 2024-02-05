@@ -116,20 +116,20 @@ public class Commands555 {
         ); 
     }
 
-    public static Command scoreAmp(Drivetrain drivetrain, Shooter shooter, Sprocket sprocket, Limelight limelight) {
+    public static Command scoreAmp() {
         return Commands.sequence(
-            alignTo(limelight),
+            alignTo(RobotContainer.shooterLimelight),
             goToAngle(SubsystemConstants.AMP_SCORE_ANGLE),
             shootAmp(),
-            goDown()
+            goToAngle(SubsystemConstants.ENCODER_MIN_ANGLE)
         );
     }
-    public static Command scoreSpeaker(Drivetrain drivetrain, Shooter shooter, Sprocket sprocket, Limelight limelight) {
+    public static Command scoreSpeaker() {
         return Commands.sequence(
-            alignTo(limelight),
+            alignTo(RobotContainer.shooterLimelight),
             goToAngle(SubsystemConstants.SPEAKER_SCORE_ANGLE),
             shootSpeaker(),
-            goDown()
+            goToAngle(SubsystemConstants.ENCODER_MIN_ANGLE)
         );
     }
 
