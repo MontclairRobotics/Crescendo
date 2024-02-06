@@ -28,8 +28,6 @@ public class Robot extends LoggedRobot {
 
   private RobotContainer m_robotContainer;
 
-  
-
   @Override
   public void robotInit() {
     Logger.recordMetadata("ProjectName", "Katherine Tchaikovsky Swift");

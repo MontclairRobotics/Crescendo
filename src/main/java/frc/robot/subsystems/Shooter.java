@@ -18,7 +18,6 @@ public class Shooter extends SubsystemBase {
      * Un-inverts the motors used for shooting
      */
     public Shooter() {
-        
         motor1.setInverted(false);
         motor2.setInverted(false);
     }
@@ -51,7 +50,5 @@ public class Shooter extends SubsystemBase {
     public void reverseShooter() {
         motor1.set(-SubsystemConstants.SPEAKER_EJECT_SPEED);
         motor2.set(-SubsystemConstants.SPEAKER_EJECT_SPEED);
-    
-      
     }
 }

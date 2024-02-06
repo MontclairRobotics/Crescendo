@@ -13,6 +13,16 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import animation2.AnimationReel;
+import animation2.CircusAnimation;
+import animation2.MagicAnimation;
+import animation2.QuickSlowFlash;
+import animation2.RaceAnimation;
+import animation2.RainbowAnimation;
+import animation2.WipeTransition;
+import animation2.api.Animation;
+import edu.wpi.first.wpilibj.util.Color;
+
 public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
@@ -76,12 +86,13 @@ public final class Constants {
 
 public static class AutoConstants {
 
-    public static final Set<Character> notes = Arrays.stream(new Character[] {'A','B','C','D','E','F','G','H'}).collect(Collectors.toSet());
-    public static final Set<Character> scoringLocations = Arrays.stream(new Character[] {'1','2','3','4'}).collect(Collectors.toSet());
-    public static final Set<Character> lane3 = Arrays.stream(new Character[] {'A','3','D', 'E'}).collect(Collectors.toSet());
-    public static final Set<Character> lane2 = Arrays.stream(new Character[] {'B', '2','F','G','E'}).collect(Collectors.toSet());
-    public static final Set<Character> lane1 = Arrays.stream(new Character[] {'C','1','4', 'G', 'H'}).collect(Collectors.toSet());
+    public static final Set<Character> NOTES = Arrays.stream(new Character[] {'A','B','C','D','E','F','G','H'}).collect(Collectors.toSet());
+    public static final Set<Character> SCORING_LOCATIONS = Arrays.stream(new Character[] {'1','2','3','4'}).collect(Collectors.toSet());
+    public static final Set<Character> LANE3 = Arrays.stream(new Character[] {'A','3','D', 'E'}).collect(Collectors.toSet());
+    public static final Set<Character> LANE2 = Arrays.stream(new Character[] {'B', '2','F','G','E'}).collect(Collectors.toSet());
+    public static final Set<Character> LANE1 = Arrays.stream(new Character[] {'C','1','4', 'G', 'H'}).collect(Collectors.toSet());
     public static final Set<Character> ALL_POINTS = Arrays.stream(new Character[] {'A','B','C','D','E','F','G','H', '1','2','3','4'}).collect(Collectors.toSet());
+    public static final Set<Character> STARTING_POINTS = Arrays.stream(new Character[] {'1','2','3'}).collect(Collectors.toSet());
 
     public static final PIDConstants ANGULAR_PID_CONSTANTS = new PIDConstants(3.0,0.0,0.0);
     public static final PIDConstants TRANSLATION_PID_CONSTANTS = new PIDConstants(3.0,0.0,0.0);
@@ -106,8 +117,8 @@ public static class AutoConstants {
      * \ 3    A        |       D
      *  \              |       
      SPKR| 2  B        |       E
-     *  /           ╱| |       
-     * / 1    C     ╲| |       F
+     *  /           /| |       
+     * / 1    C     \| |       F
      *                 |
      *                 |       G
      *                 |
@@ -118,6 +129,19 @@ public static class AutoConstants {
   
   public static class LEDConstants{
     public static final int LED_PWM_PORT = 0;
+    public static final double TRANSITION_TIME = 1;
+    public static final double REEL_TIME = 10;
+
+    public static final Animation DEMO_REEL = new AnimationReel(REEL_TIME, TRANSITION_TIME, new WipeTransition(), 
+    
+    MagicAnimation.fire(),
+    new CircusAnimation().randomized(),
+    new RainbowAnimation().randomized(),
+    MagicAnimation.galaxy(),
+    new QuickSlowFlash(Color.kAquamarine),
+    new RaceAnimation(Color.kIndigo).randomized()
+    
+    );
   }
 
 }
