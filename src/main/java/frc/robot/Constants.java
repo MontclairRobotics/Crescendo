@@ -43,10 +43,6 @@ public final class Constants {
     
     public static final double GOAL_END_VELOCITY = 0.0;
     public static final double ROTATION_DELAY_DISTANCE = 0.0;
-
-    
-    
-
   }
   public static class VisionConstants {
     public static final double TARGET_DEBOUNCE_TIME = 0.2;
@@ -63,6 +59,8 @@ public final class Constants {
     public static final int SHOOTER_MOTOR_2_PORT = 105;
 
     public static final int ANGLE_MOTOR_PORT = 106;
+
+    
   }
   
   public static class SubsystemConstants {
@@ -88,5 +86,8 @@ public final class Constants {
 
     public static final double FF_VOLTAGE = 0.6; //TODO: stolen from ChargedUp elevator feedforward  }
     
-}
+  }
+  public static class LedConstants {
+    public static final int BUFFER_SIZE = 60;
+  }
 }

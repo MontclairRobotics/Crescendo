@@ -6,6 +6,7 @@ package frc.robot;
 
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Led;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Sprocket;
 import frc.robot.vision.Limelight;
@@ -31,6 +32,7 @@ public class RobotContainer {
   public static Shooter shooter = new Shooter();
   public static Sprocket sprocket = new Sprocket();
   public static Limelight limelight = new Limelight("limelight");
+  public static Led led = new Led();
 
   
   
