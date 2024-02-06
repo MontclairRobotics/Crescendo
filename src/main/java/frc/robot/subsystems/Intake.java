@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import frc.robot.Constants.*;
 
+import org.littletonrobotics.junction.AutoLogOutput;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -9,7 +10,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Intake extends SubsystemBase {
-
+    
     private final CANSparkMax intakeMotor1 = new CANSparkMax(Ports.INTAKE_MOTOR_1_PORT, MotorType.kBrushless); 
     private final CANSparkMax intakeMotor2 = new CANSparkMax(Ports.INTAKE_MOTOR_2_PORT, MotorType.kBrushless);
 
