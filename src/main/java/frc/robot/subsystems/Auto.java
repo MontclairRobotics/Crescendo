@@ -108,7 +108,7 @@ public class Auto extends SubsystemBase {
                 // TODO: amazing error handling
             }
         
-            if (Character.isDit(next)) {
+            if (Character.isDigit(next)) {
                 if (next == '4') {
                     finalPath.addCommands(Commands555.scoreAmp());
                 } else {
