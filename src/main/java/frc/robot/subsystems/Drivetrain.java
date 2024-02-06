@@ -54,18 +54,24 @@ public class Drivetrain extends SubsystemBase {
         
 
     }
-
+    /**
+     * It drives a certain distance with a certain rotation
+     */
     public void drive(Translation2d translation, double rotation) {
 
         swerveDrive.drive(translation, rotation, this.isFieldRelative, true);
 
     }
-
+    /**
+     * Moves chassis
+     */
     public void setChassisSpeeds(ChassisSpeeds chassisSpeeds) {
         
         swerveDrive.setChassisSpeeds(chassisSpeeds);
     }
-
+    /**
+     * logs data: module positions, gyro rotation, and pose
+     */
     @Override
     public void periodic() {
         Logger.recordOutput("Drivetrain/Module-Positions",getSwerveDrive().getModulePositions());
@@ -73,10 +79,15 @@ public class Drivetrain extends SubsystemBase {
         Logger.recordOutput("Drivetrain/Pose",getSwerveDrive().getPose());        
         RobotContainer.field.setRobotPose(swerveDrive.getPose());
     }
-
+    /**
+     * sets isFieldRelative to either true or false, used for getIsFieldRelative
+     */
     public void setIsFieldRelative(boolean relative) {
         this.isFieldRelative = relative;
     }
+    /**
+     * Returns if the paramter 
+     */
     public boolean getIsFieldRelative(boolean relative) {
         return this.isFieldRelative;
     }
@@ -88,18 +99,22 @@ public class Drivetrain extends SubsystemBase {
     public SwerveDrive getSwerveDrive() {
         return this.swerveDrive;
     }
+    /**
+     * Resets the odometer 
+     */
     public void resetOdometry() {
         this.swerveDrive.resetOdometry(new Pose2d(0.0,0.0, new Rotation2d(0.0)));
     }
-
     @AutoLogOutput
+    /**
+     * returns direction
+     */
     public Rotation2d getRotation() {
         
         return this.swerveDrive.getOdometryHeading();
     }
     
   
-    
     public void setInputFromController(CommandPS5Controller controller) {
       
         double thetaSpeed = MathUtil.applyDeadband(controller.getRightX(), 0.05) * DriveConstants.MAX_ROT_SPEED;

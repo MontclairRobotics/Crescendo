@@ -37,32 +37,47 @@ public class Sprocket extends SubsystemBase {
         encoder.setPositionConversionFactor(SubsystemConstants.SPROCKET_ROTATIONS_PER_DEGREE);
         encoder.setPosition(SubsystemConstants.ENCODER_MIN_ANGLE);
     }
-    // Move sprocket up
+    /**
+     * Move sprocket up
+     */
     public void goUp() {
         pid.setSpeed(speed);
     }
-    // Move sprocket down
+    /**
+     * Move sprocket down
+     */
     public void goDown() {
         pid.setSpeed(-speed);
     }
-    // Stop sprocket
+    /**
+     * Stop sprocket
+     */
     public void stop() {
         pid.setSpeed(0.0);
     }
 
-    // Go to angle! Yay!
+    /**
+     * Go to angle! Yay!
+     */
     public Command goToAngle(double angle) {
         return pid.goToSetpoint(() -> angle, RobotContainer.sprocket);
     }
-
+    /**
+     * Stops PID from PIDDING
+     */
     public void stopPID() {
         pid.cancel();
     }
-
+    /**
+     * Returns if PID is active
+     */
     public boolean isPIDActive() {
         return pid.active();
     }
     @AutoLogOutput
+    /**
+     * If the angle is less than 0 then 0.0 is returned, if the angle is greater than 90 it return 90.0, else it will return the actual angle
+     */
     public double getAngle() {
         if(encoder.getPosition() < 0) {
             return 0.0;
@@ -74,8 +89,10 @@ public class Sprocket extends SubsystemBase {
     }
 
     @Override
+    /**
+     * will this work if getAngle returns degrees? I do not know
+     */
     public void periodic() {
-        //will this work if getAngle returns degrees? I do not know
         pid.setMeasurement(getAngle());
         pid.update();
 
