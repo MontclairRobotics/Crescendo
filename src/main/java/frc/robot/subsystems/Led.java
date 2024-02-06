@@ -34,4 +34,10 @@ public class Led extends SubsystemBase {
     public Command runAnimation(LedState targetState) {
         return Commands.runOnce(targetState.getAnimation(), RobotContainer.led);
     }
+
+    @Override
+    public void periodic() {
+        led.setData(ledBuffer);
+        led.start();
+    }
 }

@@ -7,10 +7,10 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.Constants.LedConstants;
-import frc.robot.Constants.LedConstants.*;
 import frc.robot.RobotContainer;
 
 public class Animations {
+
     public static Runnable allianceAnimation() {
         return () -> {
             Optional<Alliance> alliance = DriverStation.getAlliance();
@@ -23,6 +23,7 @@ public class Animations {
             RobotContainer.led.fill(color);
         };
     }
+
     public static Runnable rainbowAnimation() {
         return () -> {
             final int offset = (int)(LedConstants.BUFFER_SIZE * Timer.getFPGATimestamp());
