@@ -5,11 +5,13 @@ import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.animation3.LedState;
 
+// TODO: IMPLEMENT LOGGING, MORE ERGNOMIC WAY TO QUEUE ANIMATIONS, 
 public class Led extends SubsystemBase {
     private AddressableLED led = new AddressableLED(Constants.Ports.LED_PWM_PORT);
     private AddressableLEDBuffer ledBuffer = new AddressableLEDBuffer(Constants.LedConstants.BUFFER_SIZE);
@@ -34,10 +36,22 @@ public class Led extends SubsystemBase {
     public Command runAnimation(LedState targetState) {
         return Commands.runOnce(targetState.getAnimation(), RobotContainer.led);
     }
+    
+    // @Override
+    // public void periodic() {
+    //     led.setData(ledBuffer);
+    //     led.start();
+    // }
 
-    @Override
-    public void periodic() {
-        led.setData(ledBuffer);
-        led.start();
+    
+    // TODO: remove this entire function! Just a proof of concept!
+    public Command cycleAll() {
+        SequentialCommandGroup animationSequence = new SequentialCommandGroup();
+        for (LedState animation : LedState.values()) {
+            animationSequence.addCommands(runAnimation(animation));
+        }
+        return Commands.sequence(animationSequence);
+        
+        // Commands.run(null, null).until(null)
     }
 }
