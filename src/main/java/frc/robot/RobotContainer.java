@@ -36,7 +36,6 @@ public class RobotContainer {
   private static CommandPS5Controller driverController = new CommandPS5Controller(0);
   private static CommandPS5Controller operatorController = new CommandPS5Controller(1);
   
-  
   public static Drivetrain drivetrain = new Drivetrain(new File(Filesystem.getDeployDirectory(), "swerve/"));
   
   // Subsystems
