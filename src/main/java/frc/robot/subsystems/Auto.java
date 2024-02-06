@@ -8,6 +8,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.PathPlannerTrajectory;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -17,7 +18,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Commands555;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
-
+// ^(?=[^A-H1-4]*[A-H1-4])(?=[^0-9]*[0-9])(?!.*[A-Za-z]{2})(?!.*[0-9]{2})[A-H1-4]+$
 public class Auto extends SubsystemBase {
     
     private ArrayList<PathPlannerTrajectory> trajectories = new ArrayList<PathPlannerTrajectory>();
@@ -92,22 +93,22 @@ public class Auto extends SubsystemBase {
     public Command getPathSequence(String autoString) {
 
         SequentialCommandGroup finalPath = new SequentialCommandGroup();
-        PathPlannerPath path = new PathPlannerPath();
+        
         for (int i = 0; i < autoString.length()-1; i++) {
 
             char current = autoString.charAt(i);
             char next = autoString.charAt(i+1);
             try {
-                path = PathPlannerPath.fromPathFile("" + current + next);
+
+                PathPlannerPath path = PathPlannerPath.fromPathFile("" + current + next);
+                finalPath.addCommands(AutoBuilder.followPath(path));
+                trajectories.add(path.getTrajectory(RobotContainer.drivetrain.getSwerveDrive().getRobotVelocity(), RobotContainer.drivetrain.getRotation()));
+
             } catch(Exception e) {
-
+                // TODO: amazing error handling
             }
-            
-            finalPath.addCommands(AutoBuilder.followPath(path));
-
-            trajectories.add(path.getTrajectory(RobotContainer.drivetrain.getSwerveDrive().getRobotVelocity(), RobotContainer.drivetrain.getRotation()));
-
-            if (Character.isDigit(next)) {
+        
+            if (Character.isDit(next)) {
                 if (next == '4') {
                     finalPath.addCommands(Commands555.scoreAmp());
                 } else {
