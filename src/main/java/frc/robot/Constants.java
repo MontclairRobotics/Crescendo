@@ -54,6 +54,8 @@ public final class Constants {
     public static final int SHOOTER_MOTOR_2_PORT = 105;
 
     public static final int ANGLE_MOTOR_PORT = 106;
+
+    public static final int BEAM_BREAK_CHANNEL = -1; //TODO:
   }
   
   public static class SubsystemConstants {

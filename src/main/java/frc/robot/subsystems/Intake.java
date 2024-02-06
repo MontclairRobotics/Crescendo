@@ -5,12 +5,14 @@ import frc.robot.Constants.*;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Intake extends SubsystemBase {
     
     private final CANSparkMax intakeMotor1 = new CANSparkMax(Ports.INTAKE_MOTOR_1_PORT, MotorType.kBrushless); 
     private final CANSparkMax intakeMotor2 = new CANSparkMax(Ports.INTAKE_MOTOR_2_PORT, MotorType.kBrushless);
+    private final DigitalInput beamBreak = new DigitalInput(Ports.BEAM_BREAK_CHANNEL);
 
     /**
      * Accelerates motors to intake something
@@ -33,6 +35,14 @@ public class Intake extends SubsystemBase {
     public void stop() {
         intakeMotor1.set(0);
         intakeMotor2.set(0);
+    }
+
+    /**
+     * gets the state of the beam break sensor in the intake
+     * @return true if the sensor is broken (gamepiece intaked), false if unbroken
+     */
+    public boolean getSensor() {
+        return !beamBreak.get();
     }
 
 }

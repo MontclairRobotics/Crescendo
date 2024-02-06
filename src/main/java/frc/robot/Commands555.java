@@ -51,11 +51,18 @@ public class Commands555 {
     /* - - - - - - - - - -
      Intake Commands
     - - - - - - - - - - */
-    public static Command eat() {
-        return Commands.runOnce(RobotContainer.intake::in, RobotContainer.intake).withName("intake in");
+    /**
+     * runs the intake until the beam break sensor is broken, and then stops
+     * @return 
+     */
+    public static Command intake() {
+        return Commands.run(RobotContainer.intake::in, RobotContainer.intake).withName("intake in")
+            .until(RobotContainer.intake::getSensor)
+            .withTimeout(10)
+            .andThen(stopIntake());
     }
 
-    public static Command barf() {
+    public static Command reverseIntake() {
        return Commands.runOnce(RobotContainer.intake::out, RobotContainer.intake).withName("intake out");
     }
 
