@@ -2,8 +2,6 @@ package frc.robot.subsystems;
 
 import frc.robot.Constants.*;
 
-import org.littletonrobotics.junction.AutoLogOutput;
-
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 

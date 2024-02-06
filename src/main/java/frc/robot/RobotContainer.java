@@ -13,7 +13,6 @@ import frc.robot.subsystems.Sprocket;
 import frc.robot.vision.Limelight;
 
 import java.io.File;
-import java.util.concurrent.locks.Condition;
 
 import animation2.AllianceAnimation;
 import animation2.WipeTransition;
