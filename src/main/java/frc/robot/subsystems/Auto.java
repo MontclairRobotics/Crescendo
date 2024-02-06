@@ -64,7 +64,7 @@ public class Auto extends SubsystemBase {
 
     public boolean isStayingInLane(String autoString) {
 
-        Set<Character> lane ;
+        Set<Character> lane;
         if (autoString.charAt(0) == '1') lane = Constants.AutoConstants.LANE1;
         if (autoString.charAt(0) == '2') lane = Constants.AutoConstants.LANE2;
         if (autoString.charAt(0) == '3') lane = Constants.AutoConstants.LANE3;
@@ -90,15 +90,19 @@ public class Auto extends SubsystemBase {
     }
 
     public Command getPathSequence(String autoString) {
-        
-        SequentialCommandGroup finalPath = new SequentialCommandGroup();
 
+        SequentialCommandGroup finalPath = new SequentialCommandGroup();
+        PathPlannerPath path = new PathPlannerPath();
         for (int i = 0; i < autoString.length()-1; i++) {
 
             char current = autoString.charAt(i);
             char next = autoString.charAt(i+1);
+            try {
+                path = PathPlannerPath.fromPathFile("" + current + next);
+            } catch(Exception e) {
 
-            PathPlannerPath path = PathPlannerPath.fromPathFile("" + current + next);
+            }
+            
             finalPath.addCommands(AutoBuilder.followPath(path));
 
             trajectories.add(path.getTrajectory(RobotContainer.drivetrain.getSwerveDrive().getRobotVelocity(), RobotContainer.drivetrain.getRotation()));
