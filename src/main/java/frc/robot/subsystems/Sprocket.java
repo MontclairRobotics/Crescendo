@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Sprocket extends SubsystemBase {
     
     private final CANSparkMax motor = new CANSparkMax(Ports.ANGLE_MOTOR_PORT, MotorType.kBrushless);
-    public final PIDController pidController = new PIDController(SubsystemConstants.angleKP, SubsystemConstants.angleKI, SubsystemConstants.angleKD);
+    public final PIDController pidController = new PIDController(PidConstants.angleKP, PidConstants.angleKI, PidConstants.angleKD);
     public final PIDMechanism pid;
     private final double speed = SubsystemConstants.ANGLE_SPEED;
     RelativeEncoder encoder;

@@ -8,11 +8,10 @@ import animation2.AnimationStack;
 import animation2.CelebrationAnimation;
 import animation2.api.Animation;
 import animation2.api.TransitionBase;
-//import org.team555.util.frc.commandrobot.ManagerBase;
 
 public class LED extends SubsystemBase 
 {
-    private AddressableLED led = new AddressableLED(Constants.LEDConstants.LED_PWM_PORT);
+    private AddressableLED led = new AddressableLED(Constants.Ports.LED_PWM_PORT);
     private AnimationStack stack;
 
     public static final double TRANSITION_LENGTH = 0.4;
