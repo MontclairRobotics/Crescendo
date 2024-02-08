@@ -77,7 +77,8 @@ public class RobotContainer {
     // TODO: probably wrong
     driverController.cross().onTrue(Commands555.scoreSpeaker()).onFalse(Commands555.stopShooter());
     driverController.circle().onTrue(Commands555.intake()).onFalse(Commands555.stopIntake());
-    
+    operatorController.L1().onTrue(Commands555.signalAmp());
+    operatorController.R1().onTrue(Commands555.signalCoop());
   }
 
   public static Animation getTeleopDefaultAnim() {
