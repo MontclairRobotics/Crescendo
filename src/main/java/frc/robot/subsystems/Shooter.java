@@ -26,9 +26,9 @@ public class Shooter extends SubsystemBase {
      * Shoots (used for speaker)
      */
     public void shootSpeaker() {
-        topMotor.set(SubsystemConstants.SPEAKER_EJECT_SPEED);
-        bottomMotor.set(SubsystemConstants.SPEAKER_EJECT_SPEED);
-        transportMotor.set(SubsystemConstants.TRANSPORT_SPEED);
+        topMotor.set(SubsystemConstants.SHOOTER_MOTOR_TOP_SPEED);
+        bottomMotor.set(SubsystemConstants.SHOOTER_MOTOR_BOTTOM_SPEED);
+        // transportMotor.set(SubsystemConstants.TRANSPORT_SPEED);
     }
     /**
      * Shoots (used for amp)
@@ -38,6 +38,9 @@ public class Shooter extends SubsystemBase {
         bottomMotor.set(SubsystemConstants.AMP_EJECT_SPEED);
     }
 
+    public void transportWithSpeed(double desiredSpeed) {
+        transportMotor.set(desiredSpeed);
+    }
     /**
      * Stops the motors
      */

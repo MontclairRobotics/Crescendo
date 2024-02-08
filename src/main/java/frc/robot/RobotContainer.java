@@ -33,21 +33,21 @@ import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 
 public class RobotContainer {
 
-  private static CommandPS5Controller driverController = new CommandPS5Controller(0);
+  public static CommandPS5Controller driverController = new CommandPS5Controller(0);
   private static CommandPS5Controller operatorController = new CommandPS5Controller(1);
   
   public static Drivetrain drivetrain = new Drivetrain(new File(Filesystem.getDeployDirectory(), "swerve/"));
   
   // Subsystems
-  public static Intake intake = new Intake();
+  //public static Intake intake = new Intake();
   public static Shooter shooter = new Shooter();
-  public static Sprocket sprocket = new Sprocket();
-  public static Limelight intakeLimelight = new Limelight("intakeLimelight");
-  public static Limelight shooterLimelight = new Limelight("shooterLimelight");
-  public static Auto auto = new Auto();
-  public static LED led = new LED(new ConditionalAnimation(getTeleopDefaultAnim()).addCase(DriverStation::isDisabled, getDisabledAnimation()), new WipeTransition());
+  //public static Sprocket sprocket = new Sprocket();
+ // public static Limelight intakeLimelight = new Limelight("intakeLimelight");
+  //public static Limelight shooterLimelight = new Limelight("shooterLimelight");
+  // public static Auto auto = new Auto();
+  // public static LED led = new LED(new ConditionalAnimation(getTeleopDefaultAnim()).addCase(DriverStation::isDisabled, getDisabledAnimation()), new WipeTransition());
 
-  public static final Field2d field = new Field2d();
+  // public static final Field2d field = new Field2d();
 
   
   
@@ -55,15 +55,15 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     
-    auto.setupPathPlanner();
-    setupAutoTab();
+    // auto.setupPathPlanner();
+    // setupAutoTab();
     
-    drivetrain.setDefaultCommand(Commands.run(() -> {
-    drivetrain.setInputFromController(driverController);
+    // drivetrain.setDefaultCommand(Commands.run(() -> {
+    // drivetrain.setInputFromController(driverController);
 
 
       
-    }, drivetrain));
+    // }, drivetrain));
     configureBindings();
   }
 
@@ -75,8 +75,8 @@ public class RobotContainer {
     }));
     
     // TODO: probably wrong
-    driverController.cross().onTrue(Commands555.scoreSpeaker()).onFalse(Commands555.stopShooter());
-    driverController.circle().onTrue(Commands555.intake()).onFalse(Commands555.stopIntake());
+    driverController.cross().onTrue(Commands555.shootSpeaker()).onFalse(Commands555.stopShooter());
+    
     
   }
 
@@ -88,17 +88,17 @@ public class RobotContainer {
     return Constants.LEDConstants.DEMO_REEL;
   }
 
-  public void setupAutoTab() {
-    ShuffleboardTab autoTab = Shuffleboard.getTab("Auto");
-    //TODO make it the same string that was entered last time? I think i can mark nt key as persistent
-    autoTab.add("Enter Command", "").withSize(3,1).withPosition(0,0);
-    autoTab.add(field).withSize(6,4).withPosition(3,0);
-    autoTab.addString("Feedback", () -> auto.getFeedback()).withSize(3,1).withPosition(0, 1);
+  // public void setupAutoTab() {
+  //   ShuffleboardTab autoTab = Shuffleboard.getTab("Auto");
+  //   //TODO make it the same string that was entered last time? I think i can mark nt key as persistent
+  //   autoTab.add("Enter Command", "").withSize(3,1).withPosition(0,0);
+  //   autoTab.add(field).withSize(6,4).withPosition(3,0);
+  //   autoTab.addString("Feedback", () -> auto.getFeedback()).withSize(3,1).withPosition(0, 1);
     
-    autoTab.add("Ignore Safety", false).withWidget(BuiltInWidgets.kToggleSwitch).withSize(2, 1).withPosition(0,2);
+  //   autoTab.add("Ignore Safety", false).withWidget(BuiltInWidgets.kToggleSwitch).withSize(2, 1).withPosition(0,2);
 
 
-  }
+  // }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

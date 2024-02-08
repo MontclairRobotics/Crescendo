@@ -55,35 +55,35 @@ public class Commands555 {
      * runs the intake until the beam break sensor is broken, and then stops
      * @return 
      */
-    public static Command intake() {
-        return Commands.run(RobotContainer.intake::in, RobotContainer.intake).withName("intake in")
-            .until(RobotContainer.intake::getSensor)
-            .withTimeout(10)
-            .andThen(stopIntake());
-    }
+    // public static Command intake() {
+    //     return Commands.run(RobotContainer.intake::in, RobotContainer.intake).withName("intake in")
+    //         .until(RobotContainer.intake::getSensor)
+    //         .withTimeout(10)
+    //         .andThen(stopIntake());
+    // }
 
-    public static Command reverseIntake() {
-       return Commands.runOnce(RobotContainer.intake::out, RobotContainer.intake).withName("intake out");
-    }
+    // public static Command reverseIntake() {
+    //    return Commands.runOnce(RobotContainer.intake::out, RobotContainer.intake).withName("intake out");
+    // }
 
-    public static Command stopIntake() {
-        return Commands.runOnce(RobotContainer.intake::stop, RobotContainer.intake).withName("intake stop");
-    }
+    // public static Command stopIntake() {
+    //     return Commands.runOnce(RobotContainer.intake::stop, RobotContainer.intake).withName("intake stop");
+    // }
     /* - - - - - - - - - -
      Sprocket Commands
     - - - - - - - - - - */
-    public static Command goUp() {
-        return Commands.runOnce(RobotContainer.sprocket::goUp, RobotContainer.sprocket).withName("sprocket up");
-    }
-    public static Command goDown() {
-        return Commands.runOnce(RobotContainer.sprocket::goDown, RobotContainer.sprocket).withName("sprocket down");
-    }
-    public static Command stopSprocket() {
-        return Commands.runOnce(RobotContainer.sprocket::stop, RobotContainer.sprocket).withName("sprocket stop");
-    }
-    public static Command goToAngle(double angle) {
-        return RobotContainer.sprocket.goToAngle(angle);
-    }
+    // public static Command goUp() {
+    //     return Commands.runOnce(RobotContainer.sprocket::goUp, RobotContainer.sprocket).withName("sprocket up");
+    // }
+    // public static Command goDown() {
+    //     return Commands.runOnce(RobotContainer.sprocket::goDown, RobotContainer.sprocket).withName("sprocket down");
+    // }
+    // public static Command stopSprocket() {
+    //     return Commands.runOnce(RobotContainer.sprocket::stop, RobotContainer.sprocket).withName("sprocket stop");
+    // }
+    // public static Command goToAngle(double angle) {
+    //     return RobotContainer.sprocket.goToAngle(angle);
+    // }
 
     /* - - - - - - - - - -
      Shooter Commands
@@ -119,30 +119,30 @@ public class Commands555 {
         ); 
     }
 
-    public static Command scoreAmp() {
-        return Commands.sequence(
-            alignTo(RobotContainer.shooterLimelight),
-            goToAngle(SubsystemConstants.AMP_SCORE_ANGLE),
-            shootAmp(),
-            goToAngle(SubsystemConstants.ENCODER_MIN_ANGLE)
-        );
-    }
-    public static Command scoreSpeaker() {
-        return Commands.sequence(
-            alignTo(RobotContainer.shooterLimelight),
-            goToAngle(SubsystemConstants.SPEAKER_SCORE_ANGLE),
-            shootSpeaker(),
-            goToAngle(SubsystemConstants.ENCODER_MIN_ANGLE)
-        );
-    }
-    public static Command receiveHumanPlayerNote() {
-        return Commands.sequence(
-            alignTo(RobotContainer.shooterLimelight),
-            goToAngle(SubsystemConstants.SPEAKER_SCORE_ANGLE),
-            reverseShooter(),
-            goToAngle(SubsystemConstants.ENCODER_MIN_ANGLE)
-        );
-    }
+    // public static Command scoreAmp() {
+    //     return Commands.sequence(
+    //         alignTo(RobotContainer.shooterLimelight),
+    //         goToAngle(SubsystemConstants.AMP_SCORE_ANGLE),
+    //         shootAmp(),
+    //         goToAngle(SubsystemConstants.ENCODER_MIN_ANGLE)
+    //     );
+    // }
+    // public static Command scoreSpeaker() {
+    //     return Commands.sequence(
+    //         alignTo(RobotContainer.shooterLimelight),
+    //         goToAngle(SubsystemConstants.SPEAKER_SCORE_ANGLE),
+    //         shootSpeaker(),
+    //         goToAngle(SubsystemConstants.ENCODER_MIN_ANGLE)
+    //     );
+    // }
+    // public static Command receiveHumanPlayerNote() {
+    //     return Commands.sequence(
+    //         alignTo(RobotContainer.shooterLimelight),
+    //         goToAngle(SubsystemConstants.SPEAKER_SCORE_ANGLE),
+    //         reverseShooter(),
+    //         goToAngle(SubsystemConstants.ENCODER_MIN_ANGLE)
+    //     );
+    // }
 
 
 }

@@ -59,9 +59,9 @@ public class Sprocket extends SubsystemBase {
     /**
      * Go to angle! Yay!
      */
-    public Command goToAngle(double angle) {
-        return pid.goToSetpoint(() -> angle, RobotContainer.sprocket);
-    }
+    // public Command goToAngle(double angle) {
+    //     return pid.goToSetpoint(() -> angle, RobotContainer.sprocket);
+    // }
     /**
      * Stops PID from PIDDING
      */
