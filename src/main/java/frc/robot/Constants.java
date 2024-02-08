@@ -41,9 +41,9 @@ public final class Constants {
     public static final int INTAKE_MOTOR_1_PORT = 102;
     public static final int INTAKE_MOTOR_2_PORT = 103;
 
-    public static final int SHOOTER_MOTOR_BOTTOM_PORT = 1;
-    public static final int SHOOTER_MOTOR_TOP_PORT = 2;
-    public static final int SHOOTER_MOTOR_TRANSPORT_PORT = 3;
+    public static final int SHOOTER_MOTOR_BOTTOM_PORT = 201;
+    public static final int SHOOTER_MOTOR_TOP_PORT = 202;
+    public static final int SHOOTER_MOTOR_TRANSPORT_PORT = 203;
 
     public static final int ANGLE_MOTOR_PORT = 106;
 
@@ -133,4 +133,24 @@ public static class AutoConstants {
      */
   }
 
+
+  public static class ShootCommandConstants {
+    // PID constants for the shooter
+    public static class PID {
+      public static final double P = 0.1;
+      public static final double I = 0.0;
+      public static final double D = 0.0;
+      public static final double IZ = Double.POSITIVE_INFINITY;
+    }
+
+    // Should shoot command use feed forward
+    public static final boolean USE_FEED_FORWARD = false;
+
+    // Max RPMs of the shooter.  i.e. The shooter runs at this RPM when output is set to 1.0
+    public static final double MAX_RPMS = 5000;
+
+    // How long to run the shooter
+    public static final double TIME = 10.0; 
+
+  }
 }
