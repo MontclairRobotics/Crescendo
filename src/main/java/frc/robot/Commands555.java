@@ -19,32 +19,32 @@ public class Commands555 {
      * @param targetTranslation Field-relative Translation2d to drive the robot to.
      * @param theta Target angle for end position.
      */
-    public static Command driveToRobotRelativePoint(Translation2d targetTranslation, Rotation2d theta) {
-        Pose2d currentRobotPosition = RobotContainer.drivetrain.getSwerveDrive().getPose();
-        Rotation2d currentOdometryHeading = RobotContainer.drivetrain.getSwerveDrive().getOdometryHeading();
+    // public static Command driveToRobotRelativePoint(Translation2d targetTranslation, Rotation2d theta) {
+    //     Pose2d currentRobotPosition = RobotContainer.drivetrain.getSwerveDrive().getPose();
+    //     Rotation2d currentOdometryHeading = RobotContainer.drivetrain.getSwerveDrive().getOdometryHeading();
 
 
-        Translation2d targetTranslation2d = currentRobotPosition.getTranslation().plus(targetTranslation.rotateBy(currentOdometryHeading));
-        Pose2d targetPose = new Pose2d(targetTranslation2d.getX(), targetTranslation2d.getY(), theta);
+    //     Translation2d targetTranslation2d = currentRobotPosition.getTranslation().plus(targetTranslation.rotateBy(currentOdometryHeading));
+    //     Pose2d targetPose = new Pose2d(targetTranslation2d.getX(), targetTranslation2d.getY(), theta);
 
-        return AutoBuilder.pathfindToPose(
-            targetPose,
-            AutoConstants.PATH_CONSTRAINTS,
-            AutoConstants.GOAL_END_VELOCITY,
-            AutoConstants.ROTATION_DELAY_DISTANCE 
-        );      
-    }
-    /**
-     * Drive to a field-relative point given a targetPose
-     * @param targetPose field-relative pose2d to drive the robot to.
-     */
-    public static Command driveToFieldRelativePoint(Pose2d targetPose) {
-        return AutoBuilder.pathfindToPose(
-            targetPose, AutoConstants.PATH_CONSTRAINTS, 
-            AutoConstants.GOAL_END_VELOCITY, 
-            AutoConstants.ROTATION_DELAY_DISTANCE
-        );
-    }
+    //     return AutoBuilder.pathfindToPose(
+    //         targetPose,
+    //         AutoConstants.PATH_CONSTRAINTS,
+    //         AutoConstants.GOAL_END_VELOCITY,
+    //         AutoConstants.ROTATION_DELAY_DISTANCE 
+    //     );      
+    // }
+    // /**
+    //  * Drive to a field-relative point given a targetPose
+    //  * @param targetPose field-relative pose2d to drive the robot to.
+    //  */
+    // public static Command driveToFieldRelativePoint(Pose2d targetPose) {
+    //     return AutoBuilder.pathfindToPose(
+    //         targetPose, AutoConstants.PATH_CONSTRAINTS, 
+    //         AutoConstants.GOAL_END_VELOCITY, 
+    //         AutoConstants.ROTATION_DELAY_DISTANCE
+    //     );
+    // }
 
 
 
@@ -104,20 +104,20 @@ public class Commands555 {
         return Commands.runOnce(RobotContainer.shooter::reverseShooter, RobotContainer.shooter).withName("shooter reverse");
     }
     
-    public static Command alignTo(Limelight limelight) {
-        Pose2d currentRobotPose = RobotContainer.drivetrain.getSwerveDrive().getPose();
+    // public static Command alignTo(Limelight limelight) {
+    //     Pose2d currentRobotPose = RobotContainer.drivetrain.getSwerveDrive().getPose();
 
-        // getObjectTX returns a degree offset between -29.8 & 29.8 degrees. Add this to our current heading to get the true target angle
-        Rotation2d targetAngle = new Rotation2d(currentRobotPose.getRotation().getDegrees() + limelight.getObjectTX());
+    //     // getObjectTX returns a degree offset between -29.8 & 29.8 degrees. Add this to our current heading to get the true target angle
+    //     Rotation2d targetAngle = new Rotation2d(currentRobotPose.getRotation().getDegrees() + limelight.getObjectTX());
 
-        Pose2d targetRobotPose = new Pose2d(currentRobotPose.getX(), currentRobotPose.getY(), targetAngle);
-        return AutoBuilder.pathfindToPose(
-            targetRobotPose,
-            AutoConstants.PATH_CONSTRAINTS,
-            AutoConstants.GOAL_END_VELOCITY,
-            AutoConstants.ROTATION_DELAY_DISTANCE 
-        ); 
-    }
+    //     Pose2d targetRobotPose = new Pose2d(currentRobotPose.getX(), currentRobotPose.getY(), targetAngle);
+    //     return AutoBuilder.pathfindToPose(
+    //         targetRobotPose,
+    //         AutoConstants.PATH_CONSTRAINTS,
+    //         AutoConstants.GOAL_END_VELOCITY,
+    //         AutoConstants.ROTATION_DELAY_DISTANCE 
+    //     ); 
+    // }
 
     // public static Command scoreAmp() {
     //     return Commands.sequence(

@@ -72,8 +72,8 @@ public final class Constants {
     public static final double AMP_EJECT_SPEED = 0.1;
 
     // Testing speeds
-    public static final double SHOOTER_MOTOR_TOP_SPEED = 1;
-    public static final double SHOOTER_MOTOR_BOTTOM_SPEED = 0.95;
+    public static final Tunable<Double> SHOOTER_MOTOR_TOP_SPEED = Tunable.of(1, "TOP_MOTOR_SPEED");
+    public static final Tunable<Double> SHOOTER_MOTOR_BOTTOM_SPEED = Tunable.of(0.95,"BOTTOM_MOTOR_SPEED");
     
     
     // Sprocket

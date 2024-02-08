@@ -20,6 +20,10 @@ import animation2.api.Animation;
 import animation2.api.ConditionalAnimation;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.networktables.DoublePublisher;
+import edu.wpi.first.networktables.DoubleTopic;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.Topic;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -36,11 +40,14 @@ public class RobotContainer {
   public static CommandPS5Controller driverController = new CommandPS5Controller(0);
   private static CommandPS5Controller operatorController = new CommandPS5Controller(1);
   
-  public static Drivetrain drivetrain = new Drivetrain(new File(Filesystem.getDeployDirectory(), "swerve/"));
+  //public static Drivetrain drivetrain = new Drivetrain(new File(Filesystem.getDeployDirectory(), "swerve/"));
   
   // Subsystems
   //public static Intake intake = new Intake();
   public static Shooter shooter = new Shooter();
+  
+  
+  
   //public static Sprocket sprocket = new Sprocket();
  // public static Limelight intakeLimelight = new Limelight("intakeLimelight");
   //public static Limelight shooterLimelight = new Limelight("shooterLimelight");
@@ -54,6 +61,7 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    // this.dblTop = NetworkTableInstance.getDefault().getDoubleTopic("/datatable/X");
     
     // auto.setupPathPlanner();
     // setupAutoTab();
@@ -70,9 +78,10 @@ public class RobotContainer {
 
   private void configureBindings() {
     
-    driverController.touchpad().onTrue(Commands.runOnce(() -> {
-      drivetrain.getSwerveDrive().zeroGyro();
-    }));
+    // driverController.touchpad().onTrue(Commands.runOnce(() -> {
+    //   drivetrain.getSwerveDrive().zeroGyro();
+    // }));
+
     
     // TODO: probably wrong
     driverController.cross().onTrue(Commands555.shootSpeaker()).onFalse(Commands555.stopShooter());

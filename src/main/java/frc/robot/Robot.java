@@ -11,6 +11,7 @@ import org.littletonrobotics.junction.networktables.NT4Publisher;
 
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -27,7 +28,7 @@ public class Robot extends LoggedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
-
+  NetworkTableInstance inst = NetworkTableInstance.getDefault();
   @Override
   public void robotInit() {
     Logger.recordMetadata("ProjectName", "Katherine Tchaikovsky Swift");
@@ -38,10 +39,13 @@ public class Robot extends LoggedRobot {
       new PowerDistribution(1, ModuleType.kRev); // Enables power distribution logging
     } else {
       setUseTiming(false); // Run as fast as possible
-      // String logPath = LogFileUtil.findReplayLog(); // Pull the replay log from AdvantageScope (or prompt the user)
-      // Logger.setReplaySource(new WPILOGReader(logPath)); // Read replay log
-      // Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim"))); // Save outputs to a new log
+      
     }
+
+    inst.startClient4("example client");
+    inst.setServerTeam(555);
+    inst.startDSClient();
+    inst.setServer("host", NetworkTableInstance.kDefaultPort4);
 
     Logger.start();
     
@@ -52,6 +56,7 @@ public class Robot extends LoggedRobot {
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
     RobotContainer.shooter.transportWithSpeed(RobotContainer.driverController.getLeftY());
+  
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
