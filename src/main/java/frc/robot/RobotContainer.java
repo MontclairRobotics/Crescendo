@@ -68,7 +68,9 @@ public class RobotContainer {
     
     // drivetrain.setDefaultCommand(Commands.run(() -> {
     // drivetrain.setInputFromController(driverController);
-
+      shooter.setDefaultCommand(Commands.run(() -> {
+        shooter.transportWithSpeed(driverController.getLeftY());
+      }, shooter));
 
       
     // }, drivetrain));
@@ -85,6 +87,11 @@ public class RobotContainer {
     
     // TODO: probably wrong
     driverController.cross().onTrue(Commands555.shootSpeaker()).onFalse(Commands555.stopShooter());
+    driverController.square().onTrue(Commands555.startTransport()).onFalse(Commands555.stopTransport());
+    driverController.triangle().onTrue(Commands.runOnce(() -> {
+      shooter.stop();
+      shooter.stopTransport();
+    }, shooter));
     
     
   }

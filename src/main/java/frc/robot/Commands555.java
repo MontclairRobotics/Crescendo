@@ -92,17 +92,24 @@ public class Commands555 {
         return Commands.runOnce(RobotContainer.shooter::shootSpeaker, RobotContainer.shooter).withName("shoot speaker");
     }
 
-    public static Command shootAmp() {
-        return Commands.runOnce(RobotContainer.shooter::shootAmp, RobotContainer.shooter).withName("shoot amp");
-    }
+    // public static Command shootAmp() {
+    //     return Commands.runOnce(RobotContainer.shooter::shootAmp, RobotContainer.shooter).withName("shoot amp");
+    // }
     
     public static Command stopShooter() {
         return Commands.runOnce(RobotContainer.shooter::stop, RobotContainer.shooter).withName("shooter stop");
     }
 
-    public static Command reverseShooter() {
-        return Commands.runOnce(RobotContainer.shooter::reverseShooter, RobotContainer.shooter).withName("shooter reverse");
+    public static Command startTransport() {
+        return Commands.runOnce(RobotContainer.shooter::transport, RobotContainer.shooter).withName("shooter transport start");
     }
+    
+    public static Command stopTransport() {
+        return Commands.runOnce(RobotContainer.shooter::stopTransport, RobotContainer.shooter).withName("shooter transport stop");
+    }
+    // public static Command reverseShooter() {
+    //     return Commands.runOnce(RobotContainer.shooter::reverseShooter, RobotContainer.shooter).withName("shooter reverse");
+    // }
     
     // public static Command alignTo(Limelight limelight) {
     //     Pose2d currentRobotPose = RobotContainer.drivetrain.getSwerveDrive().getPose();
