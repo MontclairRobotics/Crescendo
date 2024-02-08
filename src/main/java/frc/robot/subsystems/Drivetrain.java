@@ -61,23 +61,6 @@ public class Drivetrain extends SubsystemBase {
     public void setChassisSpeeds(ChassisSpeeds chassisSpeeds) {
         swerveDrive.setChassisSpeeds(chassisSpeeds);
     }
-<<<<<<< Updated upstream
-
-=======
-    /**
-     * logs data: module positions, gyro rotation, and pose
-     */
-    @Override
-    public void periodic() {
-        Logger.recordOutput("Drivetrain/Module-Positions",getSwerveDrive().getModulePositions());
-        Logger.recordOutput("Drivetrain/Gyro-Rotation",getSwerveDrive().getGyroRotation3d());
-        Logger.recordOutput("Drivetrain/Pose",getSwerveDrive().getPose());        
-        //RobotContainer.field.setRobotPose(swerveDrive.getPose());
-    }
-    /**
-     * sets isFieldRelative to either true or false, used for getIsFieldRelative
-     */
->>>>>>> Stashed changes
     public void setIsFieldRelative(boolean relative) {
         this.isFieldRelative = relative;
     }

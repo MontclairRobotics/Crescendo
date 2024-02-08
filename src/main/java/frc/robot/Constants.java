@@ -4,48 +4,32 @@
 
 package frc.robot;
 
-<<<<<<< Updated upstream
-/**
- * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
- * constants. This class should not be used for any other purpose. All constants should be declared
- * globally (i.e. public static). Do not put anything functional in this class.
- *
- * <p>It is advised to statically import this class (or one of its inner classes) wherever the
- * constants are needed, to reduce verbosity.
- */
-=======
 import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
-
-import animation2.AnimationReel;
-import animation2.CircusAnimation;
-import animation2.MagicAnimation;
-import animation2.QuickSlowFlash;
-import animation2.RaceAnimation;
-import animation2.RainbowAnimation;
-import animation2.WipeTransition;
-import animation2.api.Animation;
 import edu.wpi.first.wpilibj.util.Color;
-import frc.robot.math.Tunable;
 
->>>>>>> Stashed changes
 public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
   public static class DriveConstants {
     public static final int MAX_SPEED = 4;
+
     public static final double MAX_ROT_SPEED = 2 * Math.PI;
+    // Max Acceleration in M/s^2
+    public static final double MAX_ACCELERATION = 2.0;
+    // Max angular acceleration in Rad/S^2
+    public static final double MAX_ANGULAR_ACCELERATION = 1.5;
+
+    public static final double DRIVE_BASE_RADIUS = 0.43;
+
   }
-<<<<<<< Updated upstream
-=======
   public static class VisionConstants {
     public static final double TARGET_DEBOUNCE_TIME = 0.2;
   }
@@ -72,12 +56,13 @@ public final class Constants {
     // Fliptop 
     public static final double FLIPTOP_SPEED = 0.5;
     // Transport
-    public static final Tunable<Double> TRANSPORT_SPEED = Tunable.of(1.0, "transport-speed");
+    public static final double TRANSPORT_SPEED = 0.6;
 
     // Shooter
-    public static final double SPEAKER_EJECT_SPEED = 1;
-    public static final Tunable<Double> SHOOTER_TOP_SPEED = Tunable.of(1.0, "shooter-top-motor-speed");
-    public static final Tunable<Double> SHOOTER_BOTTOM_SPEED = Tunable.of(0.8, "shooter-bottom-motor-speed");
+    public static final double TOP_SHOOTER_MOTOR_SPEED = 0.6;
+    public static final double BOTTOM_SHOOTER_MOTOR_SPEED = 0.6;
+    
+    public static final double SPEAKER_EJECT_SPEED = 0.5;
     public static final double AMP_EJECT_SPEED = 0.1;
 
     
@@ -147,23 +132,5 @@ public static class AutoConstants {
      * (human player)
      */
   }
-  
-  public static class LEDConstants {
-    
-    public static final double TRANSITION_TIME = 1;
-    public static final double REEL_TIME = 10;
 
-    public static final Animation DEMO_REEL = new AnimationReel(REEL_TIME, TRANSITION_TIME, new WipeTransition(), 
-    
-    MagicAnimation.fire(),
-    new CircusAnimation().randomized(),
-    new RainbowAnimation().randomized(),
-    MagicAnimation.galaxy(),
-    new QuickSlowFlash(Color.kAquamarine),
-    new RaceAnimation(Color.kIndigo).randomized()
-    
-    );
-  }
-
->>>>>>> Stashed changes
 }

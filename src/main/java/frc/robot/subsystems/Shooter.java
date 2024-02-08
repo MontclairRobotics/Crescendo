@@ -26,20 +26,24 @@ public class Shooter extends SubsystemBase {
     /**
      * Shoots (used for speaker)
      */
+    public void shootSpeaker() {
+        topMotor.set(SubsystemConstants.SPEAKER_EJECT_SPEED);
+        bottomMotor.set(SubsystemConstants.SPEAKER_EJECT_SPEED);
+        // transportMotor.set(SubsystemConstants.TRANSPORT_SPEED);
+    }
     public void transport() {
         // topMotor.set(SubsystemConstants.SPEAKER_EJECT_SPEED);
         // bottomMotor.set(SubsystemConstants.SPEAKER_EJECT_SPEED);
         //transportMotor.set(SubsystemConstants.TRANSPORT_SPEED);
-        transportMotor.setVoltage(12);
+        transportMotor.set(SubsystemConstants.TRANSPORT_SPEED);
     }
-    public void transportNew(double x) {
+    public void transportSet(double x) {
         transportMotor.set(x);
     }
     public void shoot() {
-        topMotor.set(SubsystemConstants.SHOOTER_TOP_SPEED.get());
-        bottomMotor.set(SubsystemConstants.SHOOTER_BOTTOM_SPEED.get());
-        //topMotor.set(SubsystemConstants.SPEAKER_EJECT_SPEED);
-        //bottomMotor.set(SubsystemConstants.SPEAKER_EJECT_SPEED);
+        topMotor.set(SubsystemConstants.TOP_SHOOTER_MOTOR_SPEED);
+        bottomMotor.set(SubsystemConstants.BOTTOM_SHOOTER_MOTOR_SPEED * 0.95);
+        
     }
     public void stopTransport() {
         transportMotor.set(0);
