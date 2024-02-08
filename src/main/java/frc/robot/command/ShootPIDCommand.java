@@ -6,6 +6,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.math.MathUtils;
 import frc.robot.math.Tunable;
 import frc.robot.subsystems.Shooter;
 
@@ -117,8 +118,8 @@ public class ShootPIDCommand extends Command {
         double newTopRPMs = getTopFeedForward() + topPIDController.calculate(shooter.getTopEncoder().getVelocity(), topSpeed.getAsDouble() / Constants.ShootCommandConstants.MAX_RPMS);
         double newBottomRPMs = getBottomFeedForward() + bottomPIDController.calculate(shooter.getBottomEncoder().getVelocity(), bottomSpeed.getAsDouble() / Constants.ShootCommandConstants.MAX_RPMS);
 
-        shooter.setTopSpeed(newTopRPMs / Constants.ShootCommandConstants.MAX_RPMS);
-        shooter.setBottomSpeed(newBottomRPMs / Constants.ShootCommandConstants.MAX_RPMS);
+        shooter.setTopSpeed(MathUtils.clamp(newTopRPMs / Constants.ShootCommandConstants.MAX_RPMS, -1, 1));
+        shooter.setBottomSpeed(MathUtils.clamp(newBottomRPMs / Constants.ShootCommandConstants.MAX_RPMS, -1, 1));
     }
 
     /**
