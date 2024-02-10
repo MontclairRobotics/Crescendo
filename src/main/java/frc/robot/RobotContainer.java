@@ -20,8 +20,6 @@ import animation2.WipeTransition;
 import animation2.api.Animation;
 import animation2.api.ConditionalAnimation;
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -30,7 +28,6 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 
 public class RobotContainer {
@@ -38,16 +35,16 @@ public class RobotContainer {
   private static CommandPS5Controller driverController = new CommandPS5Controller(0);
   private static CommandPS5Controller operatorController = new CommandPS5Controller(1);
   
-  public static Drivetrain drivetrain = new Drivetrain(new File(Filesystem.getDeployDirectory(), "swerve/"));
+  // public static Drivetrain drivetrain = new Drivetrain(new File(Filesystem.getDeployDirectory(), "swerve/"));
   
   // Subsystems
-  public static Intake intake = new Intake();
+  // public static Intake intake = new Intake();
   public static Shooter shooter = new Shooter();
-  public static Sprocket sprocket = new Sprocket();
-  public static Limelight intakeLimelight = new Limelight("intakeLimelight");
-  public static Limelight shooterLimelight = new Limelight("shooterLimelight");
-  public static Auto auto = new Auto();
-  public static LED led = new LED(new ConditionalAnimation(getTeleopDefaultAnim()).addCase(DriverStation::isDisabled, getDisabledAnimation()), new WipeTransition());
+  // public static Sprocket sprocket = new Sprocket();
+  // public static Limelight intakeLimelight = new Limelight("intakeLimelight");
+  // public static Limelight shooterLimelight = new Limelight("shooterLimelight");
+  // public static Auto auto = new Auto();
+  // public static LED led = new LED(new ConditionalAnimation(getTeleopDefaultAnim()).addCase(DriverStation::isDisabled, getDisabledAnimation()), new WipeTransition());
 
   public static final Field2d field = new Field2d();
 
@@ -57,18 +54,18 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     
-    auto.setupPathPlanner();
+    // auto.setupPathPlanner();
     setupAutoTab();
     
-    drivetrain.setDefaultCommand(Commands.run(() -> {
-      drivetrain.setInputFromController(driverController); 
-    }, drivetrain));
+    // drivetrain.setDefaultCommand(Commands.run(() -> {
+    //   drivetrain.setInputFromController(driverController); 
+    // }, drivetrain));
 
-    sprocket.setDefaultCommand(Commands.run(() -> {
-      sprocket.setSpeed(
-        MathUtil.applyDeadband(operatorController.getLeftY(), 0.05) * ArmConstants.MAX_SPEED
-      );
-    }, sprocket));
+    // sprocket.setDefaultCommand(Commands.run(() -> {
+    //   sprocket.setSpeed(
+    //     MathUtil.applyDeadband(operatorController.getLeftY(), 0.05) * ArmConstants.MAX_SPEED
+    //   );
+    // }, sprocket));
 
     configureBindings();
   }
@@ -76,31 +73,31 @@ public class RobotContainer {
 
   private void configureBindings() {
     
-    driverController.touchpad().onTrue(Commands.runOnce(() -> {
-      drivetrain.getSwerveDrive().zeroGyro();
-    }));
+    // driverController.touchpad().onTrue(Commands.runOnce(() -> {
+    //   drivetrain.getSwerveDrive().zeroGyro();
+    // }));
     
-    // TODO: probably wrong
-    driverController.cross().onTrue(Commands555.scoreSpeaker()).onFalse(Commands555.stopShooter());
-    driverController.circle().onTrue(Commands555.intake()).onFalse(Commands555.stopIntake());
+    // // TODO: probably wrong
+    // driverController.cross().onTrue(Commands555.scoreSpeaker()).onFalse(Commands555.stopShooter());
+    // driverController.circle().onTrue(Commands555.intake()).onFalse(Commands555.stopIntake());
 
     operatorController.circle().onTrue(Commands.runOnce(() -> {
-      shooter.shootVelocity(ShooterConstants.MAX_RPM);
+      shooter.shootVelocity(500);
     }));
 
     
 
-    operatorController.L1().onTrue(Commands555.signalAmp());
-    operatorController.R1().onTrue(Commands555.signalCoop());
+    // operatorController.L1().onTrue(Commands555.signalAmp());
+    // operatorController.R1().onTrue(Commands555.signalCoop());
 
 
     //////////////////////////////
     ///// OPERATOR BINDINGS /////
     ////////////////////////////
 
-    operatorController.circle().onTrue(Commands.run(() -> {
-      sprocket.goToAngle(45);
-    }));
+    // operatorController.circle().onTrue(Commands.run(() -> {
+    //   sprocket.goToAngle(45);
+    // }));
 
 
     
@@ -119,7 +116,7 @@ public class RobotContainer {
     //TODO make it the same string that was entered last time? I think i can mark nt key as persistent
     autoTab.add("Enter Command", "").withSize(3,1).withPosition(0,0);
     autoTab.add(field).withSize(6,4).withPosition(3,0);
-    autoTab.addString("Feedback", () -> auto.getFeedback()).withSize(3,1).withPosition(0, 1);
+    // autoTab.addString("Feedback", () -> auto.getFeedback()).withSize(3,1).withPosition(0, 1);
     
     autoTab.add("Ignore Safety", false).withWidget(BuiltInWidgets.kToggleSwitch).withSize(2, 1).withPosition(0,2);
 

@@ -26,6 +26,10 @@ public class Shooter extends SubsystemBase {
 
 
     public Shooter() {
+
+        topMotor.restoreFactoryDefaults();
+        bottomMotor.restoreFactoryDefaults();
+
         topMotor.setInverted(true);
         bottomMotor.setInverted(true);
         transportMotor.setInverted(true);
@@ -51,13 +55,13 @@ public class Shooter extends SubsystemBase {
         });
 
         ShooterConstants.kd.whenUpdate((kd) -> {
-            topController.setP(kd);
-            bottomController.setP(kd);
+            topController.setD(kd);
+            bottomController.setD(kd);
         });
 
         ShooterConstants.ff.whenUpdate((ff) -> {
             topController.setFF(ff);
-            bottomController.setP(ff);
+            bottomController.setFF(ff);
         });
 
         topController.setOutputRange(-1, 1);

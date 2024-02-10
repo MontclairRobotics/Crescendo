@@ -23,27 +23,27 @@ public class Auto extends SubsystemBase {
     private ArrayList<PathPlannerTrajectory> trajectories = new ArrayList<PathPlannerTrajectory>();
     private String feedbackValue = "Enter a command!";
 
-    public void setupPathPlanner() {
-        AutoBuilder.configureHolonomic(
-            RobotContainer.drivetrain.swerveDrive::getPose, // Robot pose supplier
-            RobotContainer.drivetrain.swerveDrive::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
-            RobotContainer.drivetrain.swerveDrive::getRobotVelocity, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-            RobotContainer.drivetrain.swerveDrive::setChassisSpeeds, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
-            Constants.AutoConstants.PATH_FOLLOWER_CONFIG,
-            () -> {
-                Optional<Alliance> alliance = DriverStation.getAlliance();
-                return alliance.isPresent() ? alliance.get() == DriverStation.Alliance.Red : false;
-            },
-            RobotContainer.drivetrain 
-        );
-    } 
+    // public void setupPathPlanner() {
+    //     AutoBuilder.configureHolonomic(
+    //         RobotContainer.drivetrain.swerveDrive::getPose, // Robot pose supplier
+    //         RobotContainer.drivetrain.swerveDrive::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
+    //         RobotContainer.drivetrain.swerveDrive::getRobotVelocity, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+    //         RobotContainer.drivetrain.swerveDrive::setChassisSpeeds, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+    //         Constants.AutoConstants.PATH_FOLLOWER_CONFIG,
+    //         () -> {
+    //             Optional<Alliance> alliance = DriverStation.getAlliance();
+    //             return alliance.isPresent() ? alliance.get() == DriverStation.Alliance.Red : false;
+    //         },
+    //         RobotContainer.drivetrain 
+    //     );
+    // } 
     //1A2
     public boolean isValidPathSequence(String autoString) {
         //Checks if the first point in the string is a starting point
-        if (!(Constants.AutoConstants.STARTING_POINTS.contains(autoString.charAt(0)))) {
-            RobotContainer.auto.setFeedback("That's not a real starting spot.");
-            return false;
-        }
+        // if (!(Constants.AutoConstants.STARTING_POINTS.contains(autoString.charAt(0)))) {
+        //     RobotContainer.auto.setFeedback("That's not a real starting spot.");
+        //     return false;
+        // }
         //Loops through the string.
         for (int i = 0; i < autoString.length()-1; i++) {
             char char1 = autoString.charAt(i);
@@ -97,36 +97,36 @@ public class Auto extends SubsystemBase {
         return feedbackValue;
     }
 
-    public Command getPathSequence(String autoString) {
+    // public Command getPathSequence(String autoString) {
 
-        SequentialCommandGroup finalPath = new SequentialCommandGroup();
+    //     SequentialCommandGroup finalPath = new SequentialCommandGroup();
         
-        for (int i = 0; i < autoString.length()-1; i++) {
+    //     for (int i = 0; i < autoString.length()-1; i++) {
 
-            char current = autoString.charAt(i);
-            char next = autoString.charAt(i+1);
-            try {
+    //         char current = autoString.charAt(i);
+    //         char next = autoString.charAt(i+1);
+    //         try {
 
-                PathPlannerPath path = PathPlannerPath.fromPathFile("" + current + next);
-                finalPath.addCommands(AutoBuilder.followPath(path));
-                trajectories.add(path.getTrajectory(RobotContainer.drivetrain.getSwerveDrive().getRobotVelocity(), RobotContainer.drivetrain.getRotation()));
+    //             PathPlannerPath path = PathPlannerPath.fromPathFile("" + current + next);
+    //             finalPath.addCommands(AutoBuilder.followPath(path));
+    //             trajectories.add(path.getTrajectory(RobotContainer.drivetrain.getSwerveDrive().getRobotVelocity(), RobotContainer.drivetrain.getRotation()));
 
-            } catch(Exception e) {
-                // TODO: amazing error handling
-            }
+    //         } catch(Exception e) {
+    //             // TODO: amazing error handling
+    //         }
         
-            if (Character.isDigit(next)) {
-                if (next == '4') {
-                    finalPath.addCommands(Commands555.scoreAmp());
-                } else {
-                    finalPath.addCommands(Commands555.scoreSpeaker());
-                }
+    //         // if (Character.isDigit(next)) {
+    //         //     if (next == '4') {
+    //         //         finalPath.addCommands(Commands555.scoreAmp());
+    //         //     } else {
+    //         //         finalPath.addCommands(Commands555.scoreSpeaker());
+    //         //     }
                 
-            } else {
-                finalPath.addCommands(Commands555.alignTo(RobotContainer.intakeLimelight),Commands555.intake());
-            }
-        }
-        return Commands.sequence(finalPath);
-    }
+    //         // } else {
+    //         //     finalPath.addCommands(Commands555.alignTo(RobotContainer.intakeLimelight),Commands555.intake());
+    //         // }
+    //     }
+    //     return Commands.sequence(finalPath);
+    // }
 
 }

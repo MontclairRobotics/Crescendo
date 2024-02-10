@@ -126,10 +126,10 @@ public final class Constants {
     public static final double SPEAKER_EJECT_SPEED = 0.5;
     public static final double AMP_EJECT_SPEED = 0.1;
 
-    public static Tunable<Double> kp = Tunable.of(6e-5, "shooter.kp");
+    public static Tunable<Double> kp = Tunable.of(0.0005, "shooter.kp");
     public static Tunable<Double> ki = Tunable.of(0, "shooter.ki");
     public static Tunable<Double> kd = Tunable.of(0, "shooter.kd");
-    public static Tunable<Double> ff = Tunable.of(0.000015, "shooter.ff");
+    public static Tunable<Double> ff = Tunable.of(0.0, "shooter.ff");
 
     public static final double MAX_RPM = 5700;
 
