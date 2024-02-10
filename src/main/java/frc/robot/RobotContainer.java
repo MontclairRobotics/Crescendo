@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.Auto;
 import frc.robot.subsystems.Drivetrain;
@@ -14,11 +15,11 @@ import frc.robot.subsystems.Sprocket;
 import frc.robot.vision.Limelight;
 
 import java.io.File;
-
 import animation2.AllianceAnimation;
 import animation2.WipeTransition;
 import animation2.api.Animation;
 import animation2.api.ConditionalAnimation;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -60,11 +61,15 @@ public class RobotContainer {
     setupAutoTab();
     
     drivetrain.setDefaultCommand(Commands.run(() -> {
-    drivetrain.setInputFromController(driverController);
-
-
-      
+      drivetrain.setInputFromController(driverController); 
     }, drivetrain));
+
+    sprocket.setDefaultCommand(Commands.run(() -> {
+      sprocket.setSpeed(
+        MathUtil.applyDeadband(operatorController.getLeftY(), 0.05) * ArmConstants.MAX_SPEED
+      );
+    }, sprocket));
+
     configureBindings();
   }
 
@@ -87,6 +92,18 @@ public class RobotContainer {
 
     operatorController.L1().onTrue(Commands555.signalAmp());
     operatorController.R1().onTrue(Commands555.signalCoop());
+
+
+    //////////////////////////////
+    ///// OPERATOR BINDINGS /////
+    ////////////////////////////
+
+    operatorController.circle().onTrue(Commands.run(() -> {
+      sprocket.goToAngle(45);
+    }));
+
+
+    
   }
 
   public static Animation getTeleopDefaultAnim() {
