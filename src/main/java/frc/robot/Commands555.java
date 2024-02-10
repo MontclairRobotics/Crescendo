@@ -1,15 +1,25 @@
 package frc.robot;
 
-import com.pathplanner.lib.auto.AutoBuilder;
+import java.util.Set;
+import java.util.function.BooleanSupplier;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkPIDController;
+import com.revrobotics.CANSparkBase.ControlType;
+
+import animation2.FlashAnimation;
 import animation2.ZoomAnimation;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.Constants.AutoConstants;
+import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.*;
 import frc.robot.vision.Limelight;
 
@@ -115,6 +125,55 @@ public class Commands555 {
                 .withName("shooter reverse");
     }
 
+    public static Command shootVelocity(double velocity) {
+        return Commands.runOnce(() -> {
+            RobotContainer.shooter.shootVelocity(ShooterConstants.MAX_RPM);
+        });
+    }
+
+    // public static Command shootVelocity(double velocity) {
+    
+    // }
+
+    public Command shootSequence(double angle, double velocity) {
+        return Commands.sequence(
+            shootVelocity(velocity),
+            setSprocket(Rotation2d.fromDegrees(angle)),
+            waitUntil(() -> {
+                return RobotContainer.shooter.isAtSetpoint(velocity) && RobotContainer.sprocket.isAtAngle(angle);
+            }),
+            transport(),
+            waitForTime(3.5),
+            setSprocket(Rotation2d.fromDegrees(SubsystemConstants.ENCODER_MIN_ANGLE)),
+            shootVelocity(0)
+        );
+    }
+
+    public Command waitUntil(BooleanSupplier condition) {
+        return new Command() {
+            @Override
+            public boolean isFinished() {
+                return condition.getAsBoolean();
+            }
+        };
+    }
+
+    public Command waitForTime(double seconds) {
+        return Commands.run(() -> {}).withTimeout(seconds);
+    }
+
+    public static Command transport() {
+        return Commands.runOnce(() -> {
+            RobotContainer.shooter.transportStart();
+        });
+    }
+
+    public static Command setSprocket(Rotation2d angle) {
+        return Commands.runOnce(() -> {
+            goToAngle(angle.getDegrees());
+        });
+    }
+
     public static Command alignTo(Limelight limelight) {
         Pose2d currentRobotPose = RobotContainer.drivetrain.getSwerveDrive().getPose();
 
@@ -156,13 +215,13 @@ public class Commands555 {
 
     public static Command signalAmp() {
         return Commands.runOnce(() -> {
-            RobotContainer.led.add(new ZoomAnimation(Color.kOrange));
+            RobotContainer.led.add(new FlashAnimation(2, Color.kOrange));
         });
     }
 
     public static Command signalCoop() {
         return Commands.runOnce(() -> {
-            RobotContainer.led.add(new ZoomAnimation(Color.kBlue));
+            RobotContainer.led.add(new FlashAnimation(2, Color.kBlue));
         });
     }
 }

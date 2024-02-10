@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.Auto;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
@@ -77,6 +78,13 @@ public class RobotContainer {
     // TODO: probably wrong
     driverController.cross().onTrue(Commands555.scoreSpeaker()).onFalse(Commands555.stopShooter());
     driverController.circle().onTrue(Commands555.intake()).onFalse(Commands555.stopIntake());
+
+    operatorController.circle().onTrue(Commands.runOnce(() -> {
+      shooter.shootVelocity(ShooterConstants.MAX_RPM);
+    }));
+
+    
+
     operatorController.L1().onTrue(Commands555.signalAmp());
     operatorController.R1().onTrue(Commands555.signalCoop());
   }

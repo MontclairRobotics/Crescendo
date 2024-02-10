@@ -88,6 +88,10 @@ public class Sprocket extends SubsystemBase {
         return encoder.getPosition();
     }
 
+    public boolean isAtAngle(double angle) { //TODO make this a constant
+        return Math.abs(getAngle() - angle) < 3;
+    }
+
     @Override
     /**
      * will this work if getAngle returns degrees? I do not know

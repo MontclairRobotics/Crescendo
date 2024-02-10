@@ -22,6 +22,7 @@ import animation2.RainbowAnimation;
 import animation2.WipeTransition;
 import animation2.api.Animation;
 import edu.wpi.first.wpilibj.util.Color;
+import frc.robot.util.Tunable;
 
 public final class Constants {
   public static class OperatorConstants {
@@ -56,7 +57,7 @@ public final class Constants {
 
     public static final int ANGLE_MOTOR_PORT = 106;
 
-    public static final int BEAM_BREAK_CHANNEL = -1; 
+    public static final int BEAM_BREAK_CHANNEL = 0; 
   }
   
   public static class SubsystemConstants {
@@ -66,10 +67,6 @@ public final class Constants {
     public static final double FLIPTOP_SPEED = 0.5;
     // Transport
     public static final double TRANSPORT_SPEED = 0.6;
-
-    // Shooter
-    public static final double SPEAKER_EJECT_SPEED = 0.5;
-    public static final double AMP_EJECT_SPEED = 0.1;
 
     
     
@@ -90,6 +87,22 @@ public final class Constants {
 
     public static final double FF_VOLTAGE = 0.6; //TODO: stolen from ChargedUp elevator feedforward  }
   }
+
+  public static class ShooterConstants {
+     // Shooter
+    public static final double SPEAKER_EJECT_SPEED = 0.5;
+    public static final double AMP_EJECT_SPEED = 0.1;
+
+    public static Tunable<Double> kp = Tunable.of(6e-5, "shooter.kp");
+    public static Tunable<Double> ki = Tunable.of(0, "shooter.ki");
+    public static Tunable<Double> kd = Tunable.of(0, "shooter.kd");
+    public static Tunable<Double> ff = Tunable.of(0.000015, "shooter.ff");
+
+    public static final double MAX_RPM = 5700;
+
+    public static final int VELOCITY_DEADBAND = 10;
+  }
+  
   public static class PidConstants {
     // TODO: Accurate PID constants
     public static final double angleKP = 0.0;
