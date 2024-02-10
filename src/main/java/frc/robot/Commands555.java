@@ -21,6 +21,8 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.vision.Limelight;
 
 public class Commands555 {
@@ -116,9 +118,6 @@ public class Commands555 {
         return Commands.runOnce(RobotContainer.shooter::shootAmp, RobotContainer.shooter).withName("shoot amp");
     }
 
-    public static Command shootWithVelocity(double velocity) {
-        return new ShooterVelocity();
-    }
     public static Command stopShooter() {
         return Commands.runOnce(RobotContainer.shooter::stop, RobotContainer.shooter).withName("shooter stop");
     }
@@ -147,7 +146,7 @@ public class Commands555 {
             }),
             transport(),
             waitForTime(3.5),
-            setSprocket(Rotation2d.fromDegrees(SubsystemConstants.ENCODER_MIN_ANGLE)),
+            setSprocket(Rotation2d.fromDegrees(ArmConstants.ENCODER_MIN_ANGLE)),
             shootVelocity(0)
         );
     }
