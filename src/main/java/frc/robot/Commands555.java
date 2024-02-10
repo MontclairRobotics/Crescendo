@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.*;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.vision.Limelight;
 
 public class Commands555 {
@@ -106,6 +106,9 @@ public class Commands555 {
         return Commands.runOnce(RobotContainer.shooter::shootAmp, RobotContainer.shooter).withName("shoot amp");
     }
 
+    public static Command shootWithVelocity(double velocity) {
+        return new ShooterVelocity();
+    }
     public static Command stopShooter() {
         return Commands.runOnce(RobotContainer.shooter::stop, RobotContainer.shooter).withName("shooter stop");
     }
@@ -133,25 +136,26 @@ public class Commands555 {
     public static Command scoreAmp() {
         return Commands.sequence(
                 alignTo(RobotContainer.shooterLimelight),
-                goToAngle(SubsystemConstants.AMP_SCORE_ANGLE),
+                goToAngle(ArmConstants.AMP_SCORE_ANGLE),
                 shootAmp(),
-                goToAngle(SubsystemConstants.ENCODER_MIN_ANGLE));
+                goToAngle(ArmConstants.ENCODER_MIN_ANGLE));
     }
 
     public static Command scoreSpeaker() {
         return Commands.sequence(
                 alignTo(RobotContainer.shooterLimelight),
-                goToAngle(SubsystemConstants.SPEAKER_SCORE_ANGLE),
+                goToAngle(ArmConstants.SPEAKER_SCORE_ANGLE),
                 shootSpeaker(),
-                goToAngle(SubsystemConstants.ENCODER_MIN_ANGLE));
+                goToAngle(ArmConstants.ENCODER_MIN_ANGLE));
     }
 
     public static Command receiveHumanPlayerNote() {
         return Commands.sequence(
-                alignTo(RobotContainer.shooterLimelight),
-                goToAngle(SubsystemConstants.SPEAKER_SCORE_ANGLE),
-                reverseShooter(),
-                goToAngle(SubsystemConstants.ENCODER_MIN_ANGLE));
+            alignTo(RobotContainer.shooterLimelight),
+            goToAngle(ArmConstants.SPEAKER_SCORE_ANGLE),
+            reverseShooter(),
+            goToAngle(ArmConstants.ENCODER_MIN_ANGLE)
+        );
     }
 
     public static Command signalAmp() {

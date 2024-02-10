@@ -34,7 +34,7 @@ public class Auto extends SubsystemBase {
                 Optional<Alliance> alliance = DriverStation.getAlliance();
                 return alliance.isPresent() ? alliance.get() == DriverStation.Alliance.Red : false;
             },
-            this 
+            RobotContainer.drivetrain 
         );
     } 
     //1A2
