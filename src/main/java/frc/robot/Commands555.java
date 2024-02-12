@@ -34,17 +34,17 @@ public class Commands555 {
     //         AutoConstants.ROTATION_DELAY_DISTANCE 
     //     );      
     // }
-    // /**
-    //  * Drive to a field-relative point given a targetPose
-    //  * @param targetPose field-relative pose2d to drive the robot to.
-    //  */
-    // public static Command driveToFieldRelativePoint(Pose2d targetPose) {
-    //     return AutoBuilder.pathfindToPose(
-    //         targetPose, AutoConstants.PATH_CONSTRAINTS, 
-    //         AutoConstants.GOAL_END_VELOCITY, 
-    //         AutoConstants.ROTATION_DELAY_DISTANCE
-    //     );
-    // }
+    /**
+     * Drive to a field-relative point given a targetPose
+     * @param targetPose field-relative pose2d to drive the robot to.
+     */
+    public static Command driveToFieldRelativePoint(Pose2d targetPose) {
+        return AutoBuilder.pathfindToPose(
+            targetPose, AutoConstants.PATH_CONSTRAINTS, 
+            AutoConstants.GOAL_END_VELOCITY, 
+            AutoConstants.ROTATION_DELAY_DISTANCE
+        );
+    }
 
 
 
