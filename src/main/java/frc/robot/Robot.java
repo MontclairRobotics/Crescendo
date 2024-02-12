@@ -28,7 +28,7 @@ public class Robot extends TimedRobot {
   private RobotContainer m_robotContainer;
 
   private PS5Controller controller = new PS5Controller(0);
-  public Drivetrain drivetrain = new Drivetrain(new File(Filesystem.getDeployDirectory(), "swerve/"));
+  // public Drivetrain drivetrain = new Drivetrain(new File(Filesystem.getDeployDirectory(), "swerve/"));
 
   @Override
   public void robotInit() {
@@ -85,7 +85,8 @@ public class Robot extends TimedRobot {
     // double rot = controller.getRightX() * DriveConstants.MAX_ROT_SPEED;
     // Translation2d translation = new Translation2d(xSpeed,ySpeed);
     // drivetrain.drive(translation, rot);
-    drivetrain.setOneModule();
+    //drivetrain.setOneModule();
+    System.out.println("top motor speed:" + RobotContainer.shooter.topMotor.getEncoder().getVelocity() + " Bottom motor speed: " + RobotContainer.shooter.bottomMotor.getEncoder().getVelocity());
   }
 
   @Override

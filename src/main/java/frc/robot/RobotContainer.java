@@ -67,9 +67,17 @@ public class RobotContainer {
     // cancelling on release.
     
 
-   driverController.square().onTrue(Commands.runOnce(() -> {
-    shooter.shootSpeaker();
-   }, shooter)).onFalse(Commands555.stopShooter());
+    driverController.square().onTrue(Commands.runOnce(() -> {
+      shooter.shootSpeaker();
+    }, shooter)).onFalse(Commands555.stopShooter());
+    
+    driverController.cross().onTrue(Commands.runOnce(() -> {
+      shooter.transport();
+      
+    }, shooter)).onFalse(Commands.runOnce(() -> {
+      shooter.stopTransport();
+    }, shooter));
+
   }
 
   /**
