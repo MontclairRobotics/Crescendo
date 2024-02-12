@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 public class RobotContainer {
 
@@ -81,9 +82,21 @@ public class RobotContainer {
     // driverController.cross().onTrue(Commands555.scoreSpeaker()).onFalse(Commands555.stopShooter());
     // driverController.circle().onTrue(Commands555.intake()).onFalse(Commands555.stopIntake());
 
-    operatorController.circle().onTrue(Commands.runOnce(() -> {
-      shooter.shootVelocity(500);
-    }));
+    // operatorController.circle().onTrue(Commands.runOnce(() -> {
+    //   shooter.shootVelocity(500);
+    // }));
+
+
+    // operatorController.triangle().onTrue(Commands.runOnce(() -> { shooter.shootVelocity(1000); }));
+    // operatorController.circle().onTrue(Commands.runOnce(() -> { shooter.shootVelocity(2000); }));
+    // operatorController.cross().onTrue(Commands.runOnce(() -> { shooter.shootVelocity(3000); }));
+    // operatorController.square().onTrue(Commands.runOnce(() -> { shooter.shootVelocity(5000); }));
+
+
+    operatorController.triangle().whileTrue(shooter.shooterSysId("quasistatic", SysIdRoutine.Direction.kForward));
+    operatorController.circle().whileTrue(shooter.shooterSysId("quasistatic", SysIdRoutine.Direction.kReverse));
+    operatorController.cross().whileTrue(shooter.shooterSysId("dynamic", SysIdRoutine.Direction.kForward));
+    operatorController.square().whileTrue(shooter.shooterSysId("dynamic", SysIdRoutine.Direction.kReverse));
 
     
 
