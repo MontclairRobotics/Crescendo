@@ -46,8 +46,8 @@ public class RobotContainer {
   // public static Drivetrain drivetrain = new Drivetrain(new File(Filesystem.getDeployDirectory(), "swerve/"));
   
   // Subsystems
-  //public static Intake intake = new Intake();
-  public static Shooter shooter = new Shooter();
+  public static Intake intake = new Intake();
+  // public static Shooter shooter = new Shooter();
   
   
   
@@ -71,9 +71,9 @@ public class RobotContainer {
     
     // drivetrain.setDefaultCommand(Commands.run(() -> {
     // drivetrain.setInputFromController(driverController);
-      shooter.setDefaultCommand(Commands.run(() -> {
-        shooter.transportWithSpeed(driverController.getLeftY());
-      }, shooter));
+      intake.setDefaultCommand(Commands.run(() -> {
+        intake.shootWithSpeed(driverController.getLeftY());
+      }, intake));
 
       
     // }, drivetrain));
@@ -88,12 +88,12 @@ public class RobotContainer {
     // }));
     
     // TODO: probably wrong
-    driverController.cross().onTrue(Commands555.shootSpeaker()).onFalse(Commands555.stopShooter());
-    driverController.square().onTrue(Commands555.startTransport()).onFalse(Commands555.stopTransport());
-    driverController.triangle().onTrue(Commands.runOnce(() -> {
-      shooter.stop();
-      shooter.stopTransport();
-    }, shooter));
+    // driverController.cross().onTrue(Commands555.shootSpeaker()).onFalse(Commands555.stopShooter());
+    // driverController.square().onTrue(Commands555.startTransport()).onFalse(Commands555.stopTransport());
+    // driverController.triangle().onTrue(Commands.runOnce(() -> {
+    //   shooter.stop();
+    //   shooter.stopTransport();
+    // }, shooter));
     
     
   }

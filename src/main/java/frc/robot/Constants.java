@@ -47,8 +47,8 @@ public final class Constants {
 
     public static final int FLIPTOP_MOTOR_PORT = 101; 
 
-    public static final int INTAKE_MOTOR_1_PORT = 102;
-    public static final int INTAKE_MOTOR_2_PORT = 103;
+    public static final int INTAKE_MOTOR_1_PORT = 20;
+    public static final int INTAKE_MOTOR_2_PORT = 21;
 
     public static final int SHOOTER_MOTOR_BOTTOM_PORT = 1;
     public static final int SHOOTER_MOTOR_TOP_PORT = 2;
@@ -56,7 +56,7 @@ public final class Constants {
 
     public static final int ANGLE_MOTOR_PORT = 106;
 
-    public static final int BEAM_BREAK_CHANNEL = -1; 
+    public static final int BEAM_BREAK_CHANNEL = 0; 
   }
   
   public static class SubsystemConstants {

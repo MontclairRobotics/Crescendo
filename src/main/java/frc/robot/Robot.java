@@ -55,7 +55,7 @@ public class Robot extends LoggedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-    RobotContainer.shooter.transportWithSpeed(RobotContainer.driverController.getLeftY());
+    // RobotContainer.shooter.transportWithSpeed(RobotContainer.driverController.getLeftY());
   
   }
 

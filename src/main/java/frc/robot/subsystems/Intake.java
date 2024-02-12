@@ -21,6 +21,11 @@ public class Intake extends SubsystemBase {
         intakeMotor1.set(SubsystemConstants.INTAKE_SPEED); 
         intakeMotor2.set(SubsystemConstants.INTAKE_SPEED);
     }
+
+    public void shootWithSpeed(double speed) {
+        intakeMotor1.set(speed);
+        intakeMotor2.set(speed);
+    }
     /**
      * Reverse intake if gamepiece gets stuck
      */
