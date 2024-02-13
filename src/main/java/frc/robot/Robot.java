@@ -88,8 +88,8 @@ public class Robot extends TimedRobot {
     //drivetrain.setOneModule();
     double topMotorSpeed = RobotContainer.shooter.topMotor.getEncoder().getVelocity();
     double bottomMotorSpeed = RobotContainer.shooter.bottomMotor.getEncoder().getVelocity();
-
-    System.out.println("difference:" + Math.abs(topMotorSpeed - bottomMotorSpeed) + "  |  Top:" + topMotorSpeed + "  |  Bottom:" + bottomMotorSpeed);
+    
+    //System.out.println("difference: " + Math.abs(topMotorSpeed - bottomMotorSpeed) + "  |  Top:" + topMotorSpeed + "  |  Bottom:" + bottomMotorSpeed);
   }
 
   @Override

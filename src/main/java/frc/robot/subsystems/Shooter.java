@@ -24,6 +24,7 @@ public class Shooter extends SubsystemBase {
     public Shooter() {
         topMotor.restoreFactoryDefaults();
         bottomMotor.restoreFactoryDefaults();
+        transportMotor.restoreFactoryDefaults();
         topMotor.setInverted(true);
         bottomMotor.setInverted(true);
         transportMotor.setInverted(true);
@@ -38,7 +39,7 @@ public class Shooter extends SubsystemBase {
         bottomMotor.set(bottomMotorSpeed.get());
     }
     public void transport() {
-       
+        System.out.println(transportSpeed.get());
         transportMotor.set(transportSpeed.get());
     }
     public void transportSet(double x) {
