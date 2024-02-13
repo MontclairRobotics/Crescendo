@@ -20,6 +20,7 @@ public class Shooter extends SubsystemBase {
     private Tunable<Double> topMotorSpeed = Tunable.of(.5, "top motor speed");
     private Tunable<Double> bottomMotorSpeed = Tunable.of(.5, "bottom motor speed");
 
+    
     public Shooter() {
         topMotor.restoreFactoryDefaults();
         bottomMotor.restoreFactoryDefaults();
@@ -35,7 +36,6 @@ public class Shooter extends SubsystemBase {
     public void shootSpeaker() {
         topMotor.set(topMotorSpeed.get());
         bottomMotor.set(bottomMotorSpeed.get());
-        // transportMotor.set(SubsystemConstants.TRANSPORT_SPEED);
     }
     public void transport() {
        
@@ -44,7 +44,6 @@ public class Shooter extends SubsystemBase {
     public void transportSet(double x) {
         transportMotor.set(x);
     }
-    
     public void stopTransport() {
         transportMotor.set(0);
     }
@@ -59,7 +58,7 @@ public class Shooter extends SubsystemBase {
     /**
      * Stops the motors
      */
-    public void stop(){
+    public void stopShooter(){
         topMotor.set(0);
         bottomMotor.set(0);
     }

@@ -86,7 +86,10 @@ public class Robot extends TimedRobot {
     // Translation2d translation = new Translation2d(xSpeed,ySpeed);
     // drivetrain.drive(translation, rot);
     //drivetrain.setOneModule();
-    System.out.println("top motor speed:" + RobotContainer.shooter.topMotor.getEncoder().getVelocity() + " Bottom motor speed: " + RobotContainer.shooter.bottomMotor.getEncoder().getVelocity());
+    double topMotorSpeed = RobotContainer.shooter.topMotor.getEncoder().getVelocity();
+    double bottomMotorSpeed = RobotContainer.shooter.bottomMotor.getEncoder().getVelocity();
+
+    System.out.println("difference:" + Math.abs(topMotorSpeed - bottomMotorSpeed) + "  |  Top:" + topMotorSpeed + "  |  Bottom:" + bottomMotorSpeed);
   }
 
   @Override

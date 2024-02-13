@@ -97,7 +97,7 @@ public class Commands555 {
     }
     
     public static Command stopShooter() {
-        return Commands.runOnce(RobotContainer.shooter::stop, RobotContainer.shooter).withName("shooter stop");
+        return Commands.runOnce(RobotContainer.shooter::stopShooter, RobotContainer.shooter).withName("shooter stop");
     }
 
     public static Command reverseShooter() {
