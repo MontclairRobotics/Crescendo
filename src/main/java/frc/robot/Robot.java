@@ -27,7 +27,7 @@ public class Robot extends TimedRobot {
 
   private RobotContainer m_robotContainer;
 
-  private PS5Controller controller = new PS5Controller(0);
+  // private PS5Controller controller = new PS5Controller(0);
   // public Drivetrain drivetrain = new Drivetrain(new File(Filesystem.getDeployDirectory(), "swerve/"));
 
   @Override

@@ -38,19 +38,13 @@ public class Shooter extends SubsystemBase {
         // transportMotor.set(SubsystemConstants.TRANSPORT_SPEED);
     }
     public void transport() {
-        // topMotor.set(SubsystemConstants.SPEAKER_EJECT_SPEED);
-        // bottomMotor.set(SubsystemConstants.SPEAKER_EJECT_SPEED);
-        //transportMotor.set(SubsystemConstants.TRANSPORT_SPEED);
+       
         transportMotor.set(transportSpeed.get());
     }
     public void transportSet(double x) {
         transportMotor.set(x);
     }
-    public void shoot() {
-        topMotor.set(SubsystemConstants.TOP_SHOOTER_MOTOR_SPEED);
-        bottomMotor.set(SubsystemConstants.BOTTOM_SHOOTER_MOTOR_SPEED * 0.95);
-        
-    }
+    
     public void stopTransport() {
         transportMotor.set(0);
     }
