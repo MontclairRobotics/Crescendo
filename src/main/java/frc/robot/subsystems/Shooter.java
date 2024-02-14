@@ -18,7 +18,7 @@ public class Shooter extends SubsystemBase {
 
     private Tunable<Double> transportSpeed = Tunable.of(.5, "transport speed");
     private Tunable<Double> topMotorSpeed = Tunable.of(.5, "top motor speed");
-    private Tunable<Double> bottomMotorSpeed = Tunable.of(.5, "bottom motor speed");
+    private Tunable<Double> bottomMotorSpeed = Tunable.of(1, "bottom motor speed");
 
     
     public Shooter() {
@@ -39,10 +39,12 @@ public class Shooter extends SubsystemBase {
         bottomMotor.set(bottomMotorSpeed.get());
     }
     public void transport() {
+        
         System.out.println(transportSpeed.get());
         transportMotor.set(transportSpeed.get());
     }
     public void transportSet(double x) {
+        //System.out.println("transportSet: " + x);
         transportMotor.set(x);
     }
     public void stopTransport() {

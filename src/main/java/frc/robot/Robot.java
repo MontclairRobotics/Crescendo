@@ -74,6 +74,8 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
+    
   }
 
   /** This function is called periodically during operator control. */
@@ -86,16 +88,19 @@ public class Robot extends TimedRobot {
     // Translation2d translation = new Translation2d(xSpeed,ySpeed);
     // drivetrain.drive(translation, rot);
     //drivetrain.setOneModule();
-    double topMotorSpeed = RobotContainer.shooter.topMotor.getEncoder().getVelocity();
-    double bottomMotorSpeed = RobotContainer.shooter.bottomMotor.getEncoder().getVelocity();
+   /// double topMotorSpeed = RobotContainer.shooter.topMotor.getEncoder().getVelocity();
+    //double bottomMotorSpeed = RobotContainer.shooter.bottomMotor.getEncoder().getVelocity();
     
     //System.out.println("difference: " + Math.abs(topMotorSpeed - bottomMotorSpeed) + "  |  Top:" + topMotorSpeed + "  |  Bottom:" + bottomMotorSpeed);
+    //System.out.println("difference:" + Math.abs(topMotorSpeed - bottomMotorSpeed));
+
   }
 
   @Override
   public void testInit() {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
+    
   }
 
   @Override

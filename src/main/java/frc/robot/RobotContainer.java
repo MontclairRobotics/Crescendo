@@ -73,9 +73,18 @@ public class RobotContainer {
     
     driverController.cross().onTrue(Commands.runOnce(() -> {
       shooter.transport();
-    }, shooter)).onFalse(Commands.runOnce(() -> {
+    }, shooter));
+
+    driverController.triangle().onTrue(Commands.runOnce(() -> {
       shooter.stopTransport();
     }, shooter));
+    
+    
+    // .onFalse(Commands.runOnce(() -> {
+    //   shooter.stopTransport();
+    // }, shooter));
+
+    
 
   }
 
