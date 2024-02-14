@@ -20,6 +20,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.ShooterConstants;
@@ -227,4 +229,21 @@ public class Commands555 {
     //         RobotContainer.led.add(new FlashAnimation(2, Color.kBlue));
     //     });
     // }
+
+
+    /**
+     * Get a command which runs SysId on the shooter
+     * 
+     * @param motors Which motors to run on. ("top", "bottom", "transport").  Multiple can be in the string separated by hypen ('-')
+     */
+    public static Command getShooterSysIdCommand(String motors) {
+      return new WaitCommand(5)
+        .andThen(RobotContainer.shooter.shooterSysId("quasistatic", motors, SysIdRoutine.Direction.kForward))
+        .andThen(new WaitCommand(5))
+        .andThen(RobotContainer.shooter.shooterSysId("quasistatic", motors, SysIdRoutine.Direction.kReverse))
+        .andThen(new WaitCommand(5))
+        .andThen(RobotContainer.shooter.shooterSysId("dynamic", motors, SysIdRoutine.Direction.kForward))
+        .andThen(new WaitCommand(5))
+        .andThen(RobotContainer.shooter.shooterSysId("dynamic", motors, SysIdRoutine.Direction.kReverse));
+    }
 }

@@ -12,6 +12,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.LED;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Sprocket;
+import frc.robot.util.Tunable;
 import frc.robot.vision.Limelight;
 
 import java.io.File;
@@ -28,6 +29,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
@@ -49,7 +51,10 @@ public class RobotContainer {
 
   public static final Field2d field = new Field2d();
 
-  
+  private Tunable<Double> topShooterSpeed = Tunable.of(1000, "shooter/top-speed");
+  private Tunable<Double> bottomShooterSpeed = Tunable.of(1000, "shooter/bottom-speed");
+  private Tunable<Double> transportSpeed = Tunable.of(1000, "shooter/transport-speed");
+
   
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -69,6 +74,22 @@ public class RobotContainer {
     // }, sprocket));
 
     configureBindings();
+
+    topShooterSpeed.whenUpdate((speed) -> {
+      if (shooter.isShooting()) {
+        shooter.shootVelocity(speed, bottomShooterSpeed.get());
+      }
+    });
+    bottomShooterSpeed.whenUpdate((speed) -> {
+      if (shooter.isShooting()) {
+        shooter.shootVelocity(topShooterSpeed.get(), speed);
+      }
+    });
+    transportSpeed.whenUpdate((speed) -> {
+      if (shooter.isTransporting()) {
+        shooter.transportVelocity(speed);
+      }
+    });
   }
 
 
@@ -87,18 +108,14 @@ public class RobotContainer {
     // }));
 
 
-    // operatorController.triangle().onTrue(Commands.runOnce(() -> { shooter.shootVelocity(1000); }));
-    // operatorController.circle().onTrue(Commands.runOnce(() -> { shooter.shootVelocity(2000); }));
-    // operatorController.cross().onTrue(Commands.runOnce(() -> { shooter.shootVelocity(3000); }));
-    // operatorController.square().onTrue(Commands.runOnce(() -> { shooter.shootVelocity(5000); }));
+    operatorController.triangle().onTrue(Commands.runOnce(() -> { shooter.shootVelocity(topShooterSpeed.get(), bottomShooterSpeed.get()); }));
+    operatorController.circle().onTrue(Commands.runOnce(() -> { shooter.stopShooter(); }));
+    operatorController.cross().onTrue(Commands.runOnce(() -> { shooter.transportVelocity(transportSpeed.get()); }));
+    operatorController.square().onTrue(Commands.runOnce(() -> { shooter.stopTransport(); }));
 
 
-    operatorController.triangle().whileTrue(shooter.shooterSysId("quasistatic", SysIdRoutine.Direction.kForward));
-    operatorController.circle().whileTrue(shooter.shooterSysId("quasistatic", SysIdRoutine.Direction.kReverse));
-    operatorController.cross().whileTrue(shooter.shooterSysId("dynamic", SysIdRoutine.Direction.kForward));
-    operatorController.square().whileTrue(shooter.shooterSysId("dynamic", SysIdRoutine.Direction.kReverse));
-
-    
+    operatorController.options().onTrue(Commands555.getShooterSysIdCommand("top-bottom"));
+    operatorController.create().onTrue(Commands555.getShooterSysIdCommand("transport"));
 
     // operatorController.L1().onTrue(Commands555.signalAmp());
     // operatorController.R1().onTrue(Commands555.signalCoop());
@@ -146,7 +163,5 @@ public class RobotContainer {
     return Commands.run(() -> {
       return;
     }); 
-
-    
   }
 }
