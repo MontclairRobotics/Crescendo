@@ -51,10 +51,13 @@ public class RobotContainer {
 
   public static final Field2d field = new Field2d();
 
-  private Tunable<Double> topShooterSpeed = Tunable.of(1000, "shooter/top-speed");
-  private Tunable<Double> bottomShooterSpeed = Tunable.of(1000, "shooter/bottom-speed");
-  private Tunable<Double> transportSpeed = Tunable.of(1000, "shooter/transport-speed");
+  private Tunable<Double> topShooterSpeakerSpeed = Tunable.of(1000, "shooter/top-speaker-speed");
+  private Tunable<Double> bottomShooterSpeakerSpeed = Tunable.of(1000, "shooter/bottom-speaker-speed");
+  private Tunable<Double> transportSpeakerSpeed = Tunable.of(1000, "shooter/transport-speed");
 
+  private Tunable<Double> topShooterAmpSpeed = Tunable.of(300.0, "shooter/top-amp-speed");
+  private Tunable<Double> bottomShooterAmpSpeed = Tunable.of(500.0, "shooter/bottom-amp-speed");
+  private Tunable<Double> transportAmpSpeed = Tunable.of(3000.0, "shooter/transport-speed");
   
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -75,17 +78,17 @@ public class RobotContainer {
 
     configureBindings();
 
-    topShooterSpeed.whenUpdate((speed) -> {
+    topShooterSpeakerSpeed.whenUpdate((speed) -> {
       if (shooter.isShooting()) {
-        shooter.shootVelocity(speed, bottomShooterSpeed.get());
+        shooter.shootVelocity(speed, bottomShooterSpeakerSpeed.get());
       }
     });
-    bottomShooterSpeed.whenUpdate((speed) -> {
+    bottomShooterSpeakerSpeed.whenUpdate((speed) -> {
       if (shooter.isShooting()) {
-        shooter.shootVelocity(topShooterSpeed.get(), speed);
+        shooter.shootVelocity(topShooterSpeakerSpeed.get(), speed);
       }
     });
-    transportSpeed.whenUpdate((speed) -> {
+    transportSpeakerSpeed.whenUpdate((speed) -> {
       if (shooter.isTransporting()) {
         shooter.transportVelocity(speed);
       }
@@ -108,9 +111,9 @@ public class RobotContainer {
     // }));
 
 
-    operatorController.triangle().onTrue(Commands.runOnce(() -> { shooter.shootVelocity(topShooterSpeed.get(), bottomShooterSpeed.get()); }));
+    operatorController.triangle().onTrue(Commands.runOnce(() -> { shooter.shootVelocity(topShooterSpeakerSpeed.get(), bottomShooterSpeakerSpeed.get()); }));
     operatorController.circle().onTrue(Commands.runOnce(() -> { shooter.stopShooter(); }));
-    operatorController.cross().onTrue(Commands.runOnce(() -> { shooter.transportVelocity(transportSpeed.get()); }));
+    operatorController.cross().onTrue(Commands.runOnce(() -> { shooter.transportVelocity(transportSpeakerSpeed.get()); }));
     operatorController.square().onTrue(Commands.runOnce(() -> { shooter.stopTransport(); }));
 
 
