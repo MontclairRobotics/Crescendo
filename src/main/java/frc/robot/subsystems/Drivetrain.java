@@ -64,12 +64,13 @@ public class Drivetrain extends SubsystemBase {
 
     }
     public void testingDrive(CommandPS5Controller controller) {
-        double thetaSpeed = MathUtil.applyDeadband(controller.getRightX(), 0.05) * DriveConstants.MAX_ROT_SPEED;
+        //double thetaSpeed = MathUtil.applyDeadband(controller.getRightX(), 0.05) * DriveConstants.MAX_ROT_SPEED;
         //swerveDrive.drive(new Translation2d(), thetaSpeed, true, true);
         swervelib.SwerveModule[] modules = swerveDrive.getModules();
         for (int i = 0; i < modules.length; i++) {
+            //modules[i].getDriveMotor().setVoltage(6);
             modules[i].setAngle(0);
-            modules[i].getDriveMotor().setVoltage(6);
+            
             System.out.println("set motor with random number of: " + i);
         }
     }

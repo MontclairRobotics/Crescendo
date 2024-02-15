@@ -84,6 +84,9 @@ public class RobotContainer {
     driverController.touchpad().onTrue(Commands.runOnce(() -> {
       drivetrain.getSwerveDrive().zeroGyro();
     }));
+    // driverController.square().onTrue(Commands.runOnce(() -> {
+    //   drivetrain.testingDrive(driverController);
+    // }, drivetrain));
     
     // driverController.cross().onTrue(Commands.runOnce(() -> {
     //   intake.in();
