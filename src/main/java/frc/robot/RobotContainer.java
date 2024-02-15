@@ -40,13 +40,13 @@ import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 public class RobotContainer {
 
   public static CommandPS5Controller driverController = new CommandPS5Controller(0);
-  private static CommandPS5Controller operatorController = new CommandPS5Controller(1);
+  //private static CommandPS5Controller operatorController = new CommandPS5Controller(1);
   
   
-  // public static Drivetrain drivetrain = new Drivetrain(new File(Filesystem.getDeployDirectory(), "swerve/"));
+  public static Drivetrain drivetrain = new Drivetrain(new File(Filesystem.getDeployDirectory(), "swerve/"));
   
   // Subsystems
-  public static Intake intake = new Intake();
+  //public static Intake intake = new Intake();
   // public static Shooter shooter = new Shooter();
   
   
@@ -69,11 +69,9 @@ public class RobotContainer {
     // auto.setupPathPlanner();
     // setupAutoTab();
     
-    // drivetrain.setDefaultCommand(Commands.run(() -> {
-    // drivetrain.setInputFromController(driverController);
-      intake.setDefaultCommand(Commands.run(() -> {
-        intake.shootWithSpeed(driverController.getLeftY());
-      }, intake));
+    drivetrain.setDefaultCommand(Commands.run(() -> {
+      drivetrain.setInputFromController(driverController);
+    }, drivetrain));
 
       
     // }, drivetrain));
@@ -83,28 +81,31 @@ public class RobotContainer {
 
   private void configureBindings() {
     
-    // driverController.touchpad().onTrue(Commands.runOnce(() -> {
-    //   drivetrain.getSwerveDrive().zeroGyro();
-    // }));
+    driverController.touchpad().onTrue(Commands.runOnce(() -> {
+      drivetrain.getSwerveDrive().zeroGyro();
+    }));
     
-    // TODO: probably wrong
-    // driverController.cross().onTrue(Commands555.shootSpeaker()).onFalse(Commands555.stopShooter());
-    // driverController.square().onTrue(Commands555.startTransport()).onFalse(Commands555.stopTransport());
+    // driverController.cross().onTrue(Commands.runOnce(() -> {
+    //   intake.in();
+    // }, intake));
+    // driverController.square().onTrue(Commands.runOnce(() -> {
+    //   intake.out();
+    // }, intake));
     // driverController.triangle().onTrue(Commands.runOnce(() -> {
-    //   shooter.stop();
-    //   shooter.stopTransport();
-    // }, shooter));
+    //   intake.stop();
+    // }, intake));
+    
     
     
   }
 
-  public static Animation getTeleopDefaultAnim() {
-    return new AllianceAnimation();
-  }
+  // public static Animation getTeleopDefaultAnim() {
+  //   return new AllianceAnimation();
+  // }
 
-  public static Animation getDisabledAnimation() {
-    return Constants.LEDConstants.DEMO_REEL;
-  }
+  // public static Animation getDisabledAnimation() {
+  //   return Constants.LEDConstants.DEMO_REEL;
+  // }
 
   // public void setupAutoTab() {
   //   ShuffleboardTab autoTab = Shuffleboard.getTab("Auto");

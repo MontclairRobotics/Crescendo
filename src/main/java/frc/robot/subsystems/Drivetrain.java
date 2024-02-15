@@ -6,6 +6,7 @@ import java.io.File;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
 import com.pathplanner.lib.util.PathPlannerLogging;
 
 import edu.wpi.first.math.MathUtil;
@@ -54,13 +55,23 @@ public class Drivetrain extends SubsystemBase {
         
 
     }
-    /**
+    /**s
      * It drives a certain distance with a certain rotation
      */
     public void drive(Translation2d translation, double rotation) {
 
         swerveDrive.drive(translation, rotation, this.isFieldRelative, true);
 
+    }
+    public void testingDrive(CommandPS5Controller controller) {
+        double thetaSpeed = MathUtil.applyDeadband(controller.getRightX(), 0.05) * DriveConstants.MAX_ROT_SPEED;
+        //swerveDrive.drive(new Translation2d(), thetaSpeed, true, true);
+        swervelib.SwerveModule[] modules = swerveDrive.getModules();
+        for (int i = 0; i < modules.length; i++) {
+            modules[i].setAngle(0);
+            modules[i].getDriveMotor().setVoltage(6);
+            System.out.println("set motor with random number of: " + i);
+        }
     }
     /**
      * Moves chassis
