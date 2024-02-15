@@ -51,8 +51,8 @@ public class RobotContainer {
 
   public static final Field2d field = new Field2d();
 
-  private Tunable<Double> topShooterSpeakerSpeed = Tunable.of(1000, "shooter/top-speaker-speed");
-  private Tunable<Double> bottomShooterSpeakerSpeed = Tunable.of(1000, "shooter/bottom-speaker-speed");
+  private Tunable<Double> topShooterSpeakerSpeed = Tunable.of(4000, "shooter/top-speaker-speed");
+  private Tunable<Double> bottomShooterSpeakerSpeed = Tunable.of(4500, "shooter/bottom-speaker-speed"); //4500 was most consistent in testing
   private Tunable<Double> transportSpeakerSpeed = Tunable.of(1000, "shooter/transport-speed");
 
   private Tunable<Double> topShooterAmpSpeed = Tunable.of(300.0, "shooter/top-amp-speed");
@@ -111,10 +111,31 @@ public class RobotContainer {
     // }));
 
 
-    operatorController.triangle().onTrue(Commands.runOnce(() -> { shooter.shootVelocity(topShooterSpeakerSpeed.get(), bottomShooterSpeakerSpeed.get()); }));
-    operatorController.circle().onTrue(Commands.runOnce(() -> { shooter.stopShooter(); }));
-    operatorController.cross().onTrue(Commands.runOnce(() -> { shooter.transportVelocity(transportSpeakerSpeed.get()); }));
-    operatorController.square().onTrue(Commands.runOnce(() -> { shooter.stopTransport(); }));
+    operatorController.triangle().onTrue(Commands.runOnce(() -> { 
+      shooter.shootVelocity(topShooterSpeakerSpeed.get(), 
+      bottomShooterSpeakerSpeed.get()); 
+    })).onFalse(Commands.runOnce(() -> {
+      shooter.stop();
+    }));
+
+    operatorController.circle().onTrue(Commands.runOnce(() -> { 
+      shooter.shootVelocity(topShooterAmpSpeed.get(), 
+      bottomShooterAmpSpeed.get()); 
+    })).onFalse(Commands.runOnce(() -> {
+      shooter.stop();
+    }));
+
+    operatorController.cross().onTrue(Commands.runOnce(() -> { 
+      shooter.transportVelocity(transportSpeakerSpeed.get()); 
+    })).onFalse(Commands.runOnce(() -> {
+      shooter.stopTransport();
+    }));
+
+    operatorController.square().onTrue(Commands.runOnce(() -> { 
+      shooter.transportVelocity(transportAmpSpeed.get());
+    })).onFalse(Commands.runOnce(() -> {
+      shooter.stopTransport();
+    }));
 
 
     operatorController.options().onTrue(Commands555.getShooterSysIdCommand("top-bottom"));
