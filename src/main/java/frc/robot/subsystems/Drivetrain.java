@@ -71,6 +71,7 @@ public class Drivetrain extends SubsystemBase {
             //modules[i].getDriveMotor().setVoltage(6);
             modules[i].setAngle(0);
             
+            
             System.out.println("set motor with random number of: " + i);
         }
     }
@@ -86,9 +87,10 @@ public class Drivetrain extends SubsystemBase {
      */
     @Override
     public void periodic() {
-        Logger.recordOutput("Drivetrain/Module-Positions",getSwerveDrive().getModulePositions());
-        Logger.recordOutput("Drivetrain/Gyro-Rotation",getSwerveDrive().getGyroRotation3d());
-        Logger.recordOutput("Drivetrain/Pose",getSwerveDrive().getPose());        
+        // Logger.recordOutput("Drivetrain/Module-Positions",getSwerveDrive().getModulePositions());
+        // Logger.recordOutput("Drivetrain/Gyro-Rotation",getSwerveDrive().getGyroRotation3d());
+        // Logger.recordOutput("Drivetrain/Pose",getSwerveDrive().getPose());    
+        System.out.println(swerveDrive.getStates()[1].angle);
         // RobotContainer.field.setRobotPose(swerveDrive.getPose());
     }
     /**
