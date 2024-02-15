@@ -40,7 +40,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-    RobotContainer.shooter.transportSet(-RobotContainer.driverController.getLeftY());
+    
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
