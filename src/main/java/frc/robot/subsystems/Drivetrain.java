@@ -131,10 +131,10 @@ public class Drivetrain extends SubsystemBase {
   
     public void setInputFromController(CommandPS5Controller controller) {
       
-        double thetaSpeed = MathUtil.applyDeadband(controller.getRightX(), 0.05) * DriveConstants.MAX_ROT_SPEED;
+        double thetaSpeed = -MathUtil.applyDeadband(controller.getRightX(), 0.05) * DriveConstants.MAX_ROT_SPEED;
 
-        double xSpeed = MathUtil.applyDeadband(controller.getLeftX(), 0.05) * DriveConstants.MAX_SPEED;
-        double ySpeed = MathUtil.applyDeadband(controller.getLeftY(), 0.05) * DriveConstants.MAX_SPEED;
+        double xSpeed = -MathUtil.applyDeadband(controller.getLeftX(), 0.05) * DriveConstants.MAX_SPEED;
+        double ySpeed = -MathUtil.applyDeadband(controller.getLeftY(), 0.05) * DriveConstants.MAX_SPEED;
         
         Translation2d targetTranslation = new Translation2d(ySpeed,xSpeed);
         Logger.recordOutput("Drivetrain/Controller-Translation", targetTranslation);

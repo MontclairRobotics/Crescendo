@@ -46,7 +46,7 @@ public class RobotContainer {
   public static Drivetrain drivetrain = new Drivetrain(new File(Filesystem.getDeployDirectory(), "swerve/"));
   
   // Subsystems
-  //public static Intake intake = new Intake();
+  public static Intake intake = new Intake();
   // public static Shooter shooter = new Shooter();
   
   
@@ -88,12 +88,15 @@ public class RobotContainer {
     //   drivetrain.testingDrive(driverController);
     // }, drivetrain));
     
-    // driverController.cross().onTrue(Commands.runOnce(() -> {
-    //   intake.in();
-    // }, intake));
-    // driverController.square().onTrue(Commands.runOnce(() -> {
-    //   intake.out();
-    // }, intake));
+    driverController.cross().onTrue(Commands.runOnce(() -> {
+      intake.in();
+    }, intake));
+    driverController.square().onTrue(Commands.runOnce(() -> {
+      intake.out();
+    }, intake));
+    driverController.triangle().onTrue(Commands.runOnce(() -> {
+      intake.stop();
+    }));
     // driverController.triangle().onTrue(Commands.runOnce(() -> {
     //   intake.stop();
     // }, intake));

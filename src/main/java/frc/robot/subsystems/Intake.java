@@ -14,7 +14,7 @@ public class Intake extends SubsystemBase {
     private final CANSparkMax intakeMotor1 = new CANSparkMax(Ports.INTAKE_MOTOR_1_PORT, MotorType.kBrushless); 
     private final CANSparkMax intakeMotor2 = new CANSparkMax(Ports.INTAKE_MOTOR_2_PORT, MotorType.kBrushless);
     //private final DigitalInput beamBreak = new DigitalInput(Ports.BEAM_BREAK_CHANNEL);
-    private Tunable<Double> intakeSpeed = Tunable.of(SubsystemConstants.INTAKE_SPEED, "Shooter/Top Motor/Speaker Eject Speed");
+    private Tunable<Double> intakeSpeed = Tunable.of(1, "Shooter/Top Motor/Speaker Eject Speed");
     /**
      * Accelerates motors to intake something
      */
