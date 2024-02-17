@@ -127,6 +127,7 @@ public class Drivetrain extends SubsystemBase {
         Logger.recordOutput("Drivetrain/Controller-Theta", thetaSpeed);
 
         this.drive(targetTranslation, thetaSpeed);
+        
     }
     
 
