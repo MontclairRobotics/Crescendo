@@ -64,15 +64,16 @@ public final class Constants {
 
     public static final int FLIPTOP_MOTOR_PORT = 101;
 
-    public static final int INTAKE_MOTOR_1_PORT = 102;
-    public static final int INTAKE_MOTOR_2_PORT = 103;
+    public static final int INTAKE_TOP_MOTOR = 21;
+    public static final int INTAKE_BOTTOM_MOTOR = 20;
 
     public static final int SHOOTER_MOTOR_BOTTOM_PORT = 1;
     public static final int SHOOTER_MOTOR_TOP_PORT = 2;
     public static final int SHOOTER_MOTOR_TRANSPORT_PORT = 3;
 
-    public static final int LEFT_ANGLE_MOTOR_PORT = 106;
-    public static final int RIGHT_ANGLE_MOTOR_PORT = 106;
+    //Sprocket motors
+    public static final int LEFT_ANGLE_MOTOR_PORT = 30;
+    public static final int RIGHT_ANGLE_MOTOR_PORT = 31;
 
     public static final int BEAM_BREAK_CHANNEL = 0; 
   }
