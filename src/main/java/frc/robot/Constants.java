@@ -21,6 +21,9 @@ import animation2.RaceAnimation;
 import animation2.RainbowAnimation;
 import animation2.WipeTransition;
 import animation2.api.Animation;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.util.Tunable;
 import frc.robot.util.Tunable;
@@ -31,6 +34,11 @@ public final class Constants {
   }
 
   public static class DriveConstants {
+
+    public static final double BUMPER_WIDTH = Units.inchesToMeters(2.75); //TOOD get real width
+
+    public static final boolean IS_OPEN_LOOP = true;
+
     public static final double MAX_VOLTAGE_V = 12.0;
     public static final int MAX_SPEED = 4;
 
@@ -42,6 +50,9 @@ public final class Constants {
 
     public static final double DRIVE_BASE_RADIUS = 0.43;
 
+    public static final Pose2d EDGE_OF_DRIVEBASE = new Pose2d(0, DRIVE_BASE_RADIUS + BUMPER_WIDTH, new Rotation2d());
+    // TODO: correct angle deadband
+    public static final double ANGLE_DEADBAND = 0.2;
   }
 
   public static class VisionConstants {

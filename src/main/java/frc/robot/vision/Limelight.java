@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.VisionConstants;
 
 public class Limelight extends SubsystemBase {
+    private double lastTx = 0;
+
     private String cameraName;
     private Debouncer targetDebouncer = new Debouncer(VisionConstants.TARGET_DEBOUNCE_TIME, DebounceType.kFalling);
     
@@ -38,6 +40,15 @@ public class Limelight extends SubsystemBase {
         return type.getPipe() == pipeline;
 
     }
+
+    public double getObjectXSafe() {
+        if (LimelightHelpers.getLimelightNTDouble(cameraName, "tv") != 1) {
+            return lastTx;
+        } else {
+            lastTx = getObjectTX();
+            return getObjectTX();
+        }
+    }
     
     public void setPipelineTo(DetectionType type) {
         if (type == DetectionType.DRIVER) {
@@ -56,5 +67,6 @@ public class Limelight extends SubsystemBase {
     public double getObjectTY() {
         return LimelightHelpers.getLimelightNTDouble(cameraName, "ty");
     }
+    
 
 }

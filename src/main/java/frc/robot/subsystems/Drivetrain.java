@@ -1,7 +1,7 @@
 package frc.robot.subsystems;
 
 import java.io.File;
-
+import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
@@ -13,6 +13,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import frc.robot.RobotContainer;
@@ -59,7 +61,7 @@ public class Drivetrain extends SubsystemBase {
      */
     public void drive(Translation2d translation, double rotation) {
 
-        swerveDrive.drive(translation, rotation, this.isFieldRelative, true);
+        swerveDrive.drive(translation, rotation, this.isFieldRelative, DriveConstants.IS_OPEN_LOOP);
 
     }
     /**
@@ -113,7 +115,25 @@ public class Drivetrain extends SubsystemBase {
         
         return this.swerveDrive.getOdometryHeading();
     }
+
+    public void enableFieldRelative() {
+        System.out.println("Enabled field relative!");
+        isFieldRelative = true;
+    }
+
+    public void disableFieldRelative() {
+        System.out.println("Disabled field relative!");
+        isFieldRelative = false;
+    }
+
+    /**
+     * Returns angle of the robot between 0 and 360
+     */
+    public Rotation2d getWrappedRotation() {
+        return Rotation2d.fromDegrees(getRotation().getDegrees() % 360);
+    }
     
+
   
     public void setInputFromController(CommandPS5Controller controller) {
       

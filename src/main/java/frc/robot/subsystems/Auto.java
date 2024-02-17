@@ -133,7 +133,7 @@ public class Auto extends SubsystemBase {
                 }
                 
             } else {
-                finalPath.addCommands(Commands555.alignTo(RobotContainer.intakeLimelight),Commands555.intake());
+                finalPath.addCommands(Commands555.alignToLimelightTarget(RobotContainer.intakeLimelight),Commands555.intake());
             }
         }
         return Commands.sequence(finalPath);

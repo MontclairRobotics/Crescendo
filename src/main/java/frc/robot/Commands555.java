@@ -2,6 +2,10 @@ package frc.robot;
 
 import java.util.Set;
 import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
+
+import org.littletonrobotics.junction.Logger;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.revrobotics.CANSparkMax;
@@ -11,6 +15,7 @@ import com.revrobotics.CANSparkBase.ControlType;
 
 import animation2.FlashAnimation;
 import animation2.ZoomAnimation;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -22,8 +27,11 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.subsystems.Drivetrain;
 import frc.robot.vision.Limelight;
+import frc.robot.vision.LimelightHelpers;
 
 public class Commands555 {
     /**
@@ -67,7 +75,7 @@ public class Commands555 {
     /**
      * runs the intake until the beam break sensor is broken, and then stops
      * 
-     * @return
+     * @return A 
      */
     public static Command intake() {
         return Commands.run(RobotContainer.intake::in, RobotContainer.intake).withName("intake in")
@@ -83,7 +91,168 @@ public class Commands555 {
     public static Command stopIntake() {
         return Commands.runOnce(RobotContainer.intake::stop, RobotContainer.intake).withName("intake stop");
     }
+    
+    // /**
+    //  * Robot relative or field relative depending on isFieldRelative. Input angle MUST be between 0 and 360 degrees
+    //  * @param angle
+    //  * @return a command
+    //  */
+    // public static Command alignToAngleFieldRelative(Supplier<Rotation2d> angle) {
+    //     return Commands.run(() -> {
+    //         RobotContainer.drivetrain.getSwerveDrive().drive(new Translation2d(), angle.get().getDegrees(), true, DriveConstants.IS_OPEN_LOOP, new Translation2d());
+    //     }).until(() -> { 
+    //         return Math.abs(RobotContainer.drivetrain.getSwerveDrive().getOdometryHeading().getDegrees() - angle.get().getDegrees()) < DriveConstants.ANGLE_DEADBAND;
+    //     }).withTimeout(5); 
+    // } 
 
+       /***
+     * 
+     * @param rot a field relative Rotation2d supplier for the target angle
+     * @param lockDrive should translational motion be locked during the command
+     * @return a command that will lock angular control in favor of an angle that is provided
+     * 
+     */
+    public static Command alignToAngleFieldRelative(Supplier<Rotation2d> rot, boolean lockDrive) {
+        Drivetrain drive = RobotContainer.drivetrain;
+        return Commands.run(() -> {
+
+            double thetaSpeed = drive.getSwerveDrive().getSwerveController().headingCalculate(drive.getWrappedRotation().getRadians(), rot.get().getRadians());
+
+            double xSpeed = 0;
+            double ySpeed = 0;
+            
+            if (!lockDrive) {
+                xSpeed = MathUtil.applyDeadband(RobotContainer.driverController.getLeftX(), 0.05) * DriveConstants.MAX_SPEED;
+                ySpeed = MathUtil.applyDeadband(RobotContainer.driverController.getLeftY(), 0.05) * DriveConstants.MAX_SPEED;
+            }
+
+            RobotContainer.drivetrain.drive(new Translation2d(xSpeed, ySpeed), thetaSpeed);
+            // RobotContainer.drivetrain.drive(targetTranslation, thetaSpeed);
+        }, RobotContainer.drivetrain).until(() -> { 
+            return Math.abs(RobotContainer.drivetrain.getSwerveDrive().getOdometryHeading().getDegrees() - rot.get().getDegrees()) < DriveConstants.ANGLE_DEADBAND;
+        }).withTimeout(5);
+    }
+    
+
+    // /**
+    //  * @param angle an angle supplier for the angle to align to
+    //  */
+    // public static Command alignToAngleRobotRelative(Supplier<Rotation2d> angle) {
+        
+    //     return Commands.run(() -> {
+    //         Drivetrain drive = RobotContainer.drivetrain;
+    //         double thetaSpeed = drive.getSwerveDrive().getSwerveController().headingCalculate(drive.getWrappedRotation().getRadians(), angle.get().getRadians());
+    //         RobotContainer.drivetrain.getSwerveDrive().drive(new Translation2d(), thetaSpeed, false, DriveConstants.IS_OPEN_LOOP, new Translation2d());
+    //     }).until(() -> {
+    //         return Math.abs(angle.get().getDegrees()) < DriveConstants.ANGLE_DEADBAND;
+    //     }).withTimeout(5); 
+    // }  
+
+    /***
+     * 
+     * @param rot a robot relative Rotation2d supplier for the target angle
+     * @param lockDrive should translational motion be locked during the command
+     * @return a command that will lock angular control in favor of an angle that is provided
+     * 
+     */
+    public static Command alignToAngleRobotRelative(Supplier<Rotation2d> rot, boolean lockDrive) {
+      return alignToAngleFieldRelative(
+          () -> {return Rotation2d.fromRadians(RobotContainer.drivetrain.getWrappedRotation().getRadians() + rot.get().getRadians() % (2 * Math.PI));},
+          lockDrive
+      ); 
+    }
+
+    /**
+     * @param angle the target angle in field space
+     * @param lockDrive should translational motion be locked
+     * @return
+     */
+    public static Command goToAngleFieldRelative(Rotation2d angle, boolean lockDrive) {
+       return alignToAngleFieldRelative(() -> {return angle;}, lockDrive);
+    }
+
+
+    /**
+     * @param angle the target angle in robot space
+     * @param lockDrive should translational motion be locked
+     * @return
+     */
+    public static Command goToAngleRobotRelative(Rotation2d angle,boolean lockDrive) {
+       return alignToAngleRobotRelative(() -> {return angle;}, lockDrive);
+    }
+    
+    
+    /**
+     * @param camera the limelight to use
+     * @return a command that will align the robot to the target from the current limelight
+     * Will be canceled if the limelight loses its target
+     */
+    public static Command alignToLimelightTarget(Limelight camera) {
+        Rotation2d targetAngle = Rotation2d.fromDegrees(camera.getObjectXSafe());
+        return ifHasTarget(alignToAngleRobotRelative(() -> {return targetAngle;}, true), camera); //TODO should we lock drive?
+    }
+
+    /**
+     * A command decorator to cancel a command if the limelight loses its target
+     * @param cmd the command to be decorated
+     * @param limey the limelight to be targeted
+     * @return
+     */
+    public static Command ifHasTarget(Command cmd, Limelight limey) {
+        return cmd.onlyWhile(() -> limey.hasValidTarget());
+    } 
+    // TODO: fix this ty
+    // public static Command alignSideways(Limelight limey) {
+    //     Pose2d currentRobotPose = RobotContainer.drivetrain.getSwerveDrive().getPose();
+        
+
+    // }
+
+
+    // TODO: Look over this
+    /***
+     * @param limey
+     * @return A command that drives to the currently targeted april tag
+     */
+    public static Command driveToAprilTag(Limelight limey) {
+        double[] aprilTagPoseArray = LimelightHelpers.getLimelightNTDoubleArray(limey.getName(), "targetpose_robotspace");
+        Pose2d aprilTagPose = new Pose2d(new Translation2d(aprilTagPoseArray[0], aprilTagPoseArray[1]), new Rotation2d(aprilTagPoseArray[5]));
+        Pose2d targetPose = aprilTagPose.relativeTo(DriveConstants.EDGE_OF_DRIVEBASE); //TODO does this work the way I think it does
+        return driveToFieldRelativePoint(targetPose);
+    
+    }
+
+    /***
+     * Enables field relative mode
+     * @return a command that enables field relative
+     */
+    public static Command enableFieldRelative() {
+        return Commands.runOnce(RobotContainer.drivetrain::enableFieldRelative);
+    }
+
+
+
+
+
+    /**
+     * @return a command that locks the angle to the angle provided by the shooter limelight
+     */
+    public static Command lockToScoreAngle() {
+        
+        return ifHasTarget(alignToAngleFieldRelative(() -> {
+            double rot = RobotContainer.shooterLimelight.getObjectXSafe() + RobotContainer.drivetrain.getWrappedRotation().getDegrees();
+            return Rotation2d.fromDegrees(rot);
+        }, true).onlyWhile(RobotContainer.shooterLimelight::hasValidTarget), RobotContainer.shooterLimelight);
+    }
+
+    /** 
+    * @return a command to disable field relative control
+    */
+    public static Command disableFieldRelative() {
+        return Commands.runOnce(RobotContainer.drivetrain::disableFieldRelative);
+    }
+
+    
     /*
      * - - - - - - - - - -
      * Sprocket Commands
@@ -176,24 +345,9 @@ public class Commands555 {
         });
     }
 
-    public static Command alignTo(Limelight limelight) {
-        Pose2d currentRobotPose = RobotContainer.drivetrain.getSwerveDrive().getPose();
-
-        // getObjectTX returns a degree offset between -29.8 & 29.8 degrees. Add this to
-        // our current heading to get the true target angle
-        Rotation2d targetAngle = new Rotation2d(currentRobotPose.getRotation().getDegrees() + limelight.getObjectTX());
-
-        Pose2d targetRobotPose = new Pose2d(currentRobotPose.getX(), currentRobotPose.getY(), targetAngle);
-        return AutoBuilder.pathfindToPose(
-                targetRobotPose,
-                AutoConstants.PATH_CONSTRAINTS,
-                AutoConstants.GOAL_END_VELOCITY,
-                AutoConstants.ROTATION_DELAY_DISTANCE);
-    }
-
     public static Command scoreAmp() {
         return Commands.sequence(
-                alignTo(RobotContainer.shooterLimelight),
+                alignToLimelightTarget(RobotContainer.shooterLimelight),
                 goToAngle(ArmConstants.AMP_SCORE_ANGLE),
                 shootAmp(),
                 goToAngle(ArmConstants.ENCODER_MIN_ANGLE));
@@ -201,7 +355,7 @@ public class Commands555 {
 
     public static Command scoreSpeaker() {
         return Commands.sequence(
-                alignTo(RobotContainer.shooterLimelight),
+                alignToLimelightTarget(RobotContainer.shooterLimelight),
                 goToAngle(ArmConstants.SPEAKER_SCORE_ANGLE),
                 shootSpeaker(),
                 goToAngle(ArmConstants.ENCODER_MIN_ANGLE));
@@ -209,7 +363,7 @@ public class Commands555 {
 
     public static Command receiveHumanPlayerNote() {
         return Commands.sequence(
-            alignTo(RobotContainer.shooterLimelight),
+            alignToLimelightTarget(RobotContainer.shooterLimelight),
             goToAngle(ArmConstants.SPEAKER_SCORE_ANGLE),
             reverseShooter(),
             goToAngle(ArmConstants.ENCODER_MIN_ANGLE)

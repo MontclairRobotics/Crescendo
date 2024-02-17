@@ -35,8 +35,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 
 public class RobotContainer {
 
-  private static CommandPS5Controller driverController = new CommandPS5Controller(0);
-  private static CommandPS5Controller operatorController = new CommandPS5Controller(1);
+  public static CommandPS5Controller driverController = new CommandPS5Controller(0);
+  public static CommandPS5Controller operatorController = new CommandPS5Controller(1);
   
   public static Drivetrain drivetrain = new Drivetrain(new File(Filesystem.getDeployDirectory(), "swerve/"));
   
@@ -75,14 +75,18 @@ public class RobotContainer {
 
 
   private void configureBindings() {
+
+    driverController.L1().whileTrue(Commands555.lockToScoreAngle()); //Is this the right trigger?
+
+    driverController.R1().onTrue(Commands555.disableFieldRelative()).onFalse(Commands555.enableFieldRelative());
     
     driverController.touchpad().onTrue(Commands.runOnce(() -> {
       drivetrain.getSwerveDrive().zeroGyro();
     }));
     
-    // TODO: probably wrong
-    driverController.cross().onTrue(Commands555.scoreSpeaker()).onFalse(Commands555.stopShooter());
-    driverController.circle().onTrue(Commands555.intake()).onFalse(Commands555.stopIntake());
+    
+    
+    
 
     operatorController.circle().onTrue(Commands.runOnce(() -> {
       shooter.shootVelocity(ShooterConstants.MAX_RPM);
@@ -90,14 +94,18 @@ public class RobotContainer {
 
     
 
-    operatorController.L1().onTrue(Commands555.signalAmp());
-    operatorController.R1().onTrue(Commands555.signalCoop());
-
+    
 
     //////////////////////////////
     ///// OPERATOR BINDINGS /////
     ////////////////////////////
 
+    operatorController.L2().onTrue(Commands555.signalAmp());
+    operatorController.R2().onTrue(Commands555.signalCoop());
+
+    operatorController.R1().onTrue(Commands555.intake()).onFalse(Commands555.stopIntake());
+    operatorController.L1().onTrue(Commands555.reverseIntake()).onFalse(Commands555.stopIntake());
+    
     operatorController.circle().onTrue(Commands.run(() -> {
       sprocket.goToAngle(45);
     }));
