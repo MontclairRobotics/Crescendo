@@ -156,9 +156,10 @@ public class Commands555 {
      * 
      */
     public static Command alignToAngleRobotRelative(Supplier<Rotation2d> rot, boolean lockDrive) {
-      return alignToAngleFieldRelative(
-          () -> {return Rotation2d.fromRadians(RobotContainer.drivetrain.getWrappedRotation().getRadians() + rot.get().getRadians() % (2 * Math.PI));},
-          lockDrive
+        double initialGyroAngle = RobotContainer.drivetrain.getWrappedRotation().getRadians();
+        return alignToAngleFieldRelative(
+            () -> {return Rotation2d.fromRadians((initialGyroAngle + rot.get().getRadians()) % (2 * Math.PI));},
+            lockDrive
       ); 
     }
 
