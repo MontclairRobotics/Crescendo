@@ -34,6 +34,8 @@ import frc.robot.vision.Limelight;
 import frc.robot.vision.LimelightHelpers;
 
 public class Commands555 {
+    private static double initTurnAngle;
+
     /**
      * Drive to a robot-relative point given a Translation2d & target Rotation2d.
      * 
@@ -122,14 +124,14 @@ public class Commands555 {
             double ySpeed = 0;
             
             if (!lockDrive) {
-                xSpeed = MathUtil.applyDeadband(RobotContainer.driverController.getLeftX(), 0.05) * DriveConstants.MAX_SPEED;
-                ySpeed = MathUtil.applyDeadband(RobotContainer.driverController.getLeftY(), 0.05) * DriveConstants.MAX_SPEED;
+                xSpeed = -MathUtil.applyDeadband(RobotContainer.driverController.getLeftX(), 0.05) * DriveConstants.MAX_SPEED;
+                ySpeed = -MathUtil.applyDeadband(RobotContainer.driverController.getLeftY(), 0.05) * DriveConstants.MAX_SPEED;
             }
 
             RobotContainer.drivetrain.drive(new Translation2d(xSpeed, ySpeed), thetaSpeed);
             // RobotContainer.drivetrain.drive(targetTranslation, thetaSpeed);
         }, RobotContainer.drivetrain).until(() -> { 
-            return Math.abs(RobotContainer.drivetrain.getSwerveDrive().getOdometryHeading().getDegrees() - rot.get().getDegrees()) < DriveConstants.ANGLE_DEADBAND;
+            return Math.abs(RobotContainer.drivetrain.getWrappedRotation().getDegrees() - rot.get().getDegrees()) < DriveConstants.ANGLE_DEADBAND;
         }).withTimeout(5);
     }
     
@@ -155,13 +157,21 @@ public class Commands555 {
      * @return a command that will lock angular control in favor of an angle that is provided
      * 
      */
-    public static Command alignToAngleRobotRelative(Supplier<Rotation2d> rot, boolean lockDrive) {
-        return alignToAngleFieldRelative(
-            () -> {
-                System.out.println((((2*Math.PI) - RobotContainer.drivetrain.getWrappedRotation().getRadians()) + rot.get().getRadians()) % (2 * Math.PI));
-                return Rotation2d.fromRadians((((2*Math.PI) - RobotContainer.drivetrain.getWrappedRotation().getRadians()) + rot.get().getRadians()) % (2 * Math.PI));}, 
-        lockDrive);
+    // public static Command alignToAngleRobotRelative(Supplier<Rotation2d> rot, boolean lockDrive) {
+    //     return alignToAngleFieldRelative(
+    //         () -> {
+    //             System.out.println(RobotContainer.drivetrain.getSwerveDrive().getOdometryHeading());
+    //             return Rotation2d.fromRadians(((2*Math.PI - RobotContainer.drivetrain.getWrappedRotation().getRadians()) + rot.get().getRadians()) % (2 * Math.PI));}, 
+    //     lockDrive);
         
+    // }
+    public static Command alignToAngleRobotRelative(Supplier<Rotation2d> rot, boolean lockDrive) {
+        return alignToAngleFieldRelative(() -> {
+            System.out.println(RobotContainer.drivetrain.getSwerveDrive().getOdometryHeading().getDegrees());
+            return Rotation2d.fromDegrees((initTurnAngle + rot.get().getDegrees()) % 360);
+        }, lockDrive).beforeStarting(() -> {
+            initTurnAngle = RobotContainer.drivetrain.getWrappedRotation().getDegrees();
+        });
     }
 
     /**

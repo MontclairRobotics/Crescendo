@@ -54,6 +54,9 @@ public class Drivetrain extends SubsystemBase {
               Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose);
             });
         
+        DriveConstants.kp.whenUpdate(getSwerveDrive().getSwerveController().thetaController::setP);
+        DriveConstants.kd.whenUpdate(getSwerveDrive().getSwerveController().thetaController::setD);
+        DriveConstants.ki.whenUpdate(getSwerveDrive().getSwerveController().thetaController::setI);
 
     }
     /**
@@ -130,7 +133,9 @@ public class Drivetrain extends SubsystemBase {
      * Returns angle of the robot between 0 and 360
      */
     public Rotation2d getWrappedRotation() {
-        return Rotation2d.fromDegrees(getRotation().getDegrees() % 360);
+        double angle = getRotation().getDegrees() % 360;
+        if (angle < 0) angle = 360+angle;
+        return Rotation2d.fromDegrees(angle);
     }
     
 

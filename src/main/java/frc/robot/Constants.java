@@ -35,6 +35,10 @@ public final class Constants {
 
   public static class DriveConstants {
 
+    public static Tunable<Double> kp = Tunable.of(0.4, "heading.kp");
+    public static Tunable<Double> kd = Tunable.of(0, "heading.kd");
+    public static Tunable<Double> ki = Tunable.of(0.01, "heading.ki");
+
     public static final double BUMPER_WIDTH = Units.inchesToMeters(2.75); //TOOD get real width
 
     public static final boolean IS_OPEN_LOOP = true;
@@ -52,7 +56,7 @@ public final class Constants {
 
     public static final Pose2d EDGE_OF_DRIVEBASE = new Pose2d(0, DRIVE_BASE_RADIUS + BUMPER_WIDTH, new Rotation2d());
     // TODO: correct angle deadband
-    public static final double ANGLE_DEADBAND = 0.5;
+    public static final double ANGLE_DEADBAND = 2;
   }
 
   public static class VisionConstants {
