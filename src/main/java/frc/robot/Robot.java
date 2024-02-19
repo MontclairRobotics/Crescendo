@@ -85,12 +85,15 @@ public class Robot extends LoggedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    
   }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-
+ //   System.out.println(RobotContainer.drivetrain.getSwerveDrive().getOdometryHeading());
+    //System.out.println(RobotContainer.intakeLimelight.getObjectTX());
+    //System.out.println("Safe: " + RobotContainer.intakeLimelight.getObjectXSafe()); 
   }
 
   @Override

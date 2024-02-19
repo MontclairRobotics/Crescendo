@@ -2,7 +2,7 @@ package frc.robot.vision;
 
 public enum DetectionType {
     DRIVER(-1),
-    NOTE(0),
+    NOTE(4),
     APRIL_TAG(1);
 
     private final int pipe;

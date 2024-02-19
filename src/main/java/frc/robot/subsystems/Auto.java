@@ -44,7 +44,7 @@ public class Auto extends SubsystemBase {
     public boolean isValidPathSequence(String autoString) {
         //Checks if the first point in the string is a starting point
         if (!(Constants.AutoConstants.STARTING_POINTS.contains(autoString.charAt(0)))) {
-            RobotContainer.auto.setFeedback("That's not a real starting spot.");
+            //RobotContainer.auto.setFeedback("That's not a real starting spot.");
             return false;
         }
         //Loops through the string.
@@ -107,36 +107,36 @@ public class Auto extends SubsystemBase {
         return feedbackValue;
     }
 
-    public Command getPathSequence(String autoString) {
+    // public Command getPathSequence(String autoString) {
 
-        SequentialCommandGroup finalPath = new SequentialCommandGroup();
+    //     SequentialCommandGroup finalPath = new SequentialCommandGroup();
         
-        for (int i = 0; i < autoString.length()-1; i++) {
+    //     for (int i = 0; i < autoString.length()-1; i++) {
 
-            char current = autoString.charAt(i);
-            char next = autoString.charAt(i+1);
-            try {
+    //         char current = autoString.charAt(i);
+    //         char next = autoString.charAt(i+1);
+    //         try {
 
-                PathPlannerPath path = PathPlannerPath.fromPathFile("" + current + next);
-                finalPath.addCommands(AutoBuilder.followPath(path));
-                trajectories.add(path.getTrajectory(RobotContainer.drivetrain.getSwerveDrive().getRobotVelocity(), RobotContainer.drivetrain.getRotation()));
+    //             PathPlannerPath path = PathPlannerPath.fromPathFile("" + current + next);
+    //             finalPath.addCommands(AutoBuilder.followPath(path));
+    //             trajectories.add(path.getTrajectory(RobotContainer.drivetrain.getSwerveDrive().getRobotVelocity(), RobotContainer.drivetrain.getRotation()));
 
-            } catch(Exception e) {
-                // TODO: amazing error handling
-            }
+    //         } catch(Exception e) {
+    //             // TODO: amazing error handling
+    //         }
         
-            if (Character.isDigit(next)) {
-                if (next == '4') {
-                    finalPath.addCommands(Commands555.scoreAmp());
-                } else {
-                    finalPath.addCommands(Commands555.scoreSpeaker());
-                }
+    //         if (Character.isDigit(next)) {
+    //             if (next == '4') {
+    //                 finalPath.addCommands(Commands555.scoreAmp());
+    //             } else {
+    //                 finalPath.addCommands(Commands555.scoreSpeaker());
+    //             }
                 
-            } else {
-                finalPath.addCommands(Commands555.alignToLimelightTarget(RobotContainer.intakeLimelight),Commands555.intake());
-            }
-        }
-        return Commands.sequence(finalPath);
-    }
+    //         } else {
+    //             finalPath.addCommands(Commands555.alignToLimelightTarget(RobotContainer.intakeLimelight),Commands555.intake());
+    //         }
+    //     }
+    //     return Commands.sequence(finalPath);
+    // }
 
 }

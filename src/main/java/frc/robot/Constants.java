@@ -52,7 +52,7 @@ public final class Constants {
 
     public static final Pose2d EDGE_OF_DRIVEBASE = new Pose2d(0, DRIVE_BASE_RADIUS + BUMPER_WIDTH, new Rotation2d());
     // TODO: correct angle deadband
-    public static final double ANGLE_DEADBAND = 0.2;
+    public static final double ANGLE_DEADBAND = 0.5;
   }
 
   public static class VisionConstants {
