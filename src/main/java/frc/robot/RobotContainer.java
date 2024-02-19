@@ -95,7 +95,7 @@ public class RobotContainer {
     //driverController.cross().onTrue(Commands555.alignToAngleRobotRelative(() -> {return Rotation2d.fromDegrees(intakeLimelight.getObjectTX());}, false));
     driverController.touchpad().onTrue(Commands.runOnce(() -> {
       drivetrain.getSwerveDrive().zeroGyro();
-    }));
+    }).ignoringDisable(true));
     //driverController.cross().onTrue(Commands555.alignToAngleRobotRelative(() -> {return Rotation2d.fromDegrees(90);}, false));
     //driverController.square().whileTrue(Commands555.alignToAngleFieldRelative(() -> {return Rotation2d.fromDegrees(90);}, false));
     
