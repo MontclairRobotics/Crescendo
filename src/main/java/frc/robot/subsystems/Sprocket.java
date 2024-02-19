@@ -13,10 +13,14 @@ import org.littletonrobotics.junction.AutoLogOutput;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkPIDController;
+import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.ArmConstants.*;
@@ -24,12 +28,14 @@ import static frc.robot.Constants.ArmConstants.*;
 public class Sprocket extends SubsystemBase {
     
     private final CANSparkMax leftMotor = new CANSparkMax(Ports.LEFT_ANGLE_MOTOR_PORT, MotorType.kBrushless);
-     private final CANSparkMax rightMotor = new CANSparkMax(Ports.RIGHT_ANGLE_MOTOR_PORT, MotorType.kBrushless);
-    public final PIDController pidController = new PIDController(ArmConstants.angleKP.get(), ArmConstants.angleKI.get(), ArmConstants.angleKD.get());
-    public final PIDMechanism pid;
+    private final CANSparkMax rightMotor = new CANSparkMax(Ports.RIGHT_ANGLE_MOTOR_PORT, MotorType.kBrushless);
+
     private ArmFeedforward angleFeedForward;
     RelativeEncoder leftEncoder;
     RelativeEncoder rightEncoder;
+
+    private final SparkPIDController leftController = leftMotor.getPIDController();
+    private final SparkPIDController rightController = rightMotor.getPIDController();
 
     public LimitSwitch bottomLimitSwitch = new LimitSwitch(BOTTOM_LIMIT_SWITCH, false);
     public LimitSwitch topLimitSwitch = new LimitSwitch(TOP_LIMIT_SWITCH, false);
@@ -42,10 +48,17 @@ public class Sprocket extends SubsystemBase {
         ArmConstants.LEFT_INVERT.whenUpdate(leftMotor::setInverted);
         ArmConstants.RIGHT_INVERT.whenUpdate(rightMotor::setInverted);
 
-        pid = new PIDMechanism(pidController);
+        leftController.setD(angleKD.get(), 1);
+        leftController.setP(angleKP.get(), 1);
+        leftController.setI(angleKI.get(), 1);
+
+        rightController.setD(angleKD.get(), 1);
+        rightController.setP(angleKP.get(), 1);
+        rightController.setI(angleKI.get(), 1);
+
+
         
         //TODO do we want to normalize this PID Controller?
-        pid.disableOutputClamping();
         angleFeedForward = new ArmFeedforward(kS.get(), kG.get(), kV.get(), kA.get());
 
         Consumer<Double> whenUpdate = (p) -> angleFeedForward = new ArmFeedforward(kS.get(), kG.get(), kV.get(), kA.get());
@@ -55,9 +68,14 @@ public class Sprocket extends SubsystemBase {
         kV.whenUpdate(whenUpdate);
         kA.whenUpdate(whenUpdate);
 
-        angleKD.whenUpdate(pidController::setD);
-        angleKI.whenUpdate(pidController::setI);
-        angleKP.whenUpdate(pidController::setP);
+        angleKD.whenUpdate((k) -> {leftController.setD(k, 1);});
+        angleKI.whenUpdate((k) -> {leftController.setI(k, 1);});
+        angleKP.whenUpdate((k) -> {leftController.setP(k, 1);});
+
+        angleKD.whenUpdate((k) -> {rightController.setD(k, 1);});
+        angleKI.whenUpdate((k) -> {rightController.setI(k, 1);});
+        angleKP.whenUpdate((k) -> {rightController.setP(k, 1);});
+
 
 
 
@@ -73,44 +91,45 @@ public class Sprocket extends SubsystemBase {
      * Move sprocket up
      */
     public void goUp() {
-        pid.setSpeed(ANGLE_SPEED);
+        leftMotor.set(ANGLE_SPEED);
+        rightMotor.set(ANGLE_SPEED);
     }
     /**
      * Move sprocket down
      */
     public void goDown() {
-        pid.setSpeed(-ANGLE_SPEED);
+        leftMotor.set(-ANGLE_SPEED);
+        rightMotor.set(-ANGLE_SPEED);
     }
 
 
     public void setSpeed(double speed) {
-        pid.setSpeed(speed);
+        leftMotor.set(speed);
+        rightMotor.set(speed);
     }
+
+    public void setPosition(double angle) {
+        double feedForward = angleFeedForward.calculate(angle, 0);
+
+        leftController.setReference(angle * ArmConstants.SPROCKET_ROTATIONS_PER_DEGREE, ControlType.kPosition, 1, feedForward);
+        rightController.setReference(angle * ArmConstants.SPROCKET_ROTATIONS_PER_DEGREE, ControlType.kPosition,1,  feedForward);
+    }
+
     /**
      * Stop sprocket
      */
     public void stop() {
-        pid.setSpeed(0.0);
+        leftMotor.set(0);
+        rightMotor.set(0);
     }
 
     /**
      * Go to angle! Yay!
      */
-    public Command goToAngle(double angle) {
-        return pid.goToSetpoint(() -> angle, RobotContainer.sprocket);
+    public void goToAngle(double angle) {
+        
     }
-    /**
-     * Stops PID from PIDDING
-     */
-    public void stopPID() {
-        pid.cancel();
-    }
-    /**
-     * Returns if PID is active
-     */
-    public boolean isPIDActive() {
-        return pid.active();
-    }
+ 
 
     @AutoLogOutput
     /**
@@ -144,27 +163,28 @@ public class Sprocket extends SubsystemBase {
      */
     public void periodic() {
         //will this work if getAngle returns degrees? I do not know - yes if its consistent with the units
-        pid.setMeasurement(Math555.invlerp(getAngle(), ENCODER_MIN_ANGLE, ENCODER_MAX_ANGLE));
-        pid.update();
+
 
         if (bottomLimitSwitch.get()) {
             stop();
-            pid.cancel();
+            leftController.setReference(ArmConstants.BOTTOM_LIMIT_SWITCH * ArmConstants.SPROCKET_ROTATIONS_PER_DEGREE, ControlType.kPosition); //TODO this should be the limit switch position
+            rightController.setReference(ArmConstants.BOTTOM_LIMIT_SWITCH * ArmConstants.SPROCKET_ROTATIONS_PER_DEGREE, ControlType.kPosition);
             leftEncoder.setPosition(ENCODER_MIN_ANGLE);
             rightEncoder.setPosition(ENCODER_MIN_ANGLE);
         }
         else if (topLimitSwitch.get()) {
             stop();
-            pid.cancel();
+            leftController.setReference(ArmConstants.TOP_LIMIT_SWITCH * ArmConstants.SPROCKET_ROTATIONS_PER_DEGREE, ControlType.kPosition);
+            rightController.setReference(ArmConstants.TOP_LIMIT_SWITCH * ArmConstants.SPROCKET_ROTATIONS_PER_DEGREE, ControlType.kPosition);
             leftEncoder.setPosition(ENCODER_MAX_ANGLE);
             rightEncoder.setPosition(ENCODER_MAX_ANGLE);
         }
         
         //Calculate voltage from PID and Feedforward, then use .setVoltage since the voltages are significant
         //TODO is the output from the controller normalized?
-        double voltage = Math555.clamp(pid.getSpeed() * MAX_VOLTAGE_V + FF_VOLTAGE.get(), -MAX_VOLTAGE_V, MAX_VOLTAGE_V); //TODO set clamping
-        leftMotor.setVoltage(voltage);
-        rightMotor.setVoltage(voltage);
+        // double voltage = Math555.clamp(pid.getSpeed() * MAX_VOLTAGE_V + FF_VOLTAGE.get(), -MAX_VOLTAGE_V, MAX_VOLTAGE_V); //TODO set clamping
+        // leftMotor.setVoltage(voltage);
+        // rightMotor.setVoltage(voltage);
     }
 }
 
