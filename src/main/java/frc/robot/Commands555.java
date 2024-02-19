@@ -203,15 +203,14 @@ public class Commands555 {
     //     Rotation2d targetAngle = Rotation2d.fromDegrees(camera.getObjectXSafe());
     //     return ifHasTarget(alignToAngleRobotRelative(() -> {return targetAngle;}, true), camera); //TODO should we lock drive?
     // }
-    public static Command 
-    alignToLimelightTarget(Limelight camera) {
+    public static Command alignToLimelightTarget(Limelight camera) {
        
         System.out.println("ah ah ah ah ah");
-        Rotation2d targetAngle = Rotation2d.fromDegrees(camera.getObjectXSafe());
+        // TODO: needs to use both limelights
         //Rotation2d targetAngle = Rotation2d.fromDegrees(-camera.getObjectTX());
-        return alignToAngleRobotRelative(() -> {
-             
-            return targetAngle;}, false); //TODO should we lock drive?
+        return ifHasTarget(alignToAngleRobotRelative(() -> {
+            Rotation2d targetAngle = Rotation2d.fromDegrees(-camera.getObjectXSafe());
+            return targetAngle;}, false), RobotContainer.intakeLimelight); //TODO should we lock drive?
     }
     
     /**
