@@ -106,7 +106,7 @@ public class RobotContainer {
     // driverController.cross().onTrue(Commands555.alignToAngleFieldRelative(() -> {return Rotation2d.fromDegrees(180);}, false));
     // driverController.triangle().onTrue(Commands555.alignToAngleFieldRelative(() -> {return Rotation2d.fromDegrees(0);}, false));
     // driverController.circle().onTrue(Commands555.alignToAngleFieldRelative(() -> {return Rotation2d.fromDegrees(90);}, false));
-    driverController.cross().onTrue(Commands555.alignToLimelightTarget(intakeLimelight));
+    driverController.cross().whileTrue(Commands555.alignToLimelightTarget(intakeLimelight));
     
     
     
