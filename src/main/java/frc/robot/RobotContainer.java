@@ -58,16 +58,16 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    intakeLimelight.setPipelineTo(DetectionType.NOTE);
+    
     //auto.setupPathPlanner();
     // setupAutoTab();
     
-    drivetrain.setDefaultCommand(Commands.run(() -> {
-      drivetrain.setInputFromController(driverController); 
-    }, drivetrain));
+    // drivetrain.setDefaultCommand(Commands.run(() -> {
+    //   drivetrain.setInputFromController(driverController); 
+    // }, drivetrain));
     
 
-    //drivetrain.setDefaultCommand(Commands555.alignToLimelightTarget(intakeLimelight));
+   drivetrain.setDefaultCommand(Commands555.alignToLimelightTarget(intakeLimelight));
     
     // drivetrain.setDefaultCommand(Commands.runOnce(() -> {
     //   ChassisSpeeds target = new ChassisSpeeds(.2,.2,.2);
@@ -83,6 +83,7 @@ public class RobotContainer {
     // }, sprocket));
 
     configureBindings();
+    intakeLimelight.setPipelineTo(DetectionType.NOTE);
   }
 
 
@@ -101,12 +102,12 @@ public class RobotContainer {
     
     //driverController.cross().onTrue(Commands555.goToAngleRobotRelative(Rotation2d.fromDegrees(-intakeLimelight.getObjectTX()), false));
     //driverController.cross().onTrue(Commands555.alignToLimelightTarget(intakeLimelight));
-    // //driverController.cross().onTrue(Commands555.alignToAngleRobotRelative(() -> {return Rotation2d.fromDegrees(90);}, false));
+    //driverController.cross().onTrue(Commands555.alignToAngleRobotRelative(() -> {return Rotation2d.fromDegrees(90);}, false));
     // driverController.square().onTrue(Commands555.alignToAngleFieldRelative(() -> {return Rotation2d.fromDegrees(270);}, false));
     // driverController.cross().onTrue(Commands555.alignToAngleFieldRelative(() -> {return Rotation2d.fromDegrees(180);}, false));
     // driverController.triangle().onTrue(Commands555.alignToAngleFieldRelative(() -> {return Rotation2d.fromDegrees(0);}, false));
     // driverController.circle().onTrue(Commands555.alignToAngleFieldRelative(() -> {return Rotation2d.fromDegrees(90);}, false));
-    driverController.cross().whileTrue(Commands555.alignToLimelightTarget(intakeLimelight));
+    //driverController.cross().whileTrue(Commands555.alignToLimelightTarget(intakeLimelight));
     
     
     
@@ -128,8 +129,8 @@ public class RobotContainer {
     // operatorController.L2().onTrue(Commands555.signalAmp());
     // operatorController.R2().onTrue(Commands555.signalCoop());
 
-    driverController.R1().onTrue(Commands555.intake()).onFalse(Commands555.stopIntake());
-    driverController.L1().onTrue(Commands555.reverseIntake()).onFalse(Commands555.stopIntake());
+    // driverController.R1().onTrue(Commands555.intake()).onFalse(Commands555.stopIntake());
+    // driverController.L1().onTrue(Commands555.reverseIntake()).onFalse(Commands555.stopIntake());
     
     // operatorController.circle().onTrue(Commands.run(() -> {
     //   sprocket.goToAngle(45);

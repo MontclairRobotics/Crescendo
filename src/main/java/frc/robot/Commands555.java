@@ -133,7 +133,7 @@ public class Commands555 {
             // RobotContainer.drivetrain.drive(targetTranslation, thetaSpeed);
         }, RobotContainer.drivetrain).until(() -> { 
             return Math.abs(RobotContainer.drivetrain.getWrappedRotation().getDegrees() - rot.get().getDegrees()) < DriveConstants.ANGLE_DEADBAND;
-        }).withTimeout(5);
+        });
     }
     
 
@@ -168,13 +168,12 @@ public class Commands555 {
     // }
     public static Command alignToAngleRobotRelative(Supplier<Rotation2d> rot, boolean lockDrive) {
         return alignToAngleFieldRelative(() -> {
-            System.out.println(RobotContainer.drivetrain.getSwerveDrive().getOdometryHeading().getDegrees());
+            
             return Rotation2d.fromDegrees((initTurnAngle + rot.get().getDegrees()) % 360);
         }, lockDrive).beforeStarting(() -> {
             initTurnAngle = RobotContainer.drivetrain.getWrappedRotation().getDegrees();
         });
     }
-
     /**
      * @param angle the target angle in field space
      * @param lockDrive should translational motion be locked
@@ -183,8 +182,6 @@ public class Commands555 {
     public static Command goToAngleFieldRelative(Rotation2d angle, boolean lockDrive) {
        return alignToAngleFieldRelative(() -> {return angle;}, lockDrive);
     }
-
-
     /**
      * @param angle the target angle in robot space
      * @param lockDrive should translational motion be locked
@@ -193,8 +190,6 @@ public class Commands555 {
     public static Command goToAngleRobotRelative(Rotation2d angle,boolean lockDrive) {
        return alignToAngleRobotRelative(() -> {return angle;}, lockDrive);
     }
-    
-    
     /**
      * @param camera the limelight to use
      * @return a command that will align the robot to the target from the current limelight
@@ -205,13 +200,11 @@ public class Commands555 {
     //     return ifHasTarget(alignToAngleRobotRelative(() -> {return targetAngle;}, true), camera); //TODO should we lock drive?
     // }
     public static Command alignToLimelightTarget(Limelight camera) {
-       
-        System.out.println("ah ah ah ah ah");
         // TODO: needs to use both limelights
         //Rotation2d targetAngle = Rotation2d.fromDegrees(-camera.getObjectTX());
         return ifHasTarget(alignToAngleRobotRelative(() -> {
-            Rotation2d targetAngle = Rotation2d.fromDegrees(-camera.getObjectXSafe());
-            return targetAngle;}, false), RobotContainer.intakeLimelight).finallyDo(() -> {RobotContainer.drivetrain.setChassisSpeeds(new ChassisSpeeds(0,0,0));}); //TODO should we lock drive?
+            Rotation2d targetAngle = Rotation2d.fromDegrees(-camera.getObjectTX());
+            return targetAngle;}, false), camera).finallyDo(() -> {RobotContainer.drivetrain.setChassisSpeeds(new ChassisSpeeds(0,0,0));}); //TODO should we lock drive?
     }
     
     /**
