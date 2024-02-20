@@ -14,6 +14,7 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Sprocket;
 import frc.robot.vision.DetectionType;
 import frc.robot.vision.Limelight;
+import swervelib.SwerveDrive;
 
 import java.io.File;
 import animation2.AllianceAnimation;
@@ -61,21 +62,31 @@ public class RobotContainer {
     
     auto.setupPathPlanner();
     setupAutoTab();
-    
-    drivetrain.setDefaultCommand(Commands.run(() -> {
-      drivetrain.setInputFromController(driverController); 
-    }, drivetrain));
+    //TODO write the command
+    drivetrain.setDefaultCommand()
 
     configureBindings();
     intakeLimelight.setPipelineTo(DetectionType.NOTE);
   }
 
   private void configureBindings() {  
-    driverController.touchpad().onTrue(Commands.runOnce(() -> {
-      drivetrain.getSwerveDrive().zeroGyro();
-    }).ignoringDisable(true));
-  }
+    //TODO: figure out what method to use for "align to april tag" and assign the command to the button
+    //TODO: write R2 and L2
+    //TODO: write right stick and left stick
+    driverController.L1().onTrue(Commands555.disableFieldRelative()).onFalse(Commands555.enableFieldRelative());
+    driverController.R1().whileTrue(Commands555.scoreMode());
+    driverController.triangle().onTrue(Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(0), false));
+    driverController.circle().onTrue(Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(90), false));
+    driverController.cross().onTrue(Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(180), false));
+    driverController.square().onTrue(Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(270), false));
+    driverController.touchpad().onTrue(Commands555.zeroGyro());
+      
+    } catch (Exception e) {
+      // TODO: handle exception
+    }2().
 
+
+  }
   public static Animation getTeleopDefaultAnim() {
     return new AllianceAnimation();
   }

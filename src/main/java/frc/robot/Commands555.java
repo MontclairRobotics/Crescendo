@@ -57,7 +57,10 @@ public class Commands555 {
                 AutoConstants.GOAL_END_VELOCITY,
                 AutoConstants.ROTATION_DELAY_DISTANCE);
     }
-
+    //Zero gyro
+    public static Command zeroGyro(){
+       return Commands.runOnce(RobotContainer.drivetrain.getSwerveDrive()::zeroGyro);
+    }
     /**
      * Drive to a field-relative point given a targetPose
      * 
@@ -172,6 +175,10 @@ public class Commands555 {
         return ifHasTarget(alignToAngleRobotRelative(() -> {
             Rotation2d targetAngle = Rotation2d.fromDegrees(-camera.getObjectTX());
             return targetAngle;}, false), camera).finallyDo(() -> {RobotContainer.drivetrain.setChassisSpeeds(new ChassisSpeeds(0,0,0));}); //TODO should we lock drive?
+    }
+
+    public static Command scoreMode() {
+        return alignToLimelightTarget(RobotContainer.shooterLimelight);
     }
     
     /**
