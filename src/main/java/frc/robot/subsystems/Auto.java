@@ -8,9 +8,10 @@ import java.util.Set;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.PathPlannerTrajectory;
-import com.pathplanner.lib.path.PathPlannerTrajectory.State;
+// import com.pathplanner.lib.path.PathPlannerTrajectory.State;
 
 import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.Trajectory.State;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -73,7 +74,7 @@ public class Auto extends SubsystemBase {
 
     public void drawPaths() {
         PathPlannerTrajectory traj = trajectories.get(1);
-        State ppState = traj.getState(1);
+        PathPlannerTrajectory.State ppState = traj.getState(1);
         // ppState.ge
     }
 
@@ -105,6 +106,24 @@ public class Auto extends SubsystemBase {
 
     public String getFeedback() {
         return feedbackValue;
+    }
+
+    public State[] convertStatesToStates(PathPlannerTrajectory.State[] ppStates) {
+        State[] wpiStates = new State[ppStates.length];
+        for (int i = 0; i < ppStates.length; i++) {
+            PathPlannerTrajectory.State currentState = ppStates[i];
+            // wpiStates[i] = new State(
+            //     currentState.timeSeconds,
+            //     currentState.velocityMps,
+            //     currentState.accelerationMpsSq,
+            //     currentState.positionMeters,
+                
+            // );
+        }
+
+
+        return wpiStates;
+
     }
 
     public Command getPathSequence(String autoString) {

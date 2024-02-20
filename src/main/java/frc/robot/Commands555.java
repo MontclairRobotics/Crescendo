@@ -143,6 +143,7 @@ public class Commands555 {
         }, lockDrive).beforeStarting(() -> {
             initTurnAngle = RobotContainer.drivetrain.getWrappedRotation().getDegrees();
         });
+
     }
     /**
      * @param angle the target angle in field space
@@ -205,22 +206,6 @@ public class Commands555 {
     public static Command enableFieldRelative() {
         return Commands.runOnce(RobotContainer.drivetrain::enableFieldRelative);
     }
-
-
-
-
-
-    /**
-     * @return a command that locks the angle to the angle provided by the shooter limelight
-     */
-    // public static Command lockToScoreAngle() {
-        
-    //     return ifHasTarget(alignToAngleFieldRelative(() -> {
-    //         double rot = RobotContainer.shooterLimelight.getObjectXSafe() + RobotContainer.drivetrain.getWrappedRotation().getDegrees();
-    //         return Rotation2d.fromDegrees(rot);
-    //     }, false).onlyWhile(RobotContainer.shooterLimelight::hasValidTarget), RobotContainer.shooterLimelight);
-    // }
-
     /** 
     * @return a command to disable field relative control
     */
@@ -246,8 +231,13 @@ public class Commands555 {
         return Commands.runOnce(RobotContainer.sprocket::stop, RobotContainer.sprocket).withName("sprocket stop");
     }
 
-    public static Command goToAngle(double angle) {
-        return RobotContainer.sprocket.goToAngle(angle);
+    /**
+     * Angle in degrees
+     * @param angle
+     * @return
+     */
+    public static Command setSprocketAngle(double angle) {
+        return Commands.runOnce(() -> RobotContainer.sprocket.setPosition(angle));
     }
 
     /*
@@ -281,13 +271,13 @@ public class Commands555 {
     public Command shootSequence(double angle, double velocity) {
         return Commands.sequence(
             shootVelocity(velocity),
-            setSprocket(Rotation2d.fromDegrees(angle)),
+            setSprocketAngle(angle),
             waitUntil(() -> {
                 return RobotContainer.shooter.isAtSetpoint(velocity) && RobotContainer.sprocket.isAtAngle(angle);
             }),
             transport(),
             waitForTime(3.5),
-            setSprocket(Rotation2d.fromDegrees(ArmConstants.ENCODER_MIN_ANGLE)),
+            setSprocketAngle(ArmConstants.ENCODER_MIN_ANGLE),
             shootVelocity(0)
         );
     }
@@ -311,34 +301,30 @@ public class Commands555 {
         });
     }
 
-    public static Command setSprocket(Rotation2d angle) {
-        return Commands.runOnce(() -> {
-            goToAngle(angle.getDegrees());
-        });
-    }
+
 
     public static Command scoreAmp() {
         return Commands.sequence(
                 alignToLimelightTarget(RobotContainer.shooterLimelight),
-                goToAngle(ArmConstants.AMP_SCORE_ANGLE),
+                setSprocketAngle(ArmConstants.AMP_SCORE_ANGLE),
                 shootAmp(),
-                goToAngle(ArmConstants.ENCODER_MIN_ANGLE));
+                setSprocketAngle(ArmConstants.ENCODER_MIN_ANGLE));
     }
 
     public static Command scoreSpeaker() {
         return Commands.sequence(
                 alignToLimelightTarget(RobotContainer.shooterLimelight),
-                goToAngle(ArmConstants.SPEAKER_SCORE_ANGLE),
+                setSprocketAngle(ArmConstants.SPEAKER_SCORE_ANGLE),
                 shootSpeaker(),
-                goToAngle(ArmConstants.ENCODER_MIN_ANGLE));
+                setSprocketAngle(ArmConstants.ENCODER_MIN_ANGLE));
     }
 
     public static Command receiveHumanPlayerNote() {
         return Commands.sequence(
             alignToLimelightTarget(RobotContainer.shooterLimelight),
-            goToAngle(ArmConstants.SPEAKER_SCORE_ANGLE),
+            setSprocketAngle(ArmConstants.SPEAKER_SCORE_ANGLE),
             reverseShooter(),
-            goToAngle(ArmConstants.ENCODER_MIN_ANGLE)
+            setSprocketAngle(ArmConstants.ENCODER_MIN_ANGLE)
         );
     }
 
