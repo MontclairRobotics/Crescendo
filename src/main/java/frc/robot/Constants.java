@@ -226,4 +226,13 @@ public final class Constants {
     );
   }
 
+  public static class ClimberConstants {
+
+    public static final int LEFT_MOTOR_PORT = 40;
+    public static final int RIGHT_MOTOR_PORT = 41; //TODO:
+    public static final int TOP_LIMIT_SWITCH_PORT = 42;
+    public static final int BOTTOM_LIMIT_SWITCH_PORT = 43;
+
+  }
+
 }

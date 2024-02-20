@@ -38,7 +38,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 public class RobotContainer {
 
   public static CommandPS5Controller driverController = new CommandPS5Controller(0);
-  //public static CommandPS5Controller operatorController = new CommandPS5Controller(1);
+  public static CommandPS5Controller operatorController = new CommandPS5Controller(1);
   
   public static Drivetrain drivetrain = new Drivetrain(new File(Filesystem.getDeployDirectory(), "swerve/"));
   
@@ -74,7 +74,17 @@ public class RobotContainer {
     driverController.touchpad().onTrue(Commands.runOnce(() -> {
       drivetrain.getSwerveDrive().zeroGyro();
     }).ignoringDisable(true));
-  }
+
+    // ************** OPERATOR CONTROLLER BINDINGS ************** //
+    operatorController.R2().onTrue(Commands555.reverseIntake()).onFalse(Commands555.stopIntake());
+    operatorController.L2().onTrue(Commands555.intake()).onFalse(Commands555.stopIntake());
+    operatorController.circle().onTrue(Commands555.scoreAmp());
+    operatorController.square().onTrue(Commands555.scoreSpeaker());
+    operatorController.L1().onTrue(Commands555.celebrate());
+    operatorController.touchpad().onTrue(Commands555.ampItUp());
+    operatorController.PS().onTrue(Commands555.Cooperatition());
+    }
+
 
   public static Animation getTeleopDefaultAnim() {
     return new AllianceAnimation();

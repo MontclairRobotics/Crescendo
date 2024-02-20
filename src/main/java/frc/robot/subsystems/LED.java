@@ -2,10 +2,12 @@ package frc.robot.subsystems;
 
 
 import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import animation2.AnimationStack;
 import animation2.CelebrationAnimation;
+import animation2.SolidAnimation;
 import animation2.api.Animation;
 import animation2.api.TransitionBase;
 
@@ -46,7 +48,14 @@ public class LED extends SubsystemBase
     {
         add(new CelebrationAnimation().length(1));
     }
-
+    public void ampItUp()
+    {
+        add(new SolidAnimation(Color.kGreen));
+    }
+    public void Cooperatition()
+    {
+        add(new SolidAnimation(Color.kBlueViolet));
+    }
     /**
      * Cancel the top command and return to the previous
      * @return The cancelled command
