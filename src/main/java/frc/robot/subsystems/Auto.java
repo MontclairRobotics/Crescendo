@@ -45,7 +45,7 @@ public class Auto extends SubsystemBase {
     public boolean isValidPathSequence(String autoString) {
         //Checks if the first point in the string is a starting point
         if (!(Constants.AutoConstants.STARTING_POINTS.contains(autoString.charAt(0)))) {
-            RobotContainer.auto.setFeedback("That's not a real starting spot.");
+            //RobotContainer.auto.setFeedback("That's not a real starting spot.");
             return false;
         }
         //Loops through the string.

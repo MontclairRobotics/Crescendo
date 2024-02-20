@@ -54,6 +54,9 @@ public class Drivetrain extends SubsystemBase {
               Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose);
             });
         
+        DriveConstants.kp.whenUpdate(getSwerveDrive().getSwerveController().thetaController::setP);
+        DriveConstants.kd.whenUpdate(getSwerveDrive().getSwerveController().thetaController::setD);
+        DriveConstants.ki.whenUpdate(getSwerveDrive().getSwerveController().thetaController::setI);
 
     }
     /**
@@ -79,7 +82,7 @@ public class Drivetrain extends SubsystemBase {
         Logger.recordOutput("Drivetrain/Module-Positions",getSwerveDrive().getModulePositions());
         Logger.recordOutput("Drivetrain/Gyro-Rotation",getSwerveDrive().getGyroRotation3d());
         Logger.recordOutput("Drivetrain/Pose",getSwerveDrive().getPose());        
-        RobotContainer.field.setRobotPose(swerveDrive.getPose());
+        //RobotContainer.field.setRobotPose(swerveDrive.getPose());
     }
     /**
      * sets isFieldRelative to either true or false, used for getIsFieldRelative
@@ -130,17 +133,19 @@ public class Drivetrain extends SubsystemBase {
      * Returns angle of the robot between 0 and 360
      */
     public Rotation2d getWrappedRotation() {
-        return Rotation2d.fromDegrees(getRotation().getDegrees() % 360);
+        double angle = getRotation().getDegrees() % 360;
+        if (angle < 0) angle = 360+angle;
+        return Rotation2d.fromDegrees(angle);
     }
     
 
   
     public void setInputFromController(CommandPS5Controller controller) {
       
-        double thetaSpeed = MathUtil.applyDeadband(controller.getRightX(), 0.05) * DriveConstants.MAX_ROT_SPEED;
+        double thetaSpeed = -MathUtil.applyDeadband(controller.getRightX(), 0.05) * DriveConstants.MAX_ROT_SPEED;
 
-        double xSpeed = MathUtil.applyDeadband(controller.getLeftX(), 0.05) * DriveConstants.MAX_SPEED;
-        double ySpeed = MathUtil.applyDeadband(controller.getLeftY(), 0.05) * DriveConstants.MAX_SPEED;
+        double xSpeed = -MathUtil.applyDeadband(controller.getLeftX(), 0.05) * DriveConstants.MAX_SPEED;
+        double ySpeed = -MathUtil.applyDeadband(controller.getLeftY(), 0.05) * DriveConstants.MAX_SPEED;
         
         Translation2d targetTranslation = new Translation2d(ySpeed,xSpeed);
         Logger.recordOutput("Drivetrain/Controller-Translation", targetTranslation);

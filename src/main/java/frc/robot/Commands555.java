@@ -20,6 +20,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -34,6 +35,8 @@ import frc.robot.vision.Limelight;
 import frc.robot.vision.LimelightHelpers;
 
 public class Commands555 {
+    private static double initTurnAngle;
+
     /**
      * Drive to a robot-relative point given a Translation2d & target Rotation2d.
      * 
@@ -97,13 +100,7 @@ public class Commands555 {
     //  * @param angle
     //  * @return a command
     //  */
-    // public static Command alignToAngleFieldRelative(Supplier<Rotation2d> angle) {
-    //     return Commands.run(() -> {
-    //         RobotContainer.drivetrain.getSwerveDrive().drive(new Translation2d(), angle.get().getDegrees(), true, DriveConstants.IS_OPEN_LOOP, new Translation2d());
-    //     }).until(() -> { 
-    //         return Math.abs(RobotContainer.drivetrain.getSwerveDrive().getOdometryHeading().getDegrees() - angle.get().getDegrees()) < DriveConstants.ANGLE_DEADBAND;
-    //     }).withTimeout(5); 
-    // } 
+    
 
        /***
      * 
@@ -122,32 +119,16 @@ public class Commands555 {
             double ySpeed = 0;
             
             if (!lockDrive) {
-                xSpeed = MathUtil.applyDeadband(RobotContainer.driverController.getLeftX(), 0.05) * DriveConstants.MAX_SPEED;
-                ySpeed = MathUtil.applyDeadband(RobotContainer.driverController.getLeftY(), 0.05) * DriveConstants.MAX_SPEED;
+                xSpeed = -MathUtil.applyDeadband(RobotContainer.driverController.getLeftX(), 0.05) * DriveConstants.MAX_SPEED;
+                ySpeed = -MathUtil.applyDeadband(RobotContainer.driverController.getLeftY(), 0.05) * DriveConstants.MAX_SPEED;
             }
 
             RobotContainer.drivetrain.drive(new Translation2d(xSpeed, ySpeed), thetaSpeed);
             // RobotContainer.drivetrain.drive(targetTranslation, thetaSpeed);
         }, RobotContainer.drivetrain).until(() -> { 
-            return Math.abs(RobotContainer.drivetrain.getSwerveDrive().getOdometryHeading().getDegrees() - rot.get().getDegrees()) < DriveConstants.ANGLE_DEADBAND;
-        }).withTimeout(5);
+            return Math.abs(RobotContainer.drivetrain.getWrappedRotation().getDegrees() - rot.get().getDegrees()) < DriveConstants.ANGLE_DEADBAND;
+        });
     }
-    
-
-    // /**
-    //  * @param angle an angle supplier for the angle to align to
-    //  */
-    // public static Command alignToAngleRobotRelative(Supplier<Rotation2d> angle) {
-        
-    //     return Commands.run(() -> {
-    //         Drivetrain drive = RobotContainer.drivetrain;
-    //         double thetaSpeed = drive.getSwerveDrive().getSwerveController().headingCalculate(drive.getWrappedRotation().getRadians(), angle.get().getRadians());
-    //         RobotContainer.drivetrain.getSwerveDrive().drive(new Translation2d(), thetaSpeed, false, DriveConstants.IS_OPEN_LOOP, new Translation2d());
-    //     }).until(() -> {
-    //         return Math.abs(angle.get().getDegrees()) < DriveConstants.ANGLE_DEADBAND;
-    //     }).withTimeout(5); 
-    // }  
-
     /***
      * 
      * @param rot a robot relative Rotation2d supplier for the target angle
@@ -156,13 +137,14 @@ public class Commands555 {
      * 
      */
     public static Command alignToAngleRobotRelative(Supplier<Rotation2d> rot, boolean lockDrive) {
-        double initialGyroAngle = RobotContainer.drivetrain.getWrappedRotation().getRadians();
-        return alignToAngleFieldRelative(
-            () -> {return Rotation2d.fromRadians((initialGyroAngle + rot.get().getRadians()) % (2 * Math.PI));},
-            lockDrive
-      ); 
-    }
+        return alignToAngleFieldRelative(() -> {
+            
+            return Rotation2d.fromDegrees((initTurnAngle + rot.get().getDegrees()) % 360);
+        }, lockDrive).beforeStarting(() -> {
+            initTurnAngle = RobotContainer.drivetrain.getWrappedRotation().getDegrees();
+        });
 
+    }
     /**
      * @param angle the target angle in field space
      * @param lockDrive should translational motion be locked
@@ -171,8 +153,6 @@ public class Commands555 {
     public static Command goToAngleFieldRelative(Rotation2d angle, boolean lockDrive) {
        return alignToAngleFieldRelative(() -> {return angle;}, lockDrive);
     }
-
-
     /**
      * @param angle the target angle in robot space
      * @param lockDrive should translational motion be locked
@@ -181,18 +161,19 @@ public class Commands555 {
     public static Command goToAngleRobotRelative(Rotation2d angle,boolean lockDrive) {
        return alignToAngleRobotRelative(() -> {return angle;}, lockDrive);
     }
-    
-    
     /**
      * @param camera the limelight to use
      * @return a command that will align the robot to the target from the current limelight
      * Will be canceled if the limelight loses its target
      */
     public static Command alignToLimelightTarget(Limelight camera) {
-        Rotation2d targetAngle = Rotation2d.fromDegrees(camera.getObjectXSafe());
-        return ifHasTarget(alignToAngleRobotRelative(() -> {return targetAngle;}, true), camera); //TODO should we lock drive?
+        // TODO: needs to use both limelights
+        //Rotation2d targetAngle = Rotation2d.fromDegrees(-camera.getObjectTX());
+        return ifHasTarget(alignToAngleRobotRelative(() -> {
+            Rotation2d targetAngle = Rotation2d.fromDegrees(-camera.getObjectTX());
+            return targetAngle;}, false), camera).finallyDo(() -> {RobotContainer.drivetrain.setChassisSpeeds(new ChassisSpeeds(0,0,0));}); //TODO should we lock drive?
     }
-
+    
     /**
      * A command decorator to cancel a command if the limelight loses its target
      * @param cmd the command to be decorated
@@ -202,12 +183,7 @@ public class Commands555 {
     public static Command ifHasTarget(Command cmd, Limelight limey) {
         return cmd.onlyWhile(() -> limey.hasValidTarget());
     } 
-    // TODO: fix this ty
-    // public static Command alignSideways(Limelight limey) {
-    //     Pose2d currentRobotPose = RobotContainer.drivetrain.getSwerveDrive().getPose();
-        
 
-    // }
 
 
     // TODO: Look over this
@@ -215,13 +191,13 @@ public class Commands555 {
      * @param limey
      * @return A command that drives to the currently targeted april tag
      */
-    public static Command driveToAprilTag(Limelight limey) {
-        double[] aprilTagPoseArray = LimelightHelpers.getLimelightNTDoubleArray(limey.getName(), "targetpose_robotspace");
-        Pose2d aprilTagPose = new Pose2d(new Translation2d(aprilTagPoseArray[0], aprilTagPoseArray[1]), new Rotation2d(aprilTagPoseArray[5]));
-        Pose2d targetPose = aprilTagPose.relativeTo(DriveConstants.EDGE_OF_DRIVEBASE); //TODO does this work the way I think it does
-        return driveToFieldRelativePoint(targetPose);
+    // public static Command driveToAprilTag(Limelight limey) {
+    //     double[] aprilTagPoseArray = LimelightHelpers.getLimelightNTDoubleArray(limey.getName(), "targetpose_robotspace");
+    //     Pose2d aprilTagPose = new Pose2d(new Translation2d(aprilTagPoseArray[0], aprilTagPoseArray[1]), new Rotation2d(aprilTagPoseArray[5]));
+    //     Pose2d targetPose = aprilTagPose.relativeTo(DriveConstants.EDGE_OF_DRIVEBASE); //TODO does this work the way I think it does
+    //     return driveToFieldRelativePoint(targetPose);
     
-    }
+    // }
 
     /***
      * Enables field relative mode
@@ -230,22 +206,6 @@ public class Commands555 {
     public static Command enableFieldRelative() {
         return Commands.runOnce(RobotContainer.drivetrain::enableFieldRelative);
     }
-
-
-
-
-
-    /**
-     * @return a command that locks the angle to the angle provided by the shooter limelight
-     */
-    public static Command lockToScoreAngle() {
-        
-        return ifHasTarget(alignToAngleFieldRelative(() -> {
-            double rot = RobotContainer.shooterLimelight.getObjectXSafe() + RobotContainer.drivetrain.getWrappedRotation().getDegrees();
-            return Rotation2d.fromDegrees(rot);
-        }, false).onlyWhile(RobotContainer.shooterLimelight::hasValidTarget), RobotContainer.shooterLimelight);
-    }
-
     /** 
     * @return a command to disable field relative control
     */
@@ -307,10 +267,6 @@ public class Commands555 {
             RobotContainer.shooter.shootVelocity(ShooterConstants.MAX_RPM);
         });
     }
-
-    // public static Command shootVelocity(double velocity) {
-    
-    // }
 
     public Command shootSequence(double angle, double velocity) {
         return Commands.sequence(

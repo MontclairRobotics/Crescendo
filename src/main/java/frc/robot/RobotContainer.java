@@ -12,6 +12,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.LED;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Sprocket;
+import frc.robot.vision.DetectionType;
 import frc.robot.vision.Limelight;
 
 import java.io.File;
@@ -22,6 +23,7 @@ import animation2.api.ConditionalAnimation;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -36,7 +38,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 public class RobotContainer {
 
   public static CommandPS5Controller driverController = new CommandPS5Controller(0);
-  public static CommandPS5Controller operatorController = new CommandPS5Controller(1);
+  //public static CommandPS5Controller operatorController = new CommandPS5Controller(1);
   
   public static Drivetrain drivetrain = new Drivetrain(new File(Filesystem.getDeployDirectory(), "swerve/"));
   
@@ -44,7 +46,7 @@ public class RobotContainer {
   public static Intake intake = new Intake();
   public static Shooter shooter = new Shooter();
   public static Sprocket sprocket = new Sprocket();
-  public static Limelight intakeLimelight = new Limelight("intakeLimelight");
+  public static Limelight intakeLimelight = new Limelight("limelight");
   public static Limelight shooterLimelight = new Limelight("shooterLimelight");
   public static Auto auto = new Auto();
   public static LED led = new LED(new ConditionalAnimation(getTeleopDefaultAnim()).addCase(DriverStation::isDisabled, getDisabledAnimation()), new WipeTransition());
@@ -64,54 +66,14 @@ public class RobotContainer {
       drivetrain.setInputFromController(driverController); 
     }, drivetrain));
 
-    sprocket.setDefaultCommand(Commands.run(() -> {
-      sprocket.setSpeed(
-        MathUtil.applyDeadband(operatorController.getLeftY(), 0.05) * ArmConstants.MAX_SPEED
-      );
-    }, sprocket));
-
     configureBindings();
+    intakeLimelight.setPipelineTo(DetectionType.NOTE);
   }
 
-
-  private void configureBindings() {
-
-    driverController.L1().whileTrue(Commands555.lockToScoreAngle()); //Is this the right trigger?
-
-    driverController.R1().onTrue(Commands555.disableFieldRelative()).onFalse(Commands555.enableFieldRelative());
-    
+  private void configureBindings() {  
     driverController.touchpad().onTrue(Commands.runOnce(() -> {
       drivetrain.getSwerveDrive().zeroGyro();
-    }));
-    
-    
-    
-    
-
-    operatorController.circle().onTrue(Commands.runOnce(() -> {
-      shooter.shootVelocity(ShooterConstants.MAX_RPM);
-    }));
-
-    
-
-    
-
-    //////////////////////////////
-    ///// OPERATOR BINDINGS /////
-    ////////////////////////////
-
-    operatorController.L2().onTrue(Commands555.signalAmp());
-    operatorController.R2().onTrue(Commands555.signalCoop());
-
-    operatorController.R1().onTrue(Commands555.intake()).onFalse(Commands555.stopIntake());
-    operatorController.L1().onTrue(Commands555.reverseIntake()).onFalse(Commands555.stopIntake());
-    
-    operatorController.circle().onTrue(Commands.run(() -> {
-      sprocket.goToAngle(45);
-    }));
-
-
-    
+    }).ignoringDisable(true));
   }
 
   public static Animation getTeleopDefaultAnim() {
@@ -124,7 +86,7 @@ public class RobotContainer {
 
   public void setupAutoTab() {
     ShuffleboardTab autoTab = Shuffleboard.getTab("Auto");
-    //TODO make it the same string that was entered last time? I think i can mark nt key as persistent
+    // TODO make it the same string that was entered last time? I think i can mark nt key as persistent
     autoTab.add("Enter Command", "").withSize(3,1).withPosition(0,0);
     autoTab.add(field).withSize(6,4).withPosition(3,0);
     autoTab.addString("Feedback", () -> auto.getFeedback()).withSize(3,1).withPosition(0, 1);
