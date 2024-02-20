@@ -91,9 +91,7 @@ public class Robot extends LoggedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
- //   System.out.println(RobotContainer.drivetrain.getSwerveDrive().getOdometryHeading());
-    //System.out.println(RobotContainer.intakeLimelight.getObjectTX());
-    //System.out.println("Safe: " + RobotContainer.intakeLimelight.getObjectXSafe()); 
+    
   }
 
   @Override

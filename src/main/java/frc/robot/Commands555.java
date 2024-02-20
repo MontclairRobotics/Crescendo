@@ -100,13 +100,7 @@ public class Commands555 {
     //  * @param angle
     //  * @return a command
     //  */
-    // public static Command alignToAngleFieldRelative(Supplier<Rotation2d> angle) {
-    //     return Commands.run(() -> {
-    //         RobotContainer.drivetrain.getSwerveDrive().drive(new Translation2d(), angle.get().getDegrees(), true, DriveConstants.IS_OPEN_LOOP, new Translation2d());
-    //     }).until(() -> { 
-    //         return Math.abs(RobotContainer.drivetrain.getSwerveDrive().getOdometryHeading().getDegrees() - angle.get().getDegrees()) < DriveConstants.ANGLE_DEADBAND;
-    //     }).withTimeout(5); 
-    // } 
+    
 
        /***
      * 
@@ -135,22 +129,6 @@ public class Commands555 {
             return Math.abs(RobotContainer.drivetrain.getWrappedRotation().getDegrees() - rot.get().getDegrees()) < DriveConstants.ANGLE_DEADBAND;
         });
     }
-    
-
-    /**
-     * @param angle an angle supplier for the angle to align to
-     */
-    // public static Command alignToAngleRobotRelative(Supplier<Rotation2d> angle) {
-        
-    //     return Commands.run(() -> {
-    //         Drivetrain drive = RobotContainer.drivetrain;
-    //         double thetaSpeed = drive.getSwerveDrive().getSwerveController().headingCalculate(drive.getWrappedRotation().getRadians(), angle.get().getRadians());
-    //         RobotContainer.drivetrain.getSwerveDrive().drive(new Translation2d(), thetaSpeed, false, DriveConstants.IS_OPEN_LOOP, new Translation2d());
-    //     }).until(() -> {
-    //         return Math.abs(angle.get().getDegrees()) < DriveConstants.ANGLE_DEADBAND;
-    //     }).withTimeout(5); 
-    // }  
-
     /***
      * 
      * @param rot a robot relative Rotation2d supplier for the target angle
@@ -158,14 +136,6 @@ public class Commands555 {
      * @return a command that will lock angular control in favor of an angle that is provided
      * 
      */
-    // public static Command alignToAngleRobotRelative(Supplier<Rotation2d> rot, boolean lockDrive) {
-    //     return alignToAngleFieldRelative(
-    //         () -> {
-    //             System.out.println(RobotContainer.drivetrain.getSwerveDrive().getOdometryHeading());
-    //             return Rotation2d.fromRadians(((2*Math.PI - RobotContainer.drivetrain.getWrappedRotation().getRadians()) + rot.get().getRadians()) % (2 * Math.PI));}, 
-    //     lockDrive);
-        
-    // }
     public static Command alignToAngleRobotRelative(Supplier<Rotation2d> rot, boolean lockDrive) {
         return alignToAngleFieldRelative(() -> {
             
@@ -195,10 +165,6 @@ public class Commands555 {
      * @return a command that will align the robot to the target from the current limelight
      * Will be canceled if the limelight loses its target
      */
-    // public static Command alignToLimelightTarget(Limelight camera) {
-    //     Rotation2d targetAngle = Rotation2d.fromDegrees(camera.getObjectXSafe());
-    //     return ifHasTarget(alignToAngleRobotRelative(() -> {return targetAngle;}, true), camera); //TODO should we lock drive?
-    // }
     public static Command alignToLimelightTarget(Limelight camera) {
         // TODO: needs to use both limelights
         //Rotation2d targetAngle = Rotation2d.fromDegrees(-camera.getObjectTX());
@@ -216,12 +182,7 @@ public class Commands555 {
     public static Command ifHasTarget(Command cmd, Limelight limey) {
         return cmd.onlyWhile(() -> limey.hasValidTarget());
     } 
-    // TODO: fix this ty
-    // public static Command alignSideways(Limelight limey) {
-    //     Pose2d currentRobotPose = RobotContainer.drivetrain.getSwerveDrive().getPose();
-        
 
-    // }
 
 
     // TODO: Look over this
@@ -235,7 +196,7 @@ public class Commands555 {
     //     Pose2d targetPose = aprilTagPose.relativeTo(DriveConstants.EDGE_OF_DRIVEBASE); //TODO does this work the way I think it does
     //     return driveToFieldRelativePoint(targetPose);
     
-    //}
+    // }
 
     /***
      * Enables field relative mode
@@ -273,67 +234,63 @@ public class Commands555 {
      * Sprocket Commands
      * - - - - - - - - - -
      */
-    // public static Command goUp() {
-    //     return Commands.runOnce(RobotContainer.sprocket::goUp, RobotContainer.sprocket).withName("sprocket up");
-    // }
+    public static Command goUp() {
+        return Commands.runOnce(RobotContainer.sprocket::goUp, RobotContainer.sprocket).withName("sprocket up");
+    }
 
-    // public static Command goDown() {
-    //     return Commands.runOnce(RobotContainer.sprocket::goDown, RobotContainer.sprocket).withName("sprocket down");
-    // }
+    public static Command goDown() {
+        return Commands.runOnce(RobotContainer.sprocket::goDown, RobotContainer.sprocket).withName("sprocket down");
+    }
 
-    // public static Command stopSprocket() {
-    //     return Commands.runOnce(RobotContainer.sprocket::stop, RobotContainer.sprocket).withName("sprocket stop");
-    // }
+    public static Command stopSprocket() {
+        return Commands.runOnce(RobotContainer.sprocket::stop, RobotContainer.sprocket).withName("sprocket stop");
+    }
 
-    // public static Command goToAngle(double angle) {
-    //     return RobotContainer.sprocket.goToAngle(angle);
-    // }
+    public static Command goToAngle(double angle) {
+        return RobotContainer.sprocket.goToAngle(angle);
+    }
 
     /*
      * - - - - - - - - - -
      * Shooter Commands
      * - - - - - - - - - -
      */
-    // public static Command shootSpeaker() {
-    //     return Commands.runOnce(RobotContainer.shooter::shootSpeaker, RobotContainer.shooter).withName("shoot speaker");
-    // }
+    public static Command shootSpeaker() {
+        return Commands.runOnce(RobotContainer.shooter::shootSpeaker, RobotContainer.shooter).withName("shoot speaker");
+    }
 
-    // public static Command shootAmp() {
-    //     return Commands.runOnce(RobotContainer.shooter::shootAmp, RobotContainer.shooter).withName("shoot amp");
-    // }
+    public static Command shootAmp() {
+        return Commands.runOnce(RobotContainer.shooter::shootAmp, RobotContainer.shooter).withName("shoot amp");
+    }
 
-    // public static Command stopShooter() {
-    //     return Commands.runOnce(RobotContainer.shooter::stop, RobotContainer.shooter).withName("shooter stop");
-    // }
+    public static Command stopShooter() {
+        return Commands.runOnce(RobotContainer.shooter::stop, RobotContainer.shooter).withName("shooter stop");
+    }
 
-    // public static Command reverseShooter() {
-    //     return Commands.runOnce(RobotContainer.shooter::reverseShooter, RobotContainer.shooter)
-    //             .withName("shooter reverse");
-    // }
+    public static Command reverseShooter() {
+        return Commands.runOnce(RobotContainer.shooter::reverseShooter, RobotContainer.shooter)
+                .withName("shooter reverse");
+    }
 
-    // public static Command shootVelocity(double velocity) {
-    //     return Commands.runOnce(() -> {
-    //         RobotContainer.shooter.shootVelocity(ShooterConstants.MAX_RPM);
-    //     });
-    // }
+    public static Command shootVelocity(double velocity) {
+        return Commands.runOnce(() -> {
+            RobotContainer.shooter.shootVelocity(ShooterConstants.MAX_RPM);
+        });
+    }
 
-    // public static Command shootVelocity(double velocity) {
-    
-    // }
-
-    // public Command shootSequence(double angle, double velocity) {
-    //     return Commands.sequence(
-    //         shootVelocity(velocity),
-    //         setSprocket(Rotation2d.fromDegrees(angle)),
-    //         waitUntil(() -> {
-    //             return RobotContainer.shooter.isAtSetpoint(velocity) && RobotContainer.sprocket.isAtAngle(angle);
-    //         }),
-    //         transport(),
-    //         waitForTime(3.5),
-    //         setSprocket(Rotation2d.fromDegrees(ArmConstants.ENCODER_MIN_ANGLE)),
-    //         shootVelocity(0)
-    //     );
-    // }
+    public Command shootSequence(double angle, double velocity) {
+        return Commands.sequence(
+            shootVelocity(velocity),
+            setSprocket(Rotation2d.fromDegrees(angle)),
+            waitUntil(() -> {
+                return RobotContainer.shooter.isAtSetpoint(velocity) && RobotContainer.sprocket.isAtAngle(angle);
+            }),
+            transport(),
+            waitForTime(3.5),
+            setSprocket(Rotation2d.fromDegrees(ArmConstants.ENCODER_MIN_ANGLE)),
+            shootVelocity(0)
+        );
+    }
 
     public Command waitUntil(BooleanSupplier condition) {
         return new Command() {
@@ -348,52 +305,52 @@ public class Commands555 {
         return Commands.run(() -> {}).withTimeout(seconds);
     }
 
-    // public static Command transport() {
-    //     return Commands.runOnce(() -> {
-    //         RobotContainer.shooter.transportStart();
-    //     });
-    // }
+    public static Command transport() {
+        return Commands.runOnce(() -> {
+            RobotContainer.shooter.transportStart();
+        });
+    }
 
-    // public static Command setSprocket(Rotation2d angle) {
-    //     return Commands.runOnce(() -> {
-    //         goToAngle(angle.getDegrees());
-    //     });
-    // }
+    public static Command setSprocket(Rotation2d angle) {
+        return Commands.runOnce(() -> {
+            goToAngle(angle.getDegrees());
+        });
+    }
 
-    // public static Command scoreAmp() {
-    //     return Commands.sequence(
-    //             alignToLimelightTarget(RobotContainer.shooterLimelight),
-    //             goToAngle(ArmConstants.AMP_SCORE_ANGLE),
-    //             shootAmp(),
-    //             goToAngle(ArmConstants.ENCODER_MIN_ANGLE));
-    // }
+    public static Command scoreAmp() {
+        return Commands.sequence(
+                alignToLimelightTarget(RobotContainer.shooterLimelight),
+                goToAngle(ArmConstants.AMP_SCORE_ANGLE),
+                shootAmp(),
+                goToAngle(ArmConstants.ENCODER_MIN_ANGLE));
+    }
 
-    // public static Command scoreSpeaker() {
-    //     return Commands.sequence(
-    //             alignToLimelightTarget(RobotContainer.shooterLimelight),
-    //             goToAngle(ArmConstants.SPEAKER_SCORE_ANGLE),
-    //             shootSpeaker(),
-    //             goToAngle(ArmConstants.ENCODER_MIN_ANGLE));
-    // }
+    public static Command scoreSpeaker() {
+        return Commands.sequence(
+                alignToLimelightTarget(RobotContainer.shooterLimelight),
+                goToAngle(ArmConstants.SPEAKER_SCORE_ANGLE),
+                shootSpeaker(),
+                goToAngle(ArmConstants.ENCODER_MIN_ANGLE));
+    }
 
-    // public static Command receiveHumanPlayerNote() {
-    //     return Commands.sequence(
-    //         alignToLimelightTarget(RobotContainer.shooterLimelight),
-    //         goToAngle(ArmConstants.SPEAKER_SCORE_ANGLE),
-    //         reverseShooter(),
-    //         goToAngle(ArmConstants.ENCODER_MIN_ANGLE)
-    //     );
-    // }
+    public static Command receiveHumanPlayerNote() {
+        return Commands.sequence(
+            alignToLimelightTarget(RobotContainer.shooterLimelight),
+            goToAngle(ArmConstants.SPEAKER_SCORE_ANGLE),
+            reverseShooter(),
+            goToAngle(ArmConstants.ENCODER_MIN_ANGLE)
+        );
+    }
 
-    // public static Command signalAmp() {
-    //     return Commands.runOnce(() -> {
-    //         RobotContainer.led.add(new FlashAnimation(2, Color.kOrange));
-    //     });
-    // }
+    public static Command signalAmp() {
+        return Commands.runOnce(() -> {
+            RobotContainer.led.add(new FlashAnimation(2, Color.kOrange));
+        });
+    }
 
-    // public static Command signalCoop() {
-    //     return Commands.runOnce(() -> {
-    //         RobotContainer.led.add(new FlashAnimation(2, Color.kBlue));
-    //     });
-    // }
+    public static Command signalCoop() {
+        return Commands.runOnce(() -> {
+            RobotContainer.led.add(new FlashAnimation(2, Color.kBlue));
+        });
+    }
 }
