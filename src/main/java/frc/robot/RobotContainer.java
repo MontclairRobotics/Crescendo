@@ -62,8 +62,12 @@ public class RobotContainer {
     
     auto.setupPathPlanner();
     setupAutoTab();
-    //TODO write the command
-    drivetrain.setDefaultCommand()
+
+    drivetrain.setDefaultCommand(Commands.run(() -> {
+      drivetrain.setInputFromController(driverController);
+    }));
+
+
 
     configureBindings();
     intakeLimelight.setPipelineTo(DetectionType.NOTE);
@@ -71,18 +75,14 @@ public class RobotContainer {
 
   private void configureBindings() {  
 
-    //TODO: figure out what method to use for "align to april tag" and assign the command to the button
-    //TODO: write R2 and L2
-    //TODO: write right stick and left stick
     driverController.L1().onTrue(Commands555.disableFieldRelative()).onFalse(Commands555.enableFieldRelative());
     driverController.R1().whileTrue(Commands555.scoreMode());
     driverController.triangle().onTrue(Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(0), false));
     driverController.circle().onTrue(Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(90), false));
     driverController.cross().onTrue(Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(180), false));
     driverController.square().onTrue(Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(270), false));
-    driverController.touchpad().onTrue(Commands555.zeroGyro());
-      
-    
+    driverController.L2().onTrue(Commands555.alignToLimelightTarget(shooterLimelight));
+    driverController.R2().onTrue(Commands555.alignToLimelightTarget(intakeLimelight));
 
     driverController.touchpad().onTrue(Commands.runOnce(() -> {
       drivetrain.getSwerveDrive().zeroGyro();
