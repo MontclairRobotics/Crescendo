@@ -367,10 +367,6 @@ public class Commands555 {
     }
 
     //***********************CLIMBER COMMANDS*************************//
-    public static Command Climber(){
-        return Commands.runOnce(() -> {
-            RobotContainer.climber();
-        });
-    }
+    
     
 }  
