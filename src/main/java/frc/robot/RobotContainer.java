@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.Auto;
+import frc.robot.subsystems.Climbers;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.LED;
@@ -54,7 +55,7 @@ public class RobotContainer {
   public static Limelight shooterLimelight = new Limelight("shooterLimelight");
   public static Auto auto = new Auto();
   public static LED led = new LED(new ConditionalAnimation(getTeleopDefaultAnim()).addCase(DriverStation::isDisabled, getDisabledAnimation()), new WipeTransition());
-
+  public static Climbers climber = new Climbers();
   public static final Field2d field = new Field2d();
 
   
