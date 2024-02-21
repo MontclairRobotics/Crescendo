@@ -80,6 +80,13 @@ public final class Constants {
     public static final int RIGHT_ANGLE_MOTOR_PORT = 31;
 
     public static final int BEAM_BREAK_CHANNEL = 0; 
+
+    //Climber ports
+    public static final int CLIMBER_LEFT_MOTOR_PORT = 40;
+    public static final int CLIMBER_RIGHT_MOTOR_PORT = 41;
+
+    public static final int CLIMBER_TOP_LIMIT_SWITCH_PORT = 42;
+    public static final int CLIMBER_BOTTOM_LIMIT_SWITCH_PORT = 43;
   }
 
   public static class SubsystemConstants {
@@ -98,6 +105,8 @@ public final class Constants {
     // TODO: Validate values
     public static final double SPROCKET_ANGLE_MOVE_SPEED = 0.5;
     public static final double SPROCKET_ANGLE_DEADBAND = 3;
+
+    
   }
 
   public static class ArmConstants {
@@ -225,15 +234,6 @@ public final class Constants {
         new RaceAnimation(Color.kIndigo).randomized()
 
     );
-  }
-
-  public static class ClimberConstants {
-
-    public static final int LEFT_MOTOR_PORT = 40;
-    public static final int RIGHT_MOTOR_PORT = 41; //TODO:
-    public static final int TOP_LIMIT_SWITCH_PORT = 42;
-    public static final int BOTTOM_LIMIT_SWITCH_PORT = 43;
-
   }
 
 }
