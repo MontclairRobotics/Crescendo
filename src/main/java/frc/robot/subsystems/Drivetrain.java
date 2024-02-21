@@ -26,7 +26,7 @@ import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
 public class Drivetrain extends SubsystemBase {
     
-    public final SwerveDrive swerveDrive;
+    private final SwerveDrive swerveDrive;
 
     @AutoLogOutput
     private boolean isFieldRelative;

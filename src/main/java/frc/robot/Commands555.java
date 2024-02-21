@@ -13,7 +13,9 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
 
+import animation2.CelebrationAnimation;
 import animation2.FlashAnimation;
+import animation2.SolidAnimation;
 import animation2.ZoomAnimation;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -345,5 +347,22 @@ public class Commands555 {
         return Commands.runOnce(() -> {
             RobotContainer.led.add(new FlashAnimation(2, Color.kBlue));
         });
+    }
+    //LED bits
+    public static Command celebrate() {
+        return Commands.runOnce(() -> {
+            RobotContainer.led.add(new CelebrationAnimation());
+        });
+    }
+    
+    public static Command ampItUp(){
+     return Commands.runOnce(() -> {
+        RobotContainer.led.add(new SolidAnimation(Color.kGreen));
+     });   
+    }
+    public static Command Cooperatition(){
+        return Commands.runOnce(() -> {
+            RobotContainer.led.add(new SolidAnimation(Color.kBlueViolet));
+     });
     }
 }

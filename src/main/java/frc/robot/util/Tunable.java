@@ -3,7 +3,7 @@ package frc.robot.util;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.function.Consumer;
-import java.util.function.Function;
+
 
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTable;

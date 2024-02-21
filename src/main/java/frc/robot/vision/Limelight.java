@@ -18,7 +18,7 @@ public class Limelight extends SubsystemBase {
  
         double[] camerapose_robotspace = new double[] {-1, -1, -1, 0.0, 0.0, 0.0};
         LimelightHelpers.setLimelightNTDoubleArray(cameraName,"camerapose_robotspace", camerapose_robotspace);
-        // TODO: Networktables boilerplate?
+        
 
         this.cameraName = cameraName;
     }
