@@ -1,13 +1,14 @@
 package frc.robot.subsystems;
 
-import com.google.flatbuffers.Constants;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.LimitSwitch;
 import frc.robot.Constants.ClimberConstants;
 
-public class Climbers {
+public class Climbers extends SubsystemBase {
     private final CANSparkMax leftMotor;
     private final CANSparkMax rightMotor;
     private final LimitSwitch topLimit;

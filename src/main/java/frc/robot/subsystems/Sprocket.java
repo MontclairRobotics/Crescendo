@@ -2,11 +2,9 @@ package frc.robot.subsystems;
 
 
 import frc.robot.LimitSwitch;
-import frc.robot.PIDMechanism;
-import frc.robot.RobotContainer;
 import frc.robot.Constants.*;
 import frc.robot.Constants.ArmConstants;
-import frc.robot.math.Math555;
+
 
 import java.util.function.Consumer;
 import org.littletonrobotics.junction.AutoLogOutput;
@@ -18,10 +16,6 @@ import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.ArmConstants.*;
 
@@ -153,8 +147,8 @@ public class Sprocket extends SubsystemBase {
         return (leftEncoder.getPosition() + rightEncoder.getPosition()) / 2;
     }
 
-    public boolean isAtAngle(double angle) { //TODO make this a constant
-        return Math.abs(getAngle() - angle) < 3;
+    public boolean isAtAngle(double angle) { 
+        return Math.abs(getAngle() - angle) < SubsystemConstants.SPROCKET_ANGLE_DEADBAND;
     }
 
     @Override

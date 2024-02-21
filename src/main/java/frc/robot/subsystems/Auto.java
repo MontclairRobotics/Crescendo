@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -10,7 +9,7 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.PathPlannerTrajectory;
 // import com.pathplanner.lib.path.PathPlannerTrajectory.State;
 
-import edu.wpi.first.math.trajectory.Trajectory;
+
 import edu.wpi.first.math.trajectory.Trajectory.State;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
