@@ -3,8 +3,6 @@ package frc.robot.subsystems;
 
 import frc.robot.LimitSwitch;
 import frc.robot.Constants.*;
-import frc.robot.Constants.ArmConstants;
-
 
 import java.util.function.Consumer;
 import org.littletonrobotics.junction.AutoLogOutput;
@@ -16,7 +14,18 @@ import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.units.Angle;
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.MutableMeasure;
+import edu.wpi.first.units.Units;
+import edu.wpi.first.units.Velocity;
+import edu.wpi.first.units.Voltage;
+import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Mechanism;
+
 import static frc.robot.Constants.ArmConstants.*;
 
 public class Sprocket extends SubsystemBase {
@@ -72,13 +81,15 @@ public class Sprocket extends SubsystemBase {
 
 
 
-
+        //TODO check conversion factors
         leftEncoder = leftMotor.getEncoder();
-        leftEncoder.setPositionConversionFactor(SPROCKET_ROTATIONS_PER_DEGREE);
+        leftEncoder.setPositionConversionFactor(1/SPROCKET_ROTATIONS_PER_DEGREE);
+        leftEncoder.setVelocityConversionFactor(1/SPROCKET_ROTATIONS_PER_DEGREE);
         leftEncoder.setPosition(ENCODER_MIN_ANGLE);
 
         rightEncoder = rightMotor.getEncoder();
-        rightEncoder.setPositionConversionFactor(SPROCKET_ROTATIONS_PER_DEGREE);
+        rightEncoder.setPositionConversionFactor(1/SPROCKET_ROTATIONS_PER_DEGREE);
+        leftEncoder.setVelocityConversionFactor(1/SPROCKET_ROTATIONS_PER_DEGREE);
         rightEncoder.setPosition(ENCODER_MIN_ANGLE);
     }
     /**
@@ -109,6 +120,34 @@ public class Sprocket extends SubsystemBase {
         rightController.setReference(angle * ArmConstants.SPROCKET_ROTATIONS_PER_DEGREE, ControlType.kPosition,1,  feedForward);
     }
 
+    public SysIdRoutine getSysId() {
+        MutableMeasure<Voltage> appliedVoltage = MutableMeasure.mutable(Units.Volts.of(0));
+        MutableMeasure<Angle> degrees = MutableMeasure.mutable(Units.Degrees.of(0));
+        MutableMeasure<Velocity<Angle>> motorVelocity = MutableMeasure.mutable(Units.DegreesPerSecond.of(0));
+        
+
+        return new SysIdRoutine(
+            new Config(), new Mechanism(
+                (Measure<Voltage> volts) -> {
+                    leftMotor.setVoltage(volts.in(Units.Volts));
+                    rightMotor.setVoltage(volts.in(Units.Volts));
+                },
+                (SysIdRoutineLog log) -> {
+                    log.motor("Left")
+                    .voltage(appliedVoltage.mut_replace(leftMotor.getAppliedOutput() * leftMotor.getBusVoltage(), Units.Volts))
+                    .angularPosition(degrees.mut_replace(getAngle(), Units.Degrees))
+                    .angularVelocity(motorVelocity.mut_replace(leftMotor.getEncoder().getVelocity(), Units.DegreesPerSecond));
+
+                    log.motor("Right")
+                    .voltage(appliedVoltage.mut_replace(rightMotor.getAppliedOutput() * rightMotor.getBusVoltage(), Units.Volts))
+                    .angularPosition(degrees.mut_replace(getAngle(), Units.Degrees))
+                    .angularVelocity(motorVelocity.mut_replace(rightMotor.getEncoder().getVelocity(), Units.DegreesPerSecond));
+                },
+                this,
+                "Sprocket"
+            ));
+    }
+
     /**
      * Stop sprocket
      */
@@ -121,9 +160,15 @@ public class Sprocket extends SubsystemBase {
      * Go to angle! Yay!
      */
     public void goToAngle(double angle) {
-        
+        leftController.setReference(angle * SPROCKET_ROTATIONS_PER_DEGREE, ControlType.kPosition);
+        rightController.setReference(angle * SPROCKET_ROTATIONS_PER_DEGREE, ControlType.kPosition);
+    }
+
+    public boolean isSprocketSafe() {
+        return !(getAngle() <= ENCODER_MIN_ANGLE || getAngle() >= ENCODER_MAX_ANGLE);
     }
  
+
 
     @AutoLogOutput
     /**
