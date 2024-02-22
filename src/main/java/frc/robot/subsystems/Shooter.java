@@ -70,7 +70,7 @@ public class Shooter extends SubsystemBase {
     public void shootSpeaker() {
         topMotor.set(ShooterConstants.SPEAKER_EJECT_SPEED);
         bottomMotor.set(ShooterConstants.SPEAKER_EJECT_SPEED);
-        transportMotor.set(SubsystemConstants.TRANSPORT_SPEED);
+        transportMotor.set(ShooterConstants.TRANSPORT_SPEED);
     }
 
     public void shootVelocity(double velocity) {
@@ -86,7 +86,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public void transportStart() {
-        transportMotor.set(SubsystemConstants.TRANSPORT_SPEED);
+        transportMotor.set(ShooterConstants.TRANSPORT_SPEED);
     }
 
     public double getTopVelocity() {

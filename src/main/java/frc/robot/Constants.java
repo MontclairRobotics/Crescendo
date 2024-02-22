@@ -90,28 +90,19 @@ public final class Constants {
 
     
   }
-
-  public static class SubsystemConstants {
-    // Intake
-    public static final double INTAKE_SPEED = 0.5;
-    // Fliptop
-    public static final double FLIPTOP_SPEED = 0.5;
-    // Transport
-    public static final double TRANSPORT_SPEED = 0.6;
-
-    // Shooter
-    public static final double SPEAKER_EJECT_SPEED = 0.5;
-    public static final double AMP_EJECT_SPEED = 0.1;
-
-    // Sprocket
-    // TODO: Validate values
-    public static final double SPROCKET_ANGLE_MOVE_SPEED = 0.5;
-    public static final double SPROCKET_ANGLE_DEADBAND = 3;
-
+  public static class ClimberConstants {
     // Climbers
     public static final double CLIMBER_SPEED = 1;
-
+    public static final double MAX_HEIGHT = 18; // Inches
+    public static final double ROTATIONS_PER_INCH = 12.0672 * Math.PI; //TODO:
+    
   }
+
+  public static class IntakeConstants {
+    // Intake
+    public static final double INTAKE_SPEED = 0.5;
+  }
+
 
   public static class ArmConstants {
 
@@ -149,6 +140,11 @@ public final class Constants {
     public static final Tunable<Boolean> RIGHT_INVERT = Tunable.of(false, "arm.invert.right");
 
     public static final double ENCODER_DIFFERENCE = 2; // the acceptable difference between encoder values
+
+    // Sprocket
+    // TODO: Validate values
+    public static final double SPROCKET_ANGLE_MOVE_SPEED = 0.5;
+    public static final double SPROCKET_ANGLE_DEADBAND = 3;
   }
 
   public static class ShooterConstants {
@@ -164,6 +160,13 @@ public final class Constants {
     public static final double MAX_RPM = 5700;
 
     public static final int VELOCITY_DEADBAND = 10;
+
+    // Transport
+    public static final double TRANSPORT_SPEED = 0.6;
+
+    // // Shooter
+    // public static final double SPEAKER_EJECT_SPEED = 0.5;
+    // public static final double AMP_EJECT_SPEED = 0.1;
   }
 
   public static class SprocketConstants {

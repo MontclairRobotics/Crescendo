@@ -18,15 +18,15 @@ public class Intake extends SubsystemBase {
      * Accelerates motors to intake something
      */
     public void in() {
-        topMotor.set(SubsystemConstants.INTAKE_SPEED); 
-        bottomMotor.set(SubsystemConstants.INTAKE_SPEED);
+        topMotor.set(IntakeConstants.INTAKE_SPEED); 
+        bottomMotor.set(IntakeConstants.INTAKE_SPEED);    
     }
     /**
      * Reverse intake if gamepiece gets stuck
      */
     public void out() {
-        topMotor.set(-SubsystemConstants.INTAKE_SPEED);
-        bottomMotor.set(-SubsystemConstants.INTAKE_SPEED);
+        topMotor.set(-IntakeConstants.INTAKE_SPEED);
+        bottomMotor.set(-IntakeConstants.INTAKE_SPEED);
     }
     
     /**

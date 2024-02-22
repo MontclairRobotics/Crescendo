@@ -204,7 +204,7 @@ public class Sprocket extends SubsystemBase {
     }
 
     public boolean isAtAngle(double angle) { 
-        return Math.abs(getAngle() - angle) < SubsystemConstants.SPROCKET_ANGLE_DEADBAND;
+        return Math.abs(getAngle() - angle) < ArmConstants.SPROCKET_ANGLE_DEADBAND;
     }
 
     @Override
@@ -212,7 +212,7 @@ public class Sprocket extends SubsystemBase {
      * will this work if getAngle returns degrees? I do not know
      */
     public void periodic() {
-        //will this work if getAngle returns degrees? I do not know - yes if its consistent with the units
+        //will this work if getAngle returns degrees? I do not now - yes if its consistent with the units
 
 
         if (bottomLimitSwitch.get()) {
@@ -229,7 +229,6 @@ public class Sprocket extends SubsystemBase {
             leftEncoder.setPosition(ENCODER_MAX_ANGLE);
             rightEncoder.setPosition(ENCODER_MAX_ANGLE);
         }
-        
         //Calculate voltage from PID and Feedforward, then use .setVoltage since the voltages are significant
         //TODO is the output from the controller normalized?
         // double voltage = Math555.clamp(pid.getSpeed() * MAX_VOLTAGE_V + FF_VOLTAGE.get(), -MAX_VOLTAGE_V, MAX_VOLTAGE_V); //TODO set clamping
@@ -237,4 +236,3 @@ public class Sprocket extends SubsystemBase {
         // rightMotor.setVoltage(voltage);
     }
 }
-

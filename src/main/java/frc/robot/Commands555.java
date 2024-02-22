@@ -338,13 +338,13 @@ public class Commands555 {
 
     public static Command signalAmp() {
         return Commands.runOnce(() -> {
-            RobotContainer.led.add(new FlashAnimation(2, Color.kOrange));
+            RobotContainer.led.add(new FlashAnimation(Color.kOrange));
         });
     }
 
     public static Command signalCoop() {
         return Commands.runOnce(() -> {
-            RobotContainer.led.add(new FlashAnimation(2, Color.kBlue));
+            RobotContainer.led.add(new FlashAnimation(Color.kBlue));
         });
     }
     //LED bits
@@ -356,12 +356,12 @@ public class Commands555 {
     
     public static Command ampItUp(){
      return Commands.runOnce(() -> {
-        RobotContainer.led.add(new SolidAnimation(Color.kGreen));
-     });   
+        RobotContainer.led.add(new FlashAnimation(Color.kYellow));
+     });
     }
     public static Command cooperatition(){
         return Commands.runOnce(() -> {
-            RobotContainer.led.add(new SolidAnimation(Color.kBlueViolet));
+            RobotContainer.led.add(new FlashAnimation(Color.kBlueViolet));
      });
     }
     //***********************CLIMBER COMMANDS*************************//

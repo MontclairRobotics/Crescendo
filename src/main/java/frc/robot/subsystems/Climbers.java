@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -15,6 +16,8 @@ public class Climbers extends SubsystemBase {
 
     private final LimitSwitch topLimit;
     private final LimitSwitch bottomLimit;
+    private final RelativeEncoder rightEncoder;
+    private final RelativeEncoder leftEncoder;
 
     public Climbers() {
         leftMotor = new CANSparkMax(Ports.CLIMBER_LEFT_MOTOR_PORT, MotorType.kBrushless);
@@ -22,16 +25,28 @@ public class Climbers extends SubsystemBase {
 
         topLimit = new LimitSwitch(Ports.CLIMBER_TOP_LIMIT_SWITCH_PORT, false);
         bottomLimit = new LimitSwitch(Ports.CLIMBER_BOTTOM_LIMIT_SWITCH_PORT, false);
+
+        leftEncoder = leftMotor.getEncoder();
+        rightEncoder = rightMotor.getEncoder();
+
+        leftEncoder.setPositionConversionFactor(1/ClimberConstants.ROTATIONS_PER_INCH); //Converts to inches per rotation
+        rightEncoder.setPositionConversionFactor(1/ClimberConstants.ROTATIONS_PER_INCH);
+
+        leftEncoder.setVelocityConversionFactor(1/ClimberConstants.ROTATIONS_PER_INCH);
+        rightEncoder.setVelocityConversionFactor(1/ClimberConstants.ROTATIONS_PER_INCH);
+
+        leftEncoder.setPosition(0);
+        rightEncoder.setPosition(0);
     }
 
     public void up() {
-        leftMotor.set(SubsystemConstants.CLIMBER_SPEED);
-        rightMotor.set(SubsystemConstants.CLIMBER_SPEED);
+        leftMotor.set(ClimberConstants.CLIMBER_SPEED);
+        rightMotor.set(ClimberConstants.CLIMBER_SPEED);
     }
 
     public void down() {
-        leftMotor.set(-SubsystemConstants.CLIMBER_SPEED);
-        rightMotor.set(-SubsystemConstants.CLIMBER_SPEED);
+        leftMotor.set(-ClimberConstants.CLIMBER_SPEED);
+        rightMotor.set(-ClimberConstants.CLIMBER_SPEED);
     }
 
     public void stop() {
@@ -43,12 +58,14 @@ public class Climbers extends SubsystemBase {
         
         if (bottomLimit.get()) {
             stop();
+            leftEncoder.setPosition(0);
+            rightEncoder.setPosition(0);
         }
 
         else if (topLimit.get()) {
             stop();
+            leftEncoder.setPosition(ClimberConstants.MAX_HEIGHT);
+            rightEncoder.setPosition(ClimberConstants.MAX_HEIGHT);
         }
-
     }
-
 }

@@ -10,7 +10,7 @@ public class FlashAnimation extends AnimationBase
 {
     private Color flashColor;
 
-    public FlashAnimation(double length, Color color)
+    public FlashAnimation(Color color)
     {
         flashColor = color;
     }
