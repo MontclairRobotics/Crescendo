@@ -13,6 +13,7 @@ import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
 import edu.wpi.first.units.Angle;
 import edu.wpi.first.units.Measure;
@@ -22,6 +23,7 @@ import edu.wpi.first.units.Velocity;
 import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Mechanism;
@@ -111,6 +113,15 @@ public class Sprocket extends SubsystemBase {
     public void setSpeed(double speed) {
         leftMotor.set(speed);
         rightMotor.set(speed);
+    }
+
+    public void setInputFromJoystick(CommandPS5Controller controller) {
+        double yAxis = -MathUtil.applyDeadband(controller.getLeftY(), 0.05);
+
+        if(yAxis == 0) {
+            stop();
+        }
+        setSpeed(yAxis);
     }
 
     public void setPosition(double angle) {

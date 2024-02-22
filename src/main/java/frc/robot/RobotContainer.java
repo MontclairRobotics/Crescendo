@@ -69,8 +69,11 @@ public class RobotContainer {
 
     drivetrain.setDefaultCommand(Commands.run(() -> {
       drivetrain.setInputFromController(driverController);
-    }));
-
+    }, drivetrain));
+    
+    sprocket.setDefaultCommand(Commands.run(() -> {
+      sprocket.setInputFromJoystick(operatorController);
+    }, sprocket));
 
 
     configureBindings();
@@ -79,12 +82,15 @@ public class RobotContainer {
 
   private void configureBindings() {  
 
+    // ************* DRIVER CONTROLLER BINDINGS **************** //
     driverController.L1().onTrue(Commands555.disableFieldRelative()).onFalse(Commands555.enableFieldRelative());
     driverController.R1().whileTrue(Commands555.scoreMode());
+
     driverController.triangle().onTrue(Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(0), false));
     driverController.circle().onTrue(Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(90), false));
     driverController.cross().onTrue(Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(180), false));
     driverController.square().onTrue(Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(270), false));
+
     driverController.L2().onTrue(Commands555.alignToLimelightTarget(shooterLimelight));
     driverController.R2().onTrue(Commands555.alignToLimelightTarget(intakeLimelight));
 
@@ -93,14 +99,21 @@ public class RobotContainer {
     }).ignoringDisable(true));
 
     // ************** OPERATOR CONTROLLER BINDINGS ************** //
+
     operatorController.R2().onTrue(Commands555.reverseIntake()).onFalse(Commands555.stopIntake());
     operatorController.L2().onTrue(Commands555.intake()).onFalse(Commands555.stopIntake());
+
     operatorController.circle().onTrue(Commands555.scoreAmp());
     operatorController.square().onTrue(Commands555.scoreSpeaker());
+    operatorController.triangle().onTrue(Commands555.shootSpeaker());
+
     operatorController.L1().onTrue(Commands555.celebrate());
     operatorController.touchpad().onTrue(Commands555.ampItUp());
-    operatorController.PS().onTrue(Commands555.Cooperatition());
-
+    operatorController.PS().onTrue(Commands555.cooperatition());
+    
+    // operatorController.povUp().onTrue(Commands555.climberUp());
+    // operatorController.povDown().onTrue(Commands555.climberDown());
+    //operatorController.R1().onTrue(Commands555.sprocketToAprilTag()); TODO: We do this later!!!
 
     ControllerTools.getDPad(DPad.UP, operatorController).toggleOnTrue(sprocket.getSysId().quasistatic(Direction.kForward).onlyWhile(sprocket::isSprocketSafe));
     ControllerTools.getDPad(DPad.DOWN, operatorController).toggleOnTrue(sprocket.getSysId().quasistatic(Direction.kReverse).onlyWhile(sprocket::isSprocketSafe));

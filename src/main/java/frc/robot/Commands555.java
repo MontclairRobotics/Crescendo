@@ -239,7 +239,6 @@ public class Commands555 {
     public static Command stopSprocket() {
         return Commands.runOnce(RobotContainer.sprocket::stop, RobotContainer.sprocket).withName("sprocket stop");
     }
-
     /**
      * Angle in degrees
      * @param angle
@@ -360,13 +359,22 @@ public class Commands555 {
         RobotContainer.led.add(new SolidAnimation(Color.kGreen));
      });   
     }
-    public static Command Cooperatition(){
+    public static Command cooperatition(){
         return Commands.runOnce(() -> {
             RobotContainer.led.add(new SolidAnimation(Color.kBlueViolet));
      });
     }
-
     //***********************CLIMBER COMMANDS*************************//
+    public static Command climberUp(){
+        return Commands.runOnce(() -> {
+            RobotContainer.climber.up();
+        });
+    }
     
+    public static Command climberDown(){
+        return Commands.runOnce(() -> {
+            RobotContainer.climber.down();
+        });
+    }
     
 }  

@@ -87,6 +87,8 @@ public final class Constants {
 
     public static final int CLIMBER_TOP_LIMIT_SWITCH_PORT = 42;
     public static final int CLIMBER_BOTTOM_LIMIT_SWITCH_PORT = 43;
+
+    
   }
 
   public static class SubsystemConstants {
@@ -106,7 +108,9 @@ public final class Constants {
     public static final double SPROCKET_ANGLE_MOVE_SPEED = 0.5;
     public static final double SPROCKET_ANGLE_DEADBAND = 3;
 
-    
+    // Climbers
+    public static final double CLIMBER_SPEED = 1;
+
   }
 
   public static class ArmConstants {
@@ -160,6 +164,10 @@ public final class Constants {
     public static final double MAX_RPM = 5700;
 
     public static final int VELOCITY_DEADBAND = 10;
+  }
+
+  public static class SprocketConstants {
+    public static final double MAX_SPEED = 0.5;
   }
   
   public static class PidConstants {
@@ -235,5 +243,4 @@ public final class Constants {
 
     );
   }
-
 }
