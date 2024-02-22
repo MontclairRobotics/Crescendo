@@ -18,7 +18,10 @@ public class Climbers extends SubsystemBase {
     private final LimitSwitch bottomLimit;
     private final RelativeEncoder rightEncoder;
     private final RelativeEncoder leftEncoder;
-
+    /**
+     * Creates objects for the motors, limits, and encoders
+     * Then sets the encoders
+     */
     public Climbers() {
         leftMotor = new CANSparkMax(Ports.CLIMBER_LEFT_MOTOR_PORT, MotorType.kBrushless);
         rightMotor = new CANSparkMax(Ports.CLIMBER_RIGHT_MOTOR_PORT, MotorType.kBrushless);
@@ -38,22 +41,31 @@ public class Climbers extends SubsystemBase {
         leftEncoder.setPosition(0);
         rightEncoder.setPosition(0);
     }
-
+    /**
+    * Makes the climber go up
+    */
     public void up() {
         leftMotor.set(ClimberConstants.CLIMBER_SPEED);
         rightMotor.set(ClimberConstants.CLIMBER_SPEED);
     }
-
+    /**
+     * Climber arm goes down
+     */
     public void down() {
         leftMotor.set(-ClimberConstants.CLIMBER_SPEED);
         rightMotor.set(-ClimberConstants.CLIMBER_SPEED);
     }
-
+    /**
+     * Stops The Climbers
+     */
     public void stop() {
         leftMotor.set(0);
         rightMotor.set(0);
     }
-    
+    /**
+     * If the arm reaches the bottom limit, it will stop
+     * Same for top
+     */
     public void periodic() {
         
         if (bottomLimit.get()) {

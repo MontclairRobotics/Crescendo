@@ -56,6 +56,7 @@ public class RobotContainer {
   public static Auto auto = new Auto();
   public static LED led = new LED(new ConditionalAnimation(getTeleopDefaultAnim()).addCase(DriverStation::isDisabled, getDisabledAnimation()), new WipeTransition());
   public static Climbers climber = new Climbers();
+  
   public static final Field2d field = new Field2d();
 
   
