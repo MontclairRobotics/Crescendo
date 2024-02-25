@@ -71,15 +71,15 @@ public final class Constants {
     public static final int INTAKE_TOP_MOTOR = 21;
     public static final int INTAKE_BOTTOM_MOTOR = 20;
 
-    public static final int SHOOTER_MOTOR_BOTTOM_PORT = 1;
-    public static final int SHOOTER_MOTOR_TOP_PORT = 2;
-    public static final int SHOOTER_MOTOR_TRANSPORT_PORT = 3;
+    public static final int SHOOTER_MOTOR_BOTTOM_PORT = 40;
+    public static final int SHOOTER_MOTOR_TOP_PORT = 41;
+    public static final int SHOOTER_MOTOR_TRANSPORT_PORT = 42;
 
     //Sprocket motors
     public static final int LEFT_ANGLE_MOTOR_PORT = 30;
     public static final int RIGHT_ANGLE_MOTOR_PORT = 31;
 
-    public static final int BEAM_BREAK_CHANNEL = 0; 
+    public static final int BEAM_BREAK_CHANNEL = 5; 
 
     //Climber ports
     public static final int CLIMBER_LEFT_MOTOR_PORT = 40;
@@ -109,34 +109,34 @@ public final class Constants {
     public static final double MAX_VOLTAGE_V = 12.0;
     // TODO: needs to be set
     public static final int BOTTOM_LIMIT_SWITCH = 0;
-    public static final int TOP_LIMIT_SWITCH = 1;
+    public static final int TOP_LIMIT_SWITCH = 3;
 
     public static final Tunable<Double> FF_VOLTAGE = Tunable.of(0.6, "arm.feedforwardvoltage"); // TODO: stolen from
                                                                                                 // ChargedUp elevator
                                                                                                 // feedforward }
 
     public static final Tunable<Double> kS = Tunable.of(0, "arm.feedforward.ks");
-    public static final Tunable<Double> kG = Tunable.of(0, "arm.feedforward.kG");
-    public static final Tunable<Double> kV = Tunable.of(0, "arm.feedforward.kV");
-    public static final Tunable<Double> kA = Tunable.of(0, "arm.feedforward.ka");
+    public static final Tunable<Double> kG = Tunable.of(0.1, "arm.feedforward.kG");
+    public static final Tunable<Double> kV = Tunable.of(8.91, "arm.feedforward.kV");
+    public static final Tunable<Double> kA = Tunable.of(0.01, "arm.feedforward.ka");
 
     // TODO: Angle PID Constants: (!!!!!!)
-    public static final Tunable<Double> angleKP = Tunable.of(0, "arm.kp");
+    public static final Tunable<Double> angleKP = Tunable.of(0.125, "arm.kp");
     public static final Tunable<Double> angleKI = Tunable.of(0, "arm.ki");
     public static final Tunable<Double> angleKD = Tunable.of(0, "arm.kd");
 
     // TODO: All of these constants are basically guessed!!
     public static final double ANGLE_SPEED = 0.5; // Speed of the angle changing
     public static final double SPROCKET_ROTATIONS_PER_DEGREE = 1.26984126984;
-    public static final double ENCODER_MIN_ANGLE = 0.0;
-    public static final double ENCODER_MAX_ANGLE = 75.787;
+    public static final double ENCODER_MIN_ANGLE = 39;
+    public static final double ENCODER_MAX_ANGLE = 69;
 
     public static final double SPEAKER_SCORE_ANGLE = -1;
     public static final double AMP_SCORE_ANGLE = -1;
 
     public static final double MAX_SPEED = 0; // TODO ???
 
-    public static final Tunable<Boolean> LEFT_INVERT = Tunable.of(false, "arm.invert.left");
+    public static final Tunable<Boolean> LEFT_INVERT = Tunable.of(true, "arm.invert.left");
     public static final Tunable<Boolean> RIGHT_INVERT = Tunable.of(false, "arm.invert.right");
 
     public static final double ENCODER_DIFFERENCE = 2; // the acceptable difference between encoder values

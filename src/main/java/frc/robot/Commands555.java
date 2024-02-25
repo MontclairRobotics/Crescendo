@@ -180,9 +180,9 @@ public class Commands555 {
             return targetAngle;}, false), camera).finallyDo(() -> {RobotContainer.drivetrain.setChassisSpeeds(new ChassisSpeeds(0,0,0));}); //TODO should we lock drive?
     }
 
-    public static Command scoreMode() {
-        return alignToLimelightTarget(RobotContainer.shooterLimelight);
-    }
+    // public static Command scoreMode() {
+    //     return alignToLimelightTarget(RobotContainer.shooterLimelight);
+    // }
     
     /**
      * A command decorator to cancel a command if the limelight loses its target
@@ -246,7 +246,7 @@ public class Commands555 {
      * @return
      */
     public static Command setSprocketAngle(double angle) {
-        return Commands.runOnce(() -> RobotContainer.sprocket.setPosition(angle));
+        return Commands.runOnce(() -> RobotContainer.sprocket.setPosition(Rotation2d.fromDegrees(angle)));
     }
 
     /*
@@ -312,70 +312,70 @@ public class Commands555 {
 
 
 
-    public static Command scoreAmp() {
-        return Commands.sequence(
-                alignToLimelightTarget(RobotContainer.shooterLimelight),
-                setSprocketAngle(ArmConstants.AMP_SCORE_ANGLE),
-                shootAmp(),
-                setSprocketAngle(ArmConstants.ENCODER_MIN_ANGLE));
-    }
+    // public static Command scoreAmp() {
+    //     return Commands.sequence(
+    //             alignToLimelightTarget(RobotContainer.shooterLimelight),
+    //             setSprocketAngle(ArmConstants.AMP_SCORE_ANGLE),
+    //             shootAmp(),
+    //             setSprocketAngle(ArmConstants.ENCODER_MIN_ANGLE));
+    // }
 
-    public static Command scoreSpeaker() {
-        return Commands.sequence(
-                alignToLimelightTarget(RobotContainer.shooterLimelight),
-                setSprocketAngle(ArmConstants.SPEAKER_SCORE_ANGLE),
-                shootSpeaker(),
-                setSprocketAngle(ArmConstants.ENCODER_MIN_ANGLE));
-    }
+    // public static Command scoreSpeaker() {
+    //     return Commands.sequence(
+    //             alignToLimelightTarget(RobotContainer.shooterLimelight),
+    //             setSprocketAngle(ArmConstants.SPEAKER_SCORE_ANGLE),
+    //             shootSpeaker(),
+    //             setSprocketAngle(ArmConstants.ENCODER_MIN_ANGLE));
+    // }
 
-    public static Command receiveHumanPlayerNote() {
-        return Commands.sequence(
-            alignToLimelightTarget(RobotContainer.shooterLimelight),
-            setSprocketAngle(ArmConstants.SPEAKER_SCORE_ANGLE),
-            reverseShooter(),
-            setSprocketAngle(ArmConstants.ENCODER_MIN_ANGLE)
-        );
-    }
+    // public static Command receiveHumanPlayerNote() {
+    //     return Commands.sequence(
+    //         alignToLimelightTarget(RobotContainer.shooterLimelight),
+    //         setSprocketAngle(ArmConstants.SPEAKER_SCORE_ANGLE),
+    //         reverseShooter(),
+    //         setSprocketAngle(ArmConstants.ENCODER_MIN_ANGLE)
+    //     );
+    // }
 
-    public static Command signalAmp() {
-        return Commands.runOnce(() -> {
-            RobotContainer.led.add(new FlashAnimation(Color.kOrange));
-        });
-    }
+    // public static Command signalAmp() {
+    //     return Commands.runOnce(() -> {
+    //         RobotContainer.led.add(new FlashAnimation(Color.kOrange));
+    //     });
+    // }
 
-    public static Command signalCoop() {
-        return Commands.runOnce(() -> {
-            RobotContainer.led.add(new FlashAnimation(Color.kBlue));
-        });
-    }
+    // public static Command signalCoop() {
+    //     return Commands.runOnce(() -> {
+    //         RobotContainer.led.add(new FlashAnimation(Color.kBlue));
+    //     });
+    // }
     //LED bits
-    public static Command celebrate() {
-        return Commands.runOnce(() -> {
-            RobotContainer.led.add(new CelebrationAnimation());
-        });
-    }
+    // public static Command celebrate() {
+    //     return Commands.runOnce(() -> {
+    //         RobotContainer.led.add(new CelebrationAnimation());
+    //     });
+    // }
     
-    public static Command ampItUp(){
-     return Commands.runOnce(() -> {
-        RobotContainer.led.add(new FlashAnimation(Color.kYellow));
-     });
-    }
-    public static Command cooperatition(){
-        return Commands.runOnce(() -> {
-            RobotContainer.led.add(new FlashAnimation(Color.kBlueViolet));
-     });
-    }
-    //***********************CLIMBER COMMANDS*************************//
-    public static Command climberUp(){
-        return Commands.runOnce(() -> {
-            RobotContainer.climber.up();
-        });
-    }
+    // public static Command ampItUp(){
+    //  return Commands.runOnce(() -> {
+    //     RobotContainer.led.add(new FlashAnimation(Color.kYellow));
+    //  });
+    // }
+    // public static Command cooperatition(){
+    //     return Commands.runOnce(() -> {
+    //         RobotContainer.led.add(new FlashAnimation(Color.kBlueViolet));
+    //  });
+    // }
+    // //***********************CLIMBER COMMANDS*************************//
+    // public static Command climberUp(){
+    //     return Commands.runOnce(() -> {
+    //         RobotContainer.climber.up();
+    //     });
+    // }
     
-    public static Command climberDown(){
-        return Commands.runOnce(() -> {
-            RobotContainer.climber.down();
-        });
-    }
+    // public static Command climberDown(){
+    //     return Commands.runOnce(() -> {
+    //         RobotContainer.climber.down();
+    //     });
+    // }
     
 }  

@@ -143,16 +143,16 @@ public class Auto extends SubsystemBase {
                 // TODO: amazing error handling
             }
         
-            if (Character.isDigit(next)) {
-                if (next == '4') {
-                    finalPath.addCommands(Commands555.scoreAmp());
-                } else {
-                    finalPath.addCommands(Commands555.scoreSpeaker());
-                }
+            // if (Character.isDigit(next)) {
+            //     if (next == '4') {
+            //         finalPath.addCommands(Commands555.scoreAmp());
+            //     } else {
+            //         finalPath.addCommands(Commands555.scoreSpeaker());
+            //     }
                 
-            } else {
-                finalPath.addCommands(Commands555.alignToLimelightTarget(RobotContainer.intakeLimelight),Commands555.intake());
-            }
+            // } else {
+            //     finalPath.addCommands(Commands555.alignToLimelightTarget(RobotContainer.intakeLimelight),Commands555.intake());
+            // }
         }
         return Commands.sequence(finalPath);
     }
