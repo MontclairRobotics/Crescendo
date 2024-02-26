@@ -17,6 +17,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.units.Angle;
 import edu.wpi.first.units.Measure;
@@ -38,8 +39,8 @@ import static frc.robot.Constants.ArmConstants.*;
 
 public class Sprocket extends SubsystemBase {
     
-    private final CANSparkMax leftMotor = new CANSparkMax(Ports.LEFT_ANGLE_MOTOR_PORT, MotorType.kBrushless);
-    private final CANSparkMax rightMotor = new CANSparkMax(Ports.RIGHT_ANGLE_MOTOR_PORT, MotorType.kBrushless);
+    public final CANSparkMax leftMotor = new CANSparkMax(Ports.LEFT_ANGLE_MOTOR_PORT, MotorType.kBrushless);
+    public final CANSparkMax rightMotor = new CANSparkMax(Ports.RIGHT_ANGLE_MOTOR_PORT, MotorType.kBrushless);
 
     private double targetSpeed;
     private boolean usingPID;
@@ -49,10 +50,11 @@ public class Sprocket extends SubsystemBase {
     private ArmFeedforward angleFeedForward;
     // RelativeEncoder leftEncoder;
     // RelativeEncoder rightEncoder;
-    DutyCycleEncoder absEncoder;
+    public DutyCycleEncoder absEncoder;
 
     private final SparkPIDController leftController = leftMotor.getPIDController();
     private final SparkPIDController rightController = rightMotor.getPIDController();
+    private PIDController pidController;
 
     public LimitSwitch bottomLimitSwitch = new LimitSwitch(BOTTOM_LIMIT_SWITCH, true);
     public LimitSwitch topLimitSwitch = new LimitSwitch(TOP_LIMIT_SWITCH, true);
@@ -66,13 +68,19 @@ public class Sprocket extends SubsystemBase {
         ArmConstants.LEFT_INVERT.whenUpdate(leftMotor::setInverted);
         ArmConstants.RIGHT_INVERT.whenUpdate(rightMotor::setInverted);
 
-        leftController.setD(angleKD.get(), 1);
-        leftController.setP(angleKP.get(), 1);
-        leftController.setI(angleKI.get(), 1);
+        // leftController.setD(angleKD.get(), 1);
+        // leftController.setP(angleKP.get(), 1);
+        // leftController.setI(angleKI.get(), 1);
 
-        rightController.setD(angleKD.get(), 1);
-        rightController.setP(angleKP.get(), 1);
-        rightController.setI(angleKI.get(), 1);
+        // rightController.setD(angleKD.get(), 1);
+        // rightController.setP(angleKP.get(), 1);
+        // rightController.setI(angleKI.get(), 1);
+
+        pidController = new PIDController(angleKP.get(), angleKI.get(), angleKD.get());
+
+        angleKP.whenUpdate(pidController::setP);
+        angleKI.whenUpdate(pidController::setI);
+        angleKD.whenUpdate(pidController::setD);
 
 
         
@@ -86,13 +94,13 @@ public class Sprocket extends SubsystemBase {
         kV.whenUpdate(whenUpdate);
         kA.whenUpdate(whenUpdate);
 
-        angleKD.whenUpdate((k) -> {leftController.setD(k, 1);});
-        angleKI.whenUpdate((k) -> {leftController.setI(k, 1);});
-        angleKP.whenUpdate((k) -> {leftController.setP(k, 1);});
+        // angleKD.whenUpdate((k) -> {leftController.setD(k, 1);});
+        // angleKI.whenUpdate((k) -> {leftController.setI(k, 1);});
+        // angleKP.whenUpdate((k) -> {leftController.setP(k, 1);});
 
-        angleKD.whenUpdate((k) -> {rightController.setD(k, 1);});
-        angleKI.whenUpdate((k) -> {rightController.setI(k, 1);});
-        angleKP.whenUpdate((k) -> {rightController.setP(k, 1);});
+        // angleKD.whenUpdate((k) -> {rightController.setD(k, 1);});
+        // angleKI.whenUpdate((k) -> {rightController.setI(k, 1);});
+        // angleKP.whenUpdate((k) -> {rightController.setP(k, 1);});
 
 
 
@@ -123,6 +131,7 @@ public class Sprocket extends SubsystemBase {
      * Move sprocket down
      */
     public void goDown() {
+        usingPID = false;
         targetSpeed = -ANGLE_SPEED;
     }
 
@@ -144,11 +153,11 @@ public class Sprocket extends SubsystemBase {
 
     public void setPosition(Rotation2d angle) {
         usingPID = true;
-        double feedForward = angleFeedForward.calculate(angle.getRadians(), 0);
+        // double feedForward = angleFeedForward.calculate(angle.getRadians(), 0);
         //System.out.println(feedForward);
         setPoint = angle.getDegrees();
-        leftController.setReference(angle.getDegrees() * SPROCKET_ROTATIONS_PER_DEGREE, ControlType.kPosition, 1, feedForward);
-        rightController.setReference(angle.getDegrees() * SPROCKET_ROTATIONS_PER_DEGREE, ControlType.kPosition,1,  feedForward);
+        // leftController.setReference(angle.getDegrees() * SPROCKET_ROTATIONS_PER_DEGREE, ControlType.kPosition, 1, feedForward);
+        // rightController.setReference(angle.getDegrees() * SPROCKET_ROTATIONS_PER_DEGREE, ControlType.kPosition,1,  feedForward);
     }
 
     public SysIdRoutine getSysId() {
@@ -215,7 +224,7 @@ public class Sprocket extends SubsystemBase {
     }
 
     public double getEncoderPosition() {
-        return absEncoder.getAbsolutePosition() + SprocketConstants.ENCODER_OFFSET;
+        return -absEncoder.getDistance() + SprocketConstants.ENCODER_OFFSET;
     }
 
     public boolean isAtAngle(double angle) { 
@@ -227,13 +236,12 @@ public class Sprocket extends SubsystemBase {
      * will this work if getAngle returns degrees? I do not know
      */
     public void periodic() {
-        
         double voltage = MAX_VOLTAGE_V * targetSpeed;
         double feedForwardVoltage = angleFeedForward.calculate(getAngle() * (Math.PI/180), targetSpeed * MAX_SPEED);
         
-        if(Math.abs(setPoint-getAngle()) < ArmConstants.SPROCKET_ANGLE_DEADBAND){
-            usingPID = false;
-        }
+        // if(Math.abs(setPoint - getEncoderPosition()) < ArmConstants.SPROCKET_ANGLE_DEADBAND){
+        //     usingPID = false;
+        // }
     //TODO: Also cancel reference
         if (topLimitSwitch.get() && targetSpeed > 0) {
             leftMotor.setVoltage(feedForwardVoltage);
@@ -246,10 +254,20 @@ public class Sprocket extends SubsystemBase {
             double voltageSum = voltage + feedForwardVoltage;
             if (voltageSum > MAX_VOLTAGE_V) {
                 voltageSum = MAX_VOLTAGE_V;
+
             }
             leftMotor.setVoltage(voltageSum);
             rightMotor.setVoltage(voltageSum);
-        } 
+        } else if (usingPID) {
+            double pidVoltage = pidController.calculate(getEncoderPosition(), setPoint);
+            double voltageSum = pidVoltage;
+            System.out.println(pidVoltage);
+            // if (voltageSum > MAX_VOLTAGE_V) {
+            //     voltageSum = MAX_VOLTAGE_V;
+            // }
+            leftMotor.set(voltageSum + feedForwardVoltage/12);
+            rightMotor.set(voltageSum + feedForwardVoltage/12);
+        }
 
         // if (topLimitSwitch.get()) {
         //     rightEncoder.setPosition(ENCODER_MAX_ANGLE);

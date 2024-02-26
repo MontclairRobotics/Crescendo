@@ -115,15 +115,15 @@ public final class Constants {
                                                                                                 // ChargedUp elevator
                                                                                                 // feedforward }
 
-    public static final Tunable<Double> kS = Tunable.of(0, "arm.feedforward.ks");
+    public static final Tunable<Double> kS = Tunable.of(0.125, "arm.feedforward.ks");
     public static final Tunable<Double> kG = Tunable.of(0.1, "arm.feedforward.kG");
     public static final Tunable<Double> kV = Tunable.of(8.91, "arm.feedforward.kV");
     public static final Tunable<Double> kA = Tunable.of(0.01, "arm.feedforward.ka");
 
     // TODO: Angle PID Constants: (!!!!!!)
-    public static final Tunable<Double> angleKP = Tunable.of(0.125, "arm.kp");
+    public static final Tunable<Double> angleKP = Tunable.of(0.11, "arm.kp");
     public static final Tunable<Double> angleKI = Tunable.of(0, "arm.ki");
-    public static final Tunable<Double> angleKD = Tunable.of(0, "arm.kd");
+    public static final Tunable<Double> angleKD = Tunable.of(0.01, "arm.kd");
 
     // TODO: All of these constants are basically guessed!!
     public static final double ANGLE_SPEED = 0.5; // Speed of the angle changing
@@ -137,7 +137,7 @@ public final class Constants {
     public static final double MAX_SPEED = 0; // TODO ???
 
     public static final Tunable<Boolean> LEFT_INVERT = Tunable.of(true, "arm.invert.left");
-    public static final Tunable<Boolean> RIGHT_INVERT = Tunable.of(false, "arm.invert.right");
+    public static final Tunable<Boolean> RIGHT_INVERT = Tunable.of(true, "arm.invert.right");
 
     public static final double ENCODER_DIFFERENCE = 2; // the acceptable difference between encoder values
 
@@ -173,7 +173,7 @@ public final class Constants {
     public static final double MAX_SPEED = 0.5;
 
     public static final int ENCODER_PIN = 1;
-    public static final double ENCODER_OFFSET = 0; //TODO: get the encoder offset
+    public static final double ENCODER_OFFSET = (32 + 24.233742605843567); //TODO: get the encoder offset
   }
   
   public static class PidConstants {

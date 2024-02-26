@@ -109,6 +109,14 @@ public class RobotContainer {
     // operatorController.square().onTrue(Commands555.scoreSpeaker());
     operatorController.circle().onTrue(Commands555.setSprocketAngle(45));
     operatorController.triangle().onTrue(Commands555.shootSpeaker());
+    operatorController.square().onTrue(
+      Commands.runOnce(() -> {
+        System.out.println(RobotContainer.sprocket.getEncoderPosition());
+        System.out.println("left: " + sprocket.leftMotor.getEncoder().getPosition() * ArmConstants.SPROCKET_ROTATIONS_PER_DEGREE);
+        System.out.println("right: " + sprocket.rightMotor.getEncoder().getPosition() * ArmConstants.SPROCKET_ROTATIONS_PER_DEGREE);
+      }
+        )
+    );
 
     // operatorController.L1().onTrue(Commands555.celebrate());
     // operatorController.touchpad().onTrue(Commands555.ampItUp());
