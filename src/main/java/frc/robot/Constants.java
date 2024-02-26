@@ -171,6 +171,9 @@ public final class Constants {
 
   public static class SprocketConstants {
     public static final double MAX_SPEED = 0.5;
+
+    public static final int ENCODER_PIN = 1;
+    public static final double ENCODER_OFFSET = 0; //TODO: get the encoder offset
   }
   
   public static class PidConstants {

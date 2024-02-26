@@ -8,6 +8,7 @@ import frc.robot.Constants.*;
 import java.util.function.Consumer;
 import org.littletonrobotics.junction.AutoLogOutput;
 
+import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
@@ -23,6 +24,8 @@ import edu.wpi.first.units.MutableMeasure;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.Velocity;
 import edu.wpi.first.units.Voltage;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -44,8 +47,9 @@ public class Sprocket extends SubsystemBase {
     //setPoint is in degrees
 
     private ArmFeedforward angleFeedForward;
-    RelativeEncoder leftEncoder;
-    RelativeEncoder rightEncoder;
+    // RelativeEncoder leftEncoder;
+    // RelativeEncoder rightEncoder;
+    DutyCycleEncoder absEncoder;
 
     private final SparkPIDController leftController = leftMotor.getPIDController();
     private final SparkPIDController rightController = rightMotor.getPIDController();
@@ -93,15 +97,17 @@ public class Sprocket extends SubsystemBase {
 
 
         //TODO check conversion factors
-        leftEncoder = leftMotor.getEncoder();
-        leftEncoder.setPositionConversionFactor(1/SPROCKET_ROTATIONS_PER_DEGREE);
-        leftEncoder.setVelocityConversionFactor(1/SPROCKET_ROTATIONS_PER_DEGREE*(1/60));
-        leftEncoder.setPosition(ENCODER_MIN_ANGLE);
+        // leftEncoder = leftMotor.getEncoder();
+        // leftEncoder.setPositionConversionFactor(1/SPROCKET_ROTATIONS_PER_DEGREE);
+        // leftEncoder.setVelocityConversionFactor(1/SPROCKET_ROTATIONS_PER_DEGREE*(1/60));
+        // leftEncoder.setPosition(ENCODER_MIN_ANGLE);
 
-        rightEncoder = rightMotor.getEncoder();
-        rightEncoder.setPositionConversionFactor(1/SPROCKET_ROTATIONS_PER_DEGREE);
-        leftEncoder.setVelocityConversionFactor(1/SPROCKET_ROTATIONS_PER_DEGREE*(1/60));
-        rightEncoder.setPosition(ENCODER_MIN_ANGLE);
+        // rightEncoder = rightMotor.getEncoder();
+        // rightEncoder.setPositionConversionFactor(1/SPROCKET_ROTATIONS_PER_DEGREE);
+        // leftEncoder.setVelocityConversionFactor(1/SPROCKET_ROTATIONS_PER_DEGREE*(1/60));
+        // rightEncoder.setPosition(ENCODER_MIN_ANGLE);
+        absEncoder = new DutyCycleEncoder(SprocketConstants.ENCODER_PIN);
+        absEncoder.setDistancePerRotation(360.0);
 
         Shuffleboard.getTab("Debug").addBoolean("Using PID", () -> usingPID);
         Shuffleboard.getTab("Debug").addDouble("Angle", () -> getAngle());
@@ -209,11 +215,7 @@ public class Sprocket extends SubsystemBase {
     }
 
     public double getEncoderPosition() {
-        if (Math.abs(leftEncoder.getPosition() - rightEncoder.getPosition()) > ENCODER_DIFFERENCE) { //Should the arm auto-reset if this is not equal?
-            System.out.println("Encoders misaligned!");
-        }
-        
-        return (leftEncoder.getPosition() + rightEncoder.getPosition()) / 2;
+        return absEncoder.getAbsolutePosition() + SprocketConstants.ENCODER_OFFSET;
     }
 
     public boolean isAtAngle(double angle) { 
@@ -249,14 +251,14 @@ public class Sprocket extends SubsystemBase {
             rightMotor.setVoltage(voltageSum);
         } 
 
-        if (topLimitSwitch.get()) {
-            rightEncoder.setPosition(ENCODER_MAX_ANGLE);
-            leftEncoder.setPosition(ENCODER_MAX_ANGLE);
-        }
-        if (bottomLimitSwitch.get()) {
-            rightEncoder.setPosition(ENCODER_MIN_ANGLE);
-            leftEncoder.setPosition(ENCODER_MIN_ANGLE);
-        }
+        // if (topLimitSwitch.get()) {
+        //     rightEncoder.setPosition(ENCODER_MAX_ANGLE);
+        //     leftEncoder.setPosition(ENCODER_MAX_ANGLE);
+        // }
+        // if (bottomLimitSwitch.get()) {
+        //     rightEncoder.setPosition(ENCODER_MIN_ANGLE);
+        //     leftEncoder.setPosition(ENCODER_MIN_ANGLE);
+        // }
 
         //System.out.println("left: " + leftEncoder.getPosition() + " right: " + rightEncoder.getPosition());
         // System.out.println(usingPID);
