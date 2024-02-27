@@ -246,7 +246,7 @@ public class Commands555 {
      * @return
      */
     public static Command setSprocketAngle(double angle) {
-        return Commands.runOnce(() -> RobotContainer.sprocket.setPosition(angle));
+        return Commands.runOnce(() -> RobotContainer.sprocket.setPosition(Rotation2d.fromDegrees(angle)));
     }
 
     /*

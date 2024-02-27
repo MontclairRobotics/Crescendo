@@ -23,6 +23,7 @@ import animation2.WipeTransition;
 import animation2.api.Animation;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import java.awt.geom.Point2D;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.util.Tunable;
@@ -116,9 +117,9 @@ public final class Constants {
                                                                                                 // feedforward }
 
     public static final Tunable<Double> kS = Tunable.of(0, "arm.feedforward.ks");
-    public static final Tunable<Double> kG = Tunable.of(0, "arm.feedforward.kG");
-    public static final Tunable<Double> kV = Tunable.of(0, "arm.feedforward.kV");
-    public static final Tunable<Double> kA = Tunable.of(0, "arm.feedforward.ka");
+    public static final Tunable<Double> kG = Tunable.of(0.1, "arm.feedforward.kG");
+    public static final Tunable<Double> kV = Tunable.of(8.91, "arm.feedforward.kV");
+    public static final Tunable<Double> kA = Tunable.of(0.01, "arm.feedforward.ka");
 
     // TODO: Angle PID Constants: (!!!!!!)
     public static final Tunable<Double> angleKP = Tunable.of(0, "arm.kp");
@@ -134,7 +135,7 @@ public final class Constants {
     public static final double SPEAKER_SCORE_ANGLE = -1;
     public static final double AMP_SCORE_ANGLE = -1;
 
-    public static final double MAX_SPEED = 0; // TODO ???
+    public static final double MAX_SPEED = 20; // TODO ??? 
 
     public static final Tunable<Boolean> LEFT_INVERT = Tunable.of(false, "arm.invert.left");
     public static final Tunable<Boolean> RIGHT_INVERT = Tunable.of(false, "arm.invert.right");
@@ -171,6 +172,19 @@ public final class Constants {
 
   public static class SprocketConstants {
     public static final double MAX_SPEED = 0.5;
+
+
+    //First number in meters, second in degrees
+    public static final Point2D.Double[] ANGLE_POINTS = {
+      new Point2D.Double(0, 0) //example
+
+    };
+
+    //First number in meters, second in RPM
+    public static final Point2D.Double[] SPEED_POINTS = {
+      
+    };
+
   }
   
   public static class PidConstants {
