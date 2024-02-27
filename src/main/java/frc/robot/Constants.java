@@ -121,9 +121,9 @@ public final class Constants {
     public static final Tunable<Double> kA = Tunable.of(0.01, "arm.feedforward.ka");
 
     // TODO: Angle PID Constants: (!!!!!!)
-    public static final Tunable<Double> angleKP = Tunable.of(0.11, "arm.kp");
+    public static final Tunable<Double> angleKP = Tunable.of(0.8, "arm.kp");
     public static final Tunable<Double> angleKI = Tunable.of(0, "arm.ki");
-    public static final Tunable<Double> angleKD = Tunable.of(0.01, "arm.kd");
+    public static final Tunable<Double> angleKD = Tunable.of(0, "arm.kd");
 
     // TODO: All of these constants are basically guessed!!
     public static final double ANGLE_SPEED = 0.5; // Speed of the angle changing

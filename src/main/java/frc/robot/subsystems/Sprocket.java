@@ -211,7 +211,8 @@ public class Sprocket extends SubsystemBase {
 
     @AutoLogOutput
     /**
-     * If the angle is less than 0 then 0.0 is returned, if the angle is greater than 90 it return 90.0, else it will return the actual angle
+     * If the angle is less than 0 then 0.0 is returned, if the angle is greater than 90 it return 90.0, else it will return the actual angle in degrees
+     * @return angle of the sprocket in degrees
      */
     public double getAngle() {
         if(getEncoderPosition() < ENCODER_MIN_ANGLE) {
@@ -260,13 +261,18 @@ public class Sprocket extends SubsystemBase {
             rightMotor.setVoltage(voltageSum);
         } else if (usingPID) {
             double pidVoltage = pidController.calculate(getEncoderPosition(), setPoint);
-            double voltageSum = pidVoltage;
-            System.out.println(pidVoltage);
-            // if (voltageSum > MAX_VOLTAGE_V) {
-            //     voltageSum = MAX_VOLTAGE_V;
-            // }
-            leftMotor.set(voltageSum + feedForwardVoltage/12);
-            rightMotor.set(voltageSum + feedForwardVoltage/12);
+            double voltageSum = pidVoltage + feedForwardVoltage;
+
+            if (voltageSum > MAX_VOLTAGE_V) {
+                voltageSum = MAX_VOLTAGE_V;
+            }
+            else if(voltageSum < -MAX_VOLTAGE_V) {
+                voltageSum = -MAX_VOLTAGE_V;
+            }
+
+            System.out.println(voltageSum);
+            leftMotor.set(voltageSum / leftMotor.getBusVoltage());
+            rightMotor.set(voltageSum / rightMotor.getBusVoltage());
         }
 
         // if (topLimitSwitch.get()) {
