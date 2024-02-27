@@ -4,6 +4,7 @@ package frc.robot.subsystems;
 import frc.robot.LimitSwitch;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.*;
+import frc.robot.math.Math555;
 
 import java.util.function.Consumer;
 import org.littletonrobotics.junction.AutoLogOutput;
@@ -36,6 +37,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Mechanism;
 
 import static frc.robot.Constants.ArmConstants.*;
+import static frc.robot.Constants.SprocketConstants.*;
 
 public class Sprocket extends SubsystemBase {
     
@@ -77,6 +79,7 @@ public class Sprocket extends SubsystemBase {
         // rightController.setI(angleKI.get(), 1);
 
         pidController = new PIDController(angleKP.get(), angleKI.get(), angleKD.get());
+        pidController.setTolerance(1);
 
         angleKP.whenUpdate(pidController::setP);
         angleKI.whenUpdate(pidController::setI);
@@ -207,6 +210,20 @@ public class Sprocket extends SubsystemBase {
         return !bottomLimitSwitch.get() && !topLimitSwitch.get();
     }
  
+    public double getAdjustedSpeed() {
+        double position = getPositionInInterval();
+        double speed = targetSpeed;
+        if (1 - position < SPROCKET_SAFEZONE_PERCENTAGE) {
+            if (speed > 0) {
+                speed = speed * 0.5;
+            }
+        } else if (position < SPROCKET_SAFEZONE_PERCENTAGE) {
+            if (speed < 0) {
+                speed = speed * 0.5;
+            }
+        }
+        return speed;
+    }
 
 
     @AutoLogOutput
@@ -232,36 +249,46 @@ public class Sprocket extends SubsystemBase {
         return Math.abs(getAngle() - angle) < ArmConstants.SPROCKET_ANGLE_DEADBAND;
     }
 
+    public double getPositionInInterval() {
+        return Math555.invlerp(getAngle(), ENCODER_MIN_ANGLE, ENCODER_MAX_ANGLE);
+    }
+
     @Override
-    /**
-     * will this work if getAngle returns degrees? I do not know
-     */
+
     public void periodic() {
-        double voltage = MAX_VOLTAGE_V * targetSpeed;
         double feedForwardVoltage = angleFeedForward.calculate(getAngle() * (Math.PI/180), targetSpeed * MAX_SPEED);
         
+        double pidSpeed = pidController.calculate(getEncoderPosition(), setPoint);
         // if(Math.abs(setPoint - getEncoderPosition()) < ArmConstants.SPROCKET_ANGLE_DEADBAND){
         //     usingPID = false;
         // }
-    //TODO: Also cancel reference
-        if (topLimitSwitch.get() && targetSpeed > 0) {
-            leftMotor.setVoltage(feedForwardVoltage);
-            rightMotor.setVoltage(feedForwardVoltage);
+        boolean goingUp = false;
+        if (usingPID) {
+            goingUp = pidSpeed > 0;
+        } else {
+            goingUp = targetSpeed > 0;
         }
-        else if (bottomLimitSwitch.get() && targetSpeed < 0) {
+
+
+    //TODO: Also cancel reference
+        if (((topLimitSwitch.get() || getAngle() > ENCODER_MAX_ANGLE) && goingUp)) {
             leftMotor.setVoltage(feedForwardVoltage);
             rightMotor.setVoltage(feedForwardVoltage);
+            usingPID = false;
+        }
+        else if ((getAngle() < ENCODER_MIN_ANGLE || bottomLimitSwitch.get()) && !goingUp) {
+            leftMotor.setVoltage(feedForwardVoltage);
+            rightMotor.setVoltage(feedForwardVoltage);
+            usingPID = false;
         } else if (!usingPID) {
-            double voltageSum = voltage + feedForwardVoltage;
+            double voltageSum = getAdjustedSpeed() * MAX_VOLTAGE_V + feedForwardVoltage;
             if (voltageSum > MAX_VOLTAGE_V) {
                 voltageSum = MAX_VOLTAGE_V;
-
             }
             leftMotor.setVoltage(voltageSum);
             rightMotor.setVoltage(voltageSum);
         } else if (usingPID) {
-            double pidVoltage = pidController.calculate(getEncoderPosition(), setPoint);
-            double voltageSum = pidVoltage + feedForwardVoltage;
+            double voltageSum = pidSpeed + feedForwardVoltage;
 
             if (voltageSum > MAX_VOLTAGE_V) {
                 voltageSum = MAX_VOLTAGE_V;
@@ -270,7 +297,7 @@ public class Sprocket extends SubsystemBase {
                 voltageSum = -MAX_VOLTAGE_V;
             }
 
-            System.out.println(voltageSum);
+            //System.out.println(voltageSum);
             leftMotor.set(voltageSum / leftMotor.getBusVoltage());
             rightMotor.set(voltageSum / rightMotor.getBusVoltage());
         }

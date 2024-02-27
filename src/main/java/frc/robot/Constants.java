@@ -123,7 +123,7 @@ public final class Constants {
     // TODO: Angle PID Constants: (!!!!!!)
     public static final Tunable<Double> angleKP = Tunable.of(0.8, "arm.kp");
     public static final Tunable<Double> angleKI = Tunable.of(0, "arm.ki");
-    public static final Tunable<Double> angleKD = Tunable.of(0, "arm.kd");
+    public static final Tunable<Double> angleKD = Tunable.of(0.0001, "arm.kd");
 
     // TODO: All of these constants are basically guessed!!
     public static final double ANGLE_SPEED = 0.5; // Speed of the angle changing
@@ -170,7 +170,8 @@ public final class Constants {
   }
 
   public static class SprocketConstants {
-    public static final double MAX_SPEED = 0.5;
+
+    public static final double SPROCKET_SAFEZONE_PERCENTAGE = 0.1;
 
     public static final int ENCODER_PIN = 1;
     public static final double ENCODER_OFFSET = (32 + 24.233742605843567); //TODO: get the encoder offset
