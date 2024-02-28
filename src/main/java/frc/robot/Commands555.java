@@ -47,13 +47,13 @@ public class Commands555 {
      * @param targetTranslation Field-relative Translation2d to drive the robot to.
      * @param theta             Target angle for end position.
      */
-    // public static Command driveToRobotRelativePoint(Translation2d targetTranslation, Rotation2d theta) {
-    //     Pose2d currentRobotPosition = RobotContainer.drivetrain.getSwerveDrive().getPose();
-    //     Rotation2d currentOdometryHeading = RobotContainer.drivetrain.getSwerveDrive().getOdometryHeading();
+    public static Command driveToRobotRelativePoint(Translation2d targetTranslation, Rotation2d theta) {
+        Pose2d currentRobotPosition = RobotContainer.drivetrain.getSwerveDrive().getPose();
+        Rotation2d currentOdometryHeading = RobotContainer.drivetrain.getSwerveDrive().getOdometryHeading();
 
-    //     Translation2d targetTranslation2d = currentRobotPosition.getTranslation()
-    //             .plus(targetTranslation.rotateBy(currentOdometryHeading));
-    //     Pose2d targetPose = new Pose2d(targetTranslation2d.getX(), targetTranslation2d.getY(), theta);
+        Translation2d targetTranslation2d = currentRobotPosition.getTranslation()
+                .plus(targetTranslation.rotateBy(currentOdometryHeading));
+        Pose2d targetPose = new Pose2d(targetTranslation2d.getX(), targetTranslation2d.getY(), theta);
 
         return AutoBuilder.pathfindToPose(
                 targetPose,
@@ -95,9 +95,9 @@ public class Commands555 {
                 .andThen(stopIntake());
     }
 
-    // public static Command reverseIntake() {
-    //     return Commands.runOnce(RobotContainer.intake::out, RobotContainer.intake).withName("intake out");
-    // }
+    public static Command reverseIntake() {
+        return Commands.runOnce(RobotContainer.intake::out, RobotContainer.intake).withName("intake out");
+    }
 
     public static Command stopIntake() {
         return Commands.runOnce(RobotContainer.intake::stop, RobotContainer.intake).withName("intake stop");

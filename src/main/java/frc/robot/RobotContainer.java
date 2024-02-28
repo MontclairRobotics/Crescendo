@@ -47,10 +47,10 @@ public class RobotContainer {
   public static CommandPS5Controller driverController = new CommandPS5Controller(0);
   public static CommandPS5Controller operatorController = new CommandPS5Controller(1);
   
-  // public static Drivetrain drivetrain = new Drivetrain(new File(Filesystem.getDeployDirectory(), "swerve/"));
+  public static Drivetrain drivetrain = new Drivetrain(new File(Filesystem.getDeployDirectory(), "swerve/"));
   
   // Subsystems
-  // public static Intake intake = new Intake();
+  public static Intake intake = new Intake();
   public static Shooter shooter = new Shooter();
   public static Sprocket sprocket = new Sprocket();
   public static Limelight intakeLimelight = new Limelight("limelight");
@@ -89,16 +89,6 @@ public class RobotContainer {
     sprocket.setDefaultCommand(Commands.run(() -> {
       sprocket.setInputFromJoystick(operatorController);
     }, sprocket));
-    
-    // drivetrain.setDefaultCommand(Commands.run(() -> {
-    //   drivetrain.setInputFromController(driverController); 
-    // }, drivetrain));
-
-    // sprocket.setDefaultCommand(Commands.run(() -> {
-    //   sprocket.setSpeed(
-    //     MathUtil.applyDeadband(operatorController.getLeftY(), 0.05) * ArmConstants.MAX_SPEED
-    //   );
-    // }, sprocket));
 
 
     configureBindings();
@@ -138,37 +128,15 @@ public class RobotContainer {
     driverController.touchpad().onTrue(Commands.runOnce(() -> {
       drivetrain.getSwerveDrive().zeroGyro();
     }).ignoringDisable(true));
-  private void configureBindings() {
-    
-    // driverController.touchpad().onTrue(Commands.runOnce(() -> {
-    //   drivetrain.getSwerveDrive().zeroGyro();
-    // }));
     
     // // TODO: probably wrong
     // driverController.cross().onTrue(Commands555.scoreSpeaker()).onFalse(Commands555.stopShooter());
     // driverController.circle().onTrue(Commands555.intake()).onFalse(Commands555.stopIntake());
 
     // ************** OPERATOR CONTROLLER BINDINGS ************** //
-    // operatorController.circle().onTrue(Commands.runOnce(() -> {
-    //   shooter.shootVelocity(500);
-    // }));
-
-
-    operatorController.triangle().onTrue(Commands.runOnce(() -> { 
-      shooter.shootVelocity(topShooterSpeakerSpeed.get(), 
-      bottomShooterSpeakerSpeed.get()); 
-    })).onFalse(Commands.runOnce(() -> {
-      shooter.stop();
-    }));
 
     operatorController.R2().onTrue(Commands555.reverseIntake()).onFalse(Commands555.stopIntake());
     operatorController.L2().onTrue(Commands555.intake()).onFalse(Commands555.stopIntake());
-    operatorController.circle().onTrue(Commands.runOnce(() -> { 
-      shooter.shootVelocity(topShooterAmpSpeed.get(), 
-      bottomShooterAmpSpeed.get()); 
-    })).onFalse(Commands.runOnce(() -> {
-      shooter.stop();
-    }));
 
     operatorController.circle().onTrue(Commands555.scoreAmp());
     operatorController.square().onTrue(Commands555.scoreSpeaker());
@@ -186,20 +154,12 @@ public class RobotContainer {
     // operatorController.povUp().onTrue(Commands555.climberUp());
     // operatorController.povDown().onTrue(Commands555.climberDown());
     //operatorController.R1().onTrue(Commands555.sprocketToAprilTag()); TODO: We do this later!!!
-    operatorController.square().onTrue(Commands.runOnce(() -> { 
-      shooter.transportVelocity(transportAmpSpeed.get());
-    })).onFalse(Commands.runOnce(() -> {
-      shooter.stopTransport();
-    }));
 
     ControllerTools.getDPad(DPad.UP, operatorController).toggleOnTrue(sprocket.getSysId().quasistatic(Direction.kForward).onlyWhile(sprocket::isSprocketSafe));
     ControllerTools.getDPad(DPad.DOWN, operatorController).toggleOnTrue(sprocket.getSysId().quasistatic(Direction.kReverse).onlyWhile(sprocket::isSprocketSafe));
 
-    operatorController.options().onTrue(Commands555.getShooterSysIdCommand("top-bottom"));
-    operatorController.create().onTrue(Commands555.getShooterSysIdCommand("transport"));
-
-    // operatorController.L1().onTrue(Commands555.signalAmp());
-    // operatorController.R1().onTrue(Commands555.signalCoop());
+    // operatorController.options().onTrue(Commands555.getShooterSysIdCommand("top-bottom"));
+    // operatorController.create().onTrue(Commands555.getShooterSysIdCommand("transport"));
 
 
     //////////////////////////////

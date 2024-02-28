@@ -115,7 +115,7 @@ public class Auto extends SubsystemBase {
             //     currentState.timeSeconds,
             //     currentState.velocityMps,
             //     currentState.accelerationMpsSq,
-            //     currentState.positionMeters,
+            //     currentState.positionMeters
                 
             // );
         }
@@ -127,28 +127,28 @@ public class Auto extends SubsystemBase {
 
     public Command getPathSequence(String autoString) {
 
-    //     SequentialCommandGroup finalPath = new SequentialCommandGroup();
+        SequentialCommandGroup finalPath = new SequentialCommandGroup();
         
-    //     for (int i = 0; i < autoString.length()-1; i++) {
+        for (int i = 0; i < autoString.length()-1; i++) {
 
-    //         char current = autoString.charAt(i);
-    //         char next = autoString.charAt(i+1);
-    //         try {
+            char current = autoString.charAt(i);
+            char next = autoString.charAt(i+1);
+            try {
 
-    //             PathPlannerPath path = PathPlannerPath.fromPathFile("" + current + next);
-    //             finalPath.addCommands(AutoBuilder.followPath(path));
-    //             trajectories.add(path.getTrajectory(RobotContainer.drivetrain.getSwerveDrive().getRobotVelocity(), RobotContainer.drivetrain.getRotation()));
+                PathPlannerPath path = PathPlannerPath.fromPathFile("" + current + next);
+                finalPath.addCommands(AutoBuilder.followPath(path));
+                trajectories.add(path.getTrajectory(RobotContainer.drivetrain.getSwerveDrive().getRobotVelocity(), RobotContainer.drivetrain.getRotation()));
 
-    //         } catch(Exception e) {
-    //             // TODO: amazing error handling
-    //         }
+            } catch(Exception e) {
+                // TODO: amazing error handling
+            }
         
-    //         // if (Character.isDigit(next)) {
-    //         //     if (next == '4') {
-    //         //         finalPath.addCommands(Commands555.scoreAmp());
-    //         //     } else {
-    //         //         finalPath.addCommands(Commands555.scoreSpeaker());
-    //         //     }
+            if (Character.isDigit(next)) {
+                if (next == '4') {
+                    finalPath.addCommands(Commands555.scoreAmp());
+                } else {
+                    finalPath.addCommands(Commands555.scoreSpeaker());
+                }
                 
             } else {
                 finalPath.addCommands(Commands555.alignToLimelightTarget(RobotContainer.intakeLimelight),Commands555.intake());
