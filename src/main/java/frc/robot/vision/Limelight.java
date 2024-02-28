@@ -67,6 +67,8 @@ public class Limelight extends SubsystemBase {
     public double getObjectTY() {
         return LimelightHelpers.getLimelightNTDouble(cameraName, "ty");
     }
+
+    public void getDistanceTo
     
 
 }
