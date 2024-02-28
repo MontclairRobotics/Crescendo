@@ -153,10 +153,10 @@ public final class Constants {
     public static final double SPEAKER_EJECT_SPEED = 0.5;
     public static final double AMP_EJECT_SPEED = 0.1;
 
-    public static Tunable<Double> kp = Tunable.of(6e-5, "shooter.kp");
+    public static Tunable<Double> kp = Tunable.of(0.0005, "shooter.kp");
     public static Tunable<Double> ki = Tunable.of(0, "shooter.ki");
     public static Tunable<Double> kd = Tunable.of(0, "shooter.kd");
-    public static Tunable<Double> ff = Tunable.of(0.000015, "shooter.ff");
+    public static Tunable<Double> ff = Tunable.of(0.0, "shooter.ff");
 
     public static final double MAX_RPM = 5700;
 
@@ -168,6 +168,42 @@ public final class Constants {
     // // Shooter
     // public static final double SPEAKER_EJECT_SPEED = 0.5;
     // public static final double AMP_EJECT_SPEED = 0.1;
+
+    // From SysId
+    // public static final double TOP_SHOOTER_FF_KS = 0.20823;
+    // public static final double TOP_SHOOTER_FF_KV = 0.0021625;
+    // public static final double TOP_SHOOTER_FF_KA = 0.00024932;
+    // public static final double TOP_SHOOTER_PID_KP = 3.8326e-07;
+    // public static final double TOP_SHOOTER_PID_KI = 0;
+    // public static final double TOP_SHOOTER_PID_KD = 0;
+    public static final double TOP_SHOOTER_FF_KS = 0.18454;
+    public static final double TOP_SHOOTER_FF_KV = 0.0021629;
+    public static final double TOP_SHOOTER_FF_KA = 0.00026348;
+    public static final double TOP_SHOOTER_PID_KP = 4.4848e-07;
+    public static final double TOP_SHOOTER_PID_KI = 0;
+    public static final double TOP_SHOOTER_PID_KD = 0;
+
+    // public static final double BOTTOM_SHOOTER_FF_KS = 0.22812;
+    // public static final double BOTTOM_SHOOTER_FF_KV = 0.0022851;
+    // public static final double BOTTOM_SHOOTER_FF_KA = 0.00026402;
+    // public static final double BOTTOM_SHOOTER_PID_KP = 4.1584e-07; 
+    // public static final double BOTTOM_SHOOTER_PID_KI = 0;
+    // public static final double BOTTOM_SHOOTER_PID_KD = 0;
+    public static final double BOTTOM_SHOOTER_FF_KS = 0.19665;
+    public static final double BOTTOM_SHOOTER_FF_KV = 0.0022763;
+    public static final double BOTTOM_SHOOTER_FF_KA = 0.00033793;
+    public static final double BOTTOM_SHOOTER_PID_KP = 7.1995e-07; 
+    public static final double BOTTOM_SHOOTER_PID_KI = 0;
+    public static final double BOTTOM_SHOOTER_PID_KD = 0;
+
+    public static final double TRANSPORT_FF_KS = 0.15883;
+    public static final double TRANSPORT_FF_KV = 0.0020936;
+    public static final double TRANSPORT_FF_KA = 0.00017895;
+    public static final double TRANSPORT_PID_KP = 1.6005e-07; 
+    public static final double TRANSPORT_PID_KI = 0;
+    public static final double TRANSPORT_PID_KD = 0;
+
+
   }
 
   public static class SprocketConstants {

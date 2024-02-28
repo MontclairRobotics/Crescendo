@@ -28,6 +28,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
@@ -45,13 +47,13 @@ public class Commands555 {
      * @param targetTranslation Field-relative Translation2d to drive the robot to.
      * @param theta             Target angle for end position.
      */
-    public static Command driveToRobotRelativePoint(Translation2d targetTranslation, Rotation2d theta) {
-        Pose2d currentRobotPosition = RobotContainer.drivetrain.getSwerveDrive().getPose();
-        Rotation2d currentOdometryHeading = RobotContainer.drivetrain.getSwerveDrive().getOdometryHeading();
+    // public static Command driveToRobotRelativePoint(Translation2d targetTranslation, Rotation2d theta) {
+    //     Pose2d currentRobotPosition = RobotContainer.drivetrain.getSwerveDrive().getPose();
+    //     Rotation2d currentOdometryHeading = RobotContainer.drivetrain.getSwerveDrive().getOdometryHeading();
 
-        Translation2d targetTranslation2d = currentRobotPosition.getTranslation()
-                .plus(targetTranslation.rotateBy(currentOdometryHeading));
-        Pose2d targetPose = new Pose2d(targetTranslation2d.getX(), targetTranslation2d.getY(), theta);
+    //     Translation2d targetTranslation2d = currentRobotPosition.getTranslation()
+    //             .plus(targetTranslation.rotateBy(currentOdometryHeading));
+    //     Pose2d targetPose = new Pose2d(targetTranslation2d.getX(), targetTranslation2d.getY(), theta);
 
         return AutoBuilder.pathfindToPose(
                 targetPose,
@@ -93,9 +95,9 @@ public class Commands555 {
                 .andThen(stopIntake());
     }
 
-    public static Command reverseIntake() {
-        return Commands.runOnce(RobotContainer.intake::out, RobotContainer.intake).withName("intake out");
-    }
+    // public static Command reverseIntake() {
+    //     return Commands.runOnce(RobotContainer.intake::out, RobotContainer.intake).withName("intake out");
+    // }
 
     public static Command stopIntake() {
         return Commands.runOnce(RobotContainer.intake::stop, RobotContainer.intake).withName("intake stop");
@@ -229,13 +231,13 @@ public class Commands555 {
      * Sprocket Commands
      * - - - - - - - - - -
      */
-    public static Command goUp() {
-        return Commands.runOnce(RobotContainer.sprocket::goUp, RobotContainer.sprocket).withName("sprocket up");
-    }
+    // public static Command goUp() {
+    //     return Commands.runOnce(RobotContainer.sprocket::goUp, RobotContainer.sprocket).withName("sprocket up");
+    // }
 
-    public static Command goDown() {
-        return Commands.runOnce(RobotContainer.sprocket::goDown, RobotContainer.sprocket).withName("sprocket down");
-    }
+    // public static Command goDown() {
+    //     return Commands.runOnce(RobotContainer.sprocket::goDown, RobotContainer.sprocket).withName("sprocket down");
+    // }
 
     public static Command stopSprocket() {
         return Commands.runOnce(RobotContainer.sprocket::stop, RobotContainer.sprocket).withName("sprocket stop");
@@ -273,7 +275,7 @@ public class Commands555 {
 
     public static Command shootVelocity(double velocity) {
         return Commands.runOnce(() -> {
-            RobotContainer.shooter.shootVelocity(ShooterConstants.MAX_RPM);
+            RobotContainer.shooter.shootVelocity(5000);
         });
     }
 
