@@ -104,6 +104,11 @@ public class Shooter extends SubsystemBase {
         bottomMotor.set(ShooterConstants.AMP_EJECT_SPEED);
     }
 
+    //TODO: write the method
+    public boolean atSpeed(){
+    return false;
+    }
+    
     /**
      * Stops the motors
      */

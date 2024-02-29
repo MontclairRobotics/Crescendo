@@ -19,6 +19,8 @@ import frc.robot.vision.DetectionType;
 import frc.robot.vision.Limelight;
 import swervelib.SwerveDrive;
 
+import static frc.robot.Constants.ArmConstants.ENCODER_MIN_ANGLE;
+
 import java.io.File;
 import animation2.AllianceAnimation;
 import animation2.WipeTransition;
@@ -107,7 +109,7 @@ public class RobotContainer {
 
     // operatorController.circle().onTrue(Commands555.scoreAmp());
     // operatorController.square().onTrue(Commands555.scoreSpeaker());
-    operatorController.circle().onTrue(Commands555.setSprocketAngle(60));
+    operatorController.circle().onTrue(Commands555.setSprocketAngle(45));
     operatorController.triangle().onTrue(Commands555.shootSpeaker());
     operatorController.square().onTrue(
       Commands.runOnce(() -> {
@@ -127,13 +129,24 @@ public class RobotContainer {
     //operatorController.R1().onTrue(Commands555.sprocketToAprilTag()); TODO: We do this later!!!
 
 
-    //ControllerTools.getDPad(DPad.UP, operatorController).toggleOnTrue(sprocket.getSysId().quasistatic(Direction.kForward).onlyWhile(sprocket::isSprocketSafe));
+    // ControllerTools.getDPad(DPad.UP, operatorController).toggleOnTrue(sprocket.getSysId().quasistatic(Direction.kForward).onlyWhile(sprocket::isSprocketSafe));
     // ControllerTools.getDPad(DPad.DOWN, operatorController).toggleOnTrue(sprocket.getSysId().quasistatic(Direction.kReverse).onlyWhile(sprocket::isSprocketSafe));
 
     // ControllerTools.getDPad(DPad.RIGHT, operatorController).toggleOnTrue(sprocket.getSysId().dynamic(Direction.kForward).onlyWhile(sprocket::isSprocketSafe));
     // ControllerTools.getDPad(DPad.LEFT, operatorController).toggleOnTrue(sprocket.getSysId().dynamic(Direction.kReverse).onlyWhile(sprocket::isSprocketSafe));
 
-    // driverController.triangle().toggleOnTrue(sprocket.getSysId().quasistatic(Direction.kReverse).onlyWhile(sprocket::isSprocketSafe));
+     driverController.triangle().toggleOnTrue(sprocket.getSysId().quasistatic(Direction.kForward).onlyWhile(() -> {
+      return sprocket.getAngle() < ArmConstants.ENCODER_MAX_ANGLE - 5;
+     }));
+     driverController.circle().toggleOnTrue(sprocket.getSysId().dynamic(Direction.kReverse).onlyWhile(() -> {
+      return sprocket.getAngle() > ArmConstants.ENCODER_MIN_ANGLE + 5;
+     }));
+     driverController.cross().toggleOnTrue(sprocket.getSysId().dynamic(Direction.kForward).onlyWhile(() -> {
+      return sprocket.getAngle() < ArmConstants.ENCODER_MAX_ANGLE - 5;
+     }));
+     driverController.square().toggleOnTrue(sprocket.getSysId().quasistatic(Direction.kReverse).onlyWhile(() -> {
+      return sprocket.getAngle() > ArmConstants.ENCODER_MIN_ANGLE + 5;
+     }));
     }
 
   public static Animation getTeleopDefaultAnim() {
@@ -154,6 +167,13 @@ public class RobotContainer {
     autoTab.add("Ignore Safety", false).withWidget(BuiltInWidgets.kToggleSwitch).withSize(2, 1).withPosition(0,2);
 
 
+  }
+
+  public void setupDriverTab() {
+    ShuffleboardTab driverTab = Shuffleboard.getTab("Driver");
+    driverTab.addBoolean("Ready to Shoot", () -> {
+      return shooter.atSpeed() && sprocket.atAngle();
+    });
   }
 
   /**

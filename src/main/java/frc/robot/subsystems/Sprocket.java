@@ -50,8 +50,8 @@ public class Sprocket extends SubsystemBase {
     //setPoint is in degrees
 
     private ArmFeedforward angleFeedForward;
-    // RelativeEncoder leftEncoder;
-    // RelativeEncoder rightEncoder;
+     RelativeEncoder leftEncoder;
+     RelativeEncoder rightEncoder;
     public DutyCycleEncoder absEncoder;
 
     private final SparkPIDController leftController = leftMotor.getPIDController();
@@ -108,20 +108,22 @@ public class Sprocket extends SubsystemBase {
 
 
         //TODO check conversion factors
-        // leftEncoder = leftMotor.getEncoder();
-        // leftEncoder.setPositionConversionFactor(1/SPROCKET_ROTATIONS_PER_DEGREE);
-        // leftEncoder.setVelocityConversionFactor(1/SPROCKET_ROTATIONS_PER_DEGREE*(1/60));
-        // leftEncoder.setPosition(ENCODER_MIN_ANGLE);
+        leftEncoder = leftMotor.getEncoder();
+        leftEncoder.setPositionConversionFactor(1/SPROCKET_ROTATIONS_PER_DEGREE);
+        leftEncoder.setVelocityConversionFactor(1/SPROCKET_ROTATIONS_PER_DEGREE*(1/60));
+        leftEncoder.setPosition(ENCODER_MIN_ANGLE);
 
-        // rightEncoder = rightMotor.getEncoder();
-        // rightEncoder.setPositionConversionFactor(1/SPROCKET_ROTATIONS_PER_DEGREE);
-        // leftEncoder.setVelocityConversionFactor(1/SPROCKET_ROTATIONS_PER_DEGREE*(1/60));
-        // rightEncoder.setPosition(ENCODER_MIN_ANGLE);
+        rightEncoder = rightMotor.getEncoder();
+        rightEncoder.setPositionConversionFactor(1/SPROCKET_ROTATIONS_PER_DEGREE);
+        leftEncoder.setVelocityConversionFactor(1/SPROCKET_ROTATIONS_PER_DEGREE*(1/60));
+        rightEncoder.setPosition(ENCODER_MIN_ANGLE);
         absEncoder = new DutyCycleEncoder(SprocketConstants.ENCODER_PIN);
         absEncoder.setDistancePerRotation(360.0);
 
         Shuffleboard.getTab("Debug").addBoolean("Using PID", () -> usingPID);
         Shuffleboard.getTab("Debug").addDouble("Angle", () -> getAngle());
+        Shuffleboard.getTab("Debug").addDouble("Absolute Angle", () -> absEncoder.getDistance());
+        Shuffleboard.getTab("Debug").addDouble("ff voltage", () -> angleFeedForward.calculate(getAngle() * (Math.PI/180), targetSpeed * MAX_SPEED));
     }
     /**
      * Move sprocket up
@@ -165,11 +167,12 @@ public class Sprocket extends SubsystemBase {
 
     public SysIdRoutine getSysId() {
         MutableMeasure<Voltage> appliedVoltage = MutableMeasure.mutable(Units.Volts.of(0));
-        MutableMeasure<Angle> degrees = MutableMeasure.mutable(Units.Degrees.of(0));
-        MutableMeasure<Velocity<Angle>> motorVelocity = MutableMeasure.mutable(Units.DegreesPerSecond.of(0));
+        MutableMeasure<Angle> degrees = MutableMeasure.mutable(Units.Radians.of(0));
+        MutableMeasure<Velocity<Angle>> motorVelocity = MutableMeasure.mutable(Units.RadiansPerSecond.of(0));
         
         return new SysIdRoutine(
-            new Config(), new Mechanism(
+            new Config(), // Volts.of(1).per(Seconds.of(1)), Volts.of(7), Seconds.of(1)), 
+            new Mechanism(
                 (Measure<Voltage> volts) -> {
                     leftMotor.setVoltage(volts.in(Units.Volts));
                     rightMotor.setVoltage(volts.in(Units.Volts));
@@ -177,13 +180,13 @@ public class Sprocket extends SubsystemBase {
                 (SysIdRoutineLog log) -> {
                     log.motor("Left")
                     .voltage(appliedVoltage.mut_replace(leftMotor.getAppliedOutput() * leftMotor.getBusVoltage(), Units.Volts))
-                    .angularPosition(degrees.mut_replace(getAngle(), Units.Degrees))
-                    .angularVelocity(motorVelocity.mut_replace(leftMotor.getEncoder().getVelocity(), Units.DegreesPerSecond));
+                    .angularPosition(degrees.mut_replace(getAngle() * (180/Math.PI), Units.Radians))
+                    .angularVelocity(motorVelocity.mut_replace(leftMotor.getEncoder().getVelocity() * (180/Math.PI), Units.RadiansPerSecond));
 
                     log.motor("Right")
                     .voltage(appliedVoltage.mut_replace(rightMotor.getAppliedOutput() * rightMotor.getBusVoltage(), Units.Volts))
-                    .angularPosition(degrees.mut_replace(getAngle(), Units.Degrees))
-                    .angularVelocity(motorVelocity.mut_replace(rightMotor.getEncoder().getVelocity(), Units.DegreesPerSecond));
+                    .angularPosition(degrees.mut_replace(getAngle() * (180/Math.PI), Units.Radians))
+                    .angularVelocity(motorVelocity.mut_replace(rightMotor.getEncoder().getVelocity() * (180/Math.PI), Units.RadiansPerSecond));
                 },
                 this,
                 "Sprocket"
@@ -207,7 +210,11 @@ public class Sprocket extends SubsystemBase {
     // }
 
     public boolean isSprocketSafe() {
-        return !bottomLimitSwitch.get() && !topLimitSwitch.get();
+        //return !bottomLimitSwitch.get() && !topLimitSwitch.get();
+        if(absEncoder.getDistance() > ENCODER_MAX_ANGLE - 5 || absEncoder.getDistance() < ENCODER_MIN_ANGLE + 5) {
+            return false;
+        }
+        return true;
     }
  
     public double getAdjustedSpeed() {
@@ -232,12 +239,12 @@ public class Sprocket extends SubsystemBase {
      * @return angle of the sprocket in degrees
      */
     public double getAngle() {
-        if(getEncoderPosition() < ENCODER_MIN_ANGLE) {
-            return ENCODER_MIN_ANGLE;
-        }
-        else if(getEncoderPosition() > ENCODER_MAX_ANGLE) {
-            return ENCODER_MAX_ANGLE;
-        }
+        // if(getEncoderPosition() < ENCODER_MIN_ANGLE) {
+        //     return ENCODER_MIN_ANGLE;
+        // }
+        // else if(getEncoderPosition() > ENCODER_MAX_ANGLE) {
+        //     return ENCODER_MAX_ANGLE;
+        // }
         return getEncoderPosition();
     }
 
@@ -253,12 +260,18 @@ public class Sprocket extends SubsystemBase {
         return Math555.invlerp(getAngle(), ENCODER_MIN_ANGLE, ENCODER_MAX_ANGLE);
     }
 
+    public boolean atAngle(){
+        if(Math.abs(setPoint - getAngle()) < SPROCKET_ANGLE_DEADBAND){
+            return true;
+        } 
+        return false;
+    }
     @Override
-
     public void periodic() {
         double feedForwardVoltage = angleFeedForward.calculate(getAngle() * (Math.PI/180), targetSpeed * MAX_SPEED);
         
         double pidSpeed = pidController.calculate(getEncoderPosition(), setPoint);
+        // Shuffleboard.getTab("Debug").addDouble("PID Value", () -> pidSpeed);
         // if(Math.abs(setPoint - getEncoderPosition()) < ArmConstants.SPROCKET_ANGLE_DEADBAND){
         //     usingPID = false;
         // }
@@ -288,7 +301,7 @@ public class Sprocket extends SubsystemBase {
             leftMotor.setVoltage(voltageSum);
             rightMotor.setVoltage(voltageSum);
         } else if (usingPID) {
-            double voltageSum = pidSpeed + feedForwardVoltage;
+            double voltageSum = pidSpeed + angleFeedForward.calculate(setPoint * (180/Math.PI), 0);
 
             if (voltageSum > MAX_VOLTAGE_V) {
                 voltageSum = MAX_VOLTAGE_V;
@@ -298,8 +311,8 @@ public class Sprocket extends SubsystemBase {
             }
 
             //System.out.println(voltageSum);
-            leftMotor.set(voltageSum / leftMotor.getBusVoltage());
-            rightMotor.set(voltageSum / rightMotor.getBusVoltage());
+            leftMotor.setVoltage(voltageSum);
+            rightMotor.setVoltage(voltageSum);
         }
 
         // if (topLimitSwitch.get()) {
