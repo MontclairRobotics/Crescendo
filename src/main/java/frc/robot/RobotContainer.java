@@ -31,6 +31,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -81,6 +82,7 @@ public class RobotContainer {
     
     // auto.setupPathPlanner();
     setupAutoTab();
+    setupDriverTab();
 
     drivetrain.setDefaultCommand(Commands.run(() -> {
       drivetrain.setInputFromController(driverController);
@@ -179,6 +181,18 @@ public class RobotContainer {
 
   public static Animation getDisabledAnimation() {
     return Constants.LEDConstants.DEMO_REEL;
+  }
+
+  public void setupDriverTab() {
+    ShuffleboardTab driverTab = Shuffleboard.getTab("Driver");
+    driverTab.addBoolean("Good to shoot!", () -> {
+      return shooter.isAtSpeed() && sprocket.isAtAngle();
+    });
+    driverTab.addBoolean("Note Intaked", intake::hasPickedUp);
+
+    driverTab.addDouble("Time Remaining", Timer::getMatchTime);
+
+    driverTab.addBoolean("Note in Transport", sprocket::getSensor);
   }
 
   public void setupAutoTab() {

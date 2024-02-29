@@ -53,6 +53,8 @@ public class Shooter extends SubsystemBase {
     private SimpleMotorFeedforward bottomMotorFeedforward = new SimpleMotorFeedforward(Constants.ShooterConstants.BOTTOM_SHOOTER_FF_KS, Constants.ShooterConstants.BOTTOM_SHOOTER_FF_KV, Constants.ShooterConstants.BOTTOM_SHOOTER_FF_KA);
     private SimpleMotorFeedforward transportMotorFeedforward = new SimpleMotorFeedforward(Constants.ShooterConstants.TRANSPORT_FF_KS, Constants.ShooterConstants.TRANSPORT_FF_KV, Constants.ShooterConstants.TRANSPORT_FF_KA);
 
+    private double topVelocitySetpoint;
+    private double bottomVelocitySetpoint;
 
     private boolean isShooting = false;
     private boolean isTransporting = false;
@@ -140,7 +142,8 @@ public class Shooter extends SubsystemBase {
      * Runs top and bottom shooter motors at different velocties
      */
     public void shootVelocity(double topVelocity, double bottomVelocity) {
-
+        topVelocitySetpoint = topVelocity;
+        bottomVelocitySetpoint = bottomVelocity;
         System.out.println("shootVelocity: " + topVelocity + " " + bottomVelocity);
 
         double topFeedForward = topMotorFeedforward.calculate(topVelocity);
@@ -165,6 +168,13 @@ public class Shooter extends SubsystemBase {
         transportController.setReference(velocity, ControlType.kVelocity, 1, transportFeedForward);
 
         isTransporting = true;
+    }
+
+    public boolean isAtSpeed() {
+        boolean topAtPoint = Math.abs(topVelocitySetpoint - topEncoder.getVelocity()) < ShooterConstants.VELOCITY_DEADBAND;
+        boolean bottomAtPoint = Math.abs(bottomVelocitySetpoint - bottomEncoder.getVelocity()) < ShooterConstants.VELOCITY_DEADBAND;
+
+        return topAtPoint && bottomAtPoint;
     }
 
     /**
@@ -309,8 +319,8 @@ public class Shooter extends SubsystemBase {
     public void periodic() {
         super.periodic();
         if (count++ == 50) {
-            System.out.println("Top: " + topEncoder.getVelocity() + " Bottom: " + bottomEncoder.getVelocity() + " Transport: " + transportEncoder.getVelocity());
-            System.out.println("TopV: " + topMotor.getAppliedOutput() + " BottomV: " + bottomMotor.getAppliedOutput() + " TransportV: " + transportMotor.getAppliedOutput());
+            // System.out.println("Top: " + topEncoder.getVelocity() + " Bottom: " + bottomEncoder.getVelocity() + " Transport: " + transportEncoder.getVelocity());
+            // System.out.println("TopV: " + topMotor.getAppliedOutput() + " BottomV: " + bottomMotor.getAppliedOutput() + " TransportV: " + transportMotor.getAppliedOutput());
             count = 0;
         }
    }

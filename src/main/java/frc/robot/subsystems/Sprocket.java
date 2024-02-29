@@ -1,8 +1,9 @@
 package frc.robot.subsystems;
 
 
-import frc.robot.LimitSwitch;
 import frc.robot.Constants.*;
+import frc.robot.util.BreakBeam;
+import frc.robot.util.LimitSwitch;
 
 import java.awt.geom.Point2D;
 import java.util.function.Consumer;
@@ -24,6 +25,7 @@ import edu.wpi.first.units.MutableMeasure;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.Velocity;
 import edu.wpi.first.units.Voltage;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
@@ -44,6 +46,7 @@ public class Sprocket extends SubsystemBase {
 
     private double targetSpeed;
     private boolean usingPID;
+    private double angleSetpoint;
 
     private ArmFeedforward angleFeedForward;
     RelativeEncoder leftEncoder;
@@ -54,6 +57,8 @@ public class Sprocket extends SubsystemBase {
 
     public LimitSwitch bottomLimitSwitch = new LimitSwitch(BOTTOM_LIMIT_SWITCH, false);
     public LimitSwitch topLimitSwitch = new LimitSwitch(TOP_LIMIT_SWITCH, false);
+
+    private BreakBeam breakBeam = new BreakBeam(Ports.SPROCKET_BEAM_BREAK_CHANNEL, SPROCKET_BEAM_INVERT);
 
     public Sprocket() {
 
@@ -147,8 +152,14 @@ public class Sprocket extends SubsystemBase {
         setSpeed(yAxis);
     }
 
+    //TODO inverted?
+    public boolean getSensor() {
+        return breakBeam.get();
+    }
+
     public void setPosition(Rotation2d angle) {
         usingPID = true;
+        angleSetpoint = angle.getDegrees();
         double feedForward = angleFeedForward.calculate(angle.getRadians(), 0);
 
         leftController.setReference(angle.getDegrees() * SPROCKET_ROTATIONS_PER_DEGREE, ControlType.kPosition, 1, feedForward);
@@ -237,8 +248,8 @@ public class Sprocket extends SubsystemBase {
         return (leftEncoder.getPosition() + rightEncoder.getPosition()) / 2;
     }
 
-    public boolean isAtAngle(double angle) { 
-        return Math.abs(getAngle() - angle) < ArmConstants.SPROCKET_ANGLE_DEADBAND;
+    public boolean isAtAngle() { 
+        return Math.abs(getAngle() - angleSetpoint) < ArmConstants.SPROCKET_ANGLE_DEADBAND;
     }
 
     @Override

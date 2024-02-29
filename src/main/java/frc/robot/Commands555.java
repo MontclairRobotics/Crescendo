@@ -284,7 +284,7 @@ public class Commands555 {
             shootVelocity(velocity),
             setSprocketAngle(angle),
             waitUntil(() -> {
-                return RobotContainer.shooter.isAtSetpoint(velocity) && RobotContainer.sprocket.isAtAngle(angle);
+                return RobotContainer.shooter.isAtSetpoint(velocity) && RobotContainer.sprocket.isAtAngle();
             }),
             transport(),
             waitForTime(3.5),

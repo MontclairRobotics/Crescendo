@@ -65,22 +65,27 @@ public final class Constants {
   }
 
   public static class Ports { // TODO: add correct ports
-    public static final int LED_PWM_PORT = 100;
+    public static final int LED_PWM_PORT = 9;
 
     public static final int FLIPTOP_MOTOR_PORT = 101;
 
     public static final int INTAKE_TOP_MOTOR = 21;
     public static final int INTAKE_BOTTOM_MOTOR = 20;
 
-    public static final int SHOOTER_MOTOR_BOTTOM_PORT = 1;
-    public static final int SHOOTER_MOTOR_TOP_PORT = 2;
-    public static final int SHOOTER_MOTOR_TRANSPORT_PORT = 3;
+    //TODO get actual ports from other code
+    public static final int SHOOTER_MOTOR_BOTTOM_PORT = 51; 
+    public static final int SHOOTER_MOTOR_TOP_PORT = 50;
+    public static final int SHOOTER_MOTOR_TRANSPORT_PORT = 52;
 
     //Sprocket motors
     public static final int LEFT_ANGLE_MOTOR_PORT = 30;
     public static final int RIGHT_ANGLE_MOTOR_PORT = 31;
 
-    public static final int BEAM_BREAK_CHANNEL = 0; 
+    //TODO get ports
+    public static final int INTAKE_BEAM_BREAK_CHANNEL = 0; 
+
+    public static final int SPROCKET_BEAM_BREAK_CHANNEL = 1;
+
 
     //Climber ports
     public static final int CLIMBER_LEFT_MOTOR_PORT = 40;
@@ -102,6 +107,7 @@ public final class Constants {
   public static class IntakeConstants {
     // Intake
     public static final double INTAKE_SPEED = 0.5;
+    public static final boolean INTAKE_BEAM_INVERT = true;
   }
 
 
@@ -110,6 +116,7 @@ public final class Constants {
     public static final double MAX_VOLTAGE_V = 12.0;
     // TODO: needs to be set
     public static final int BOTTOM_LIMIT_SWITCH = 0;
+    public static final boolean SPROCKET_BEAM_INVERT = true;
     public static final int TOP_LIMIT_SWITCH = 1;
 
     public static final Tunable<Double> FF_VOLTAGE = Tunable.of(0.6, "arm.feedforwardvoltage"); // TODO: stolen from
