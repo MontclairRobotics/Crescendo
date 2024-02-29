@@ -60,6 +60,11 @@ public final class Constants {
 
   public static class VisionConstants {
     public static final double TARGET_DEBOUNCE_TIME = 0.2;
+    public static final double SHOOTER_LIMELIGHT_HEIGHT = 0;
+    public static final double INTAKE_LIMELIGHT_HEIGHT = 0;
+    public static final double SPEAKER_APRILTAG_HEIGHT = 0;
+    public static final double SHOOTER_LIMELIGHT_ANGLE_DEGREES = 0;
+    public static final double INTAKE_LIMELIGHT_ANGLE_DEGREES = 0;
   }
 
   public static class Ports { // TODO: add correct ports
@@ -296,4 +301,6 @@ public final class Constants {
             new QuickSlowFlash(Color.kAquamarine),
             new RaceAnimation(Color.kIndigo).randomized());
   }
+
+
 }

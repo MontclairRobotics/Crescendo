@@ -74,6 +74,14 @@ public class Limelight extends SubsystemBase {
     return LimelightHelpers.getLimelightNTDouble(cameraName, "ty");
   }
 
+  public double getDistanceToSpeaker() {
+
+    double distance = (VisionConstants.SPEAKER_APRILTAG_HEIGHT-VisionConstants.SHOOTER_LIMELIGHT_HEIGHT) / Math.tan((Math.PI/180.0) * (VisionConstants.SHOOTER_LIMELIGHT_ANGLE_DEGREES+getObjectTY()));
+
+    return distance;
+
+}
+
   // public void getDistanceTo
 
 }
