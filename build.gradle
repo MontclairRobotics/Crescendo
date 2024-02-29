@@ -1,12 +1,14 @@
 plugins {
     id "java"
     id "edu.wpi.first.GradleRIO" version "2024.2.1"
+    id 'com.diffplug.spotless' version '6.20.0'
 }
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
 }
+
 
 def ROBOT_MAIN_CLASS = "frc.robot.Main"
 
@@ -122,4 +124,17 @@ wpi.java.configureTestTasks(test)
 // Configure string concat to always inline compile
 tasks.withType(JavaCompile) {
     options.compilerArgs.add '-XDstringConcat=inline'
+}
+spotless {
+    java {
+      target fileTree('.') {
+            include '**/*.java'
+            exclude '**/build/**', '**/build-*/**'
+      }
+      toggleOffOn()
+      googleJavaFormat()
+      removeUnusedImports()
+      trimTrailingWhitespace()
+      endWithNewline()
+   }
 }
