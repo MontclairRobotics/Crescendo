@@ -4,6 +4,11 @@
 
 package frc.robot;
 
+import java.io.File;
+
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathPlannerPath;
+
 import animation2.AllianceAnimation;
 import animation2.WipeTransition;
 import animation2.api.Animation;
@@ -32,7 +37,6 @@ import frc.robot.util.ControllerTools.DPad;
 import frc.robot.util.Tunable;
 import frc.robot.vision.DetectionType;
 import frc.robot.vision.Limelight;
-import java.io.File;
 
 public class RobotContainer {
 
@@ -68,7 +72,7 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
-    // auto.setupPathPlanner();
+    auto.setupPathPlanner();
     setupAutoTab();
     setupDriverTab();
 
@@ -252,9 +256,9 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // TODO: Actual auto command.
-    return Commands.run(
-        () -> {
-          return;
-        });
+    
+    PathPlannerPath path = PathPlannerPath.fromPathFile("1-A");
+    
+    return AutoBuilder.followPath(path);
   }
 }
