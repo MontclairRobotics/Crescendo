@@ -56,14 +56,6 @@ public class RobotContainer {
           new WipeTransition());
   public static Climbers climber = new Climbers();
 
-  // public static Sprocket sprocket = new Sprocket();
-  // public static Limelight intakeLimelight = new Limelight("intakeLimelight");
-  // public static Limelight shooterLimelight = new Limelight("shooterLimelight");
-  // public static Auto auto = new Auto();
-  // public static LED led = new LED(new
-  // ConditionalAnimation(getTeleopDefaultAnim()).addCase(DriverStation::isDisabled,
-  // getDisabledAnimation()), new WipeTransition());
-
   public static final Field2d field = new Field2d();
 
   private Tunable<Double> topShooterSpeakerSpeed = Tunable.of(4000, "shooter/top-speaker-speed");
@@ -162,7 +154,15 @@ public class RobotContainer {
     operatorController.R2().onTrue(Commands555.reverseIntake()).onFalse(Commands555.stopIntake());
     operatorController.L2().onTrue(Commands555.intake()).onFalse(Commands555.stopIntake());
 
-    operatorController.circle().onTrue(Commands555.scoreAmp());
+    // operatorController.circle().onTrue(Commands555.scoreAmp());
+    operatorController
+        .circle()
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  sprocket.setPosition(Rotation2d.fromDegrees(45));
+                }));
+
     operatorController.square().onTrue(Commands555.scoreSpeaker());
     operatorController.triangle().onTrue(Commands555.shootSpeaker());
     operatorController
@@ -237,7 +237,7 @@ public class RobotContainer {
 
     driverTab.addDouble("Time Remaining", Timer::getMatchTime);
 
-    //driverTab.addBoolean("Note in Transport", sprocket::getSensor);
+    // driverTab.addBoolean("Note in Transport", sprocket::getSensor);
   }
 
   public void setupAutoTab() {

@@ -87,7 +87,7 @@ public final class Constants {
     // TODO get ports
     public static final int INTAKE_BEAM_BREAK_CHANNEL = 5;
 
-    //public static final int SPROCKET_BEAM_BREAK_CHANNEL = 1;
+    public static final int SPROCKET_BEAM_BREAK_CHANNEL = 1;
 
     // Climber ports
     public static final int CLIMBER_LEFT_MOTOR_PORT = 40;
@@ -123,20 +123,20 @@ public final class Constants {
     // ChargedUp elevator
     // feedforward }
 
-    public static final Tunable<Double> kS = Tunable.of(0, "arm.feedforward.ks");
-    public static final Tunable<Double> kG = Tunable.of(0.1, "arm.feedforward.kG");
-    public static final Tunable<Double> kV = Tunable.of(8.91, "arm.feedforward.kV");
-    public static final Tunable<Double> kA = Tunable.of(0.01, "arm.feedforward.ka");
+    // public static final Tunable<Double> kS = Tunable.of(0, "arm.feedforward.ks");
+    // public static final Tunable<Double> kG = Tunable.of(0.1, "arm.feedforward.kG");
+    // public static final Tunable<Double> kV = Tunable.of(8.91, "arm.feedforward.kV");
+    // public static final Tunable<Double> kA = Tunable.of(0.01, "arm.feedforward.ka");
 
     // TODO: Angle PID Constants: (!!!!!!)
-    public static final Tunable<Double> angleKP = Tunable.of(0, "arm.kp");
+    public static final Tunable<Double> angleKP = Tunable.of(0.8, "arm.kp");
     public static final Tunable<Double> angleKI = Tunable.of(0, "arm.ki");
     public static final Tunable<Double> angleKD = Tunable.of(0, "arm.kd");
 
     // TODO: All of these constants are basically guessed!!
     public static final double ANGLE_SPEED = 0.5; // Speed of the angle changing
     public static final double SPROCKET_ROTATIONS_PER_DEGREE = 1.26984126984;
-    public static final double ENCODER_MIN_ANGLE = 0.0;
+    public static final double ENCODER_MIN_ANGLE = 32;
     public static final double ENCODER_MAX_ANGLE = 75.787;
 
     public static final double SPEAKER_SCORE_ANGLE = -1;
@@ -144,8 +144,8 @@ public final class Constants {
 
     public static final double MAX_SPEED = 20; // TODO ???
 
-    public static final Tunable<Boolean> LEFT_INVERT = Tunable.of(false, "arm.invert.left");
-    public static final Tunable<Boolean> RIGHT_INVERT = Tunable.of(false, "arm.invert.right");
+    public static final Tunable<Boolean> LEFT_INVERT = Tunable.of(true, "arm.invert.left");
+    public static final Tunable<Boolean> RIGHT_INVERT = Tunable.of(true, "arm.invert.right");
 
     public static final double ENCODER_DIFFERENCE =
         2; // the acceptable difference between encoder values
@@ -153,7 +153,8 @@ public final class Constants {
     // Sprocket
     // TODO: Validate values
     public static final double SPROCKET_ANGLE_MOVE_SPEED = 0.5;
-    public static final double SPROCKET_ANGLE_DEADBAND = 3;
+    public static final double SPROCKET_ANGLE_DEADBAND = 2;
+    public static final double SPROCKET_ANGLE_LIMIT_DEADBAND = 2.5;
   }
 
   public static class ShooterConstants {
@@ -301,6 +302,4 @@ public final class Constants {
             new QuickSlowFlash(Color.kAquamarine),
             new RaceAnimation(Color.kIndigo).randomized());
   }
-
-
 }
