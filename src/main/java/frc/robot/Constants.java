@@ -46,7 +46,7 @@ public final class Constants {
 
     public static final double MAX_ROT_SPEED = 2 * Math.PI;
     // Max Acceleration in M/s^2
-    public static final double MAX_ACCELERATION = 2.0;
+    public static final double MAX_ACCELERATION = 3.0;
     // Max angular acceleration in Rad/S^2
     public static final double MAX_ANGULAR_ACCELERATION = 1.5;
 
@@ -85,16 +85,16 @@ public final class Constants {
     public static final int RIGHT_ANGLE_MOTOR_PORT = 31;
 
     // TODO get ports
-    public static final int INTAKE_BEAM_BREAK_CHANNEL = 0;
+    public static final int INTAKE_BEAM_BREAK_CHANNEL = 5;
 
-    public static final int SPROCKET_BEAM_BREAK_CHANNEL = 1;
+    //public static final int SPROCKET_BEAM_BREAK_CHANNEL = 1;
 
     // Climber ports
     public static final int CLIMBER_LEFT_MOTOR_PORT = 40;
     public static final int CLIMBER_RIGHT_MOTOR_PORT = 41;
 
-    public static final int CLIMBER_TOP_LIMIT_SWITCH_PORT = 42;
-    public static final int CLIMBER_BOTTOM_LIMIT_SWITCH_PORT = 43;
+    public static final int CLIMBER_TOP_LIMIT_SWITCH_PORT = 8;
+    public static final int CLIMBER_BOTTOM_LIMIT_SWITCH_PORT = 9;
   }
 
   public static class ClimberConstants {

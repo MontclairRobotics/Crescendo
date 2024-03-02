@@ -55,8 +55,8 @@ public class Sprocket extends SubsystemBase {
   public LimitSwitch bottomLimitSwitch = new LimitSwitch(BOTTOM_LIMIT_SWITCH, false);
   public LimitSwitch topLimitSwitch = new LimitSwitch(TOP_LIMIT_SWITCH, false);
 
-  private BreakBeam breakBeam =
-      new BreakBeam(Ports.SPROCKET_BEAM_BREAK_CHANNEL, SPROCKET_BEAM_INVERT);
+//   private BreakBeam breakBeam =
+//       new BreakBeam(Ports.SPROCKET_BEAM_BREAK_CHANNEL, SPROCKET_BEAM_INVERT);
 
   public Sprocket() {
 
@@ -161,10 +161,10 @@ public class Sprocket extends SubsystemBase {
     setSpeed(yAxis);
   }
 
-  // TODO inverted?
-  public boolean getSensor() {
-    return breakBeam.get();
-  }
+//   // TODO inverted?
+//   public boolean getSensor() {
+//     return breakBeam.get();
+//   }
 
   public void setPosition(Rotation2d angle) {
     usingPID = true;

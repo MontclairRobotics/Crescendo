@@ -237,7 +237,7 @@ public class RobotContainer {
 
     driverTab.addDouble("Time Remaining", Timer::getMatchTime);
 
-    driverTab.addBoolean("Note in Transport", sprocket::getSensor);
+    //driverTab.addBoolean("Note in Transport", sprocket::getSensor);
   }
 
   public void setupAutoTab() {
