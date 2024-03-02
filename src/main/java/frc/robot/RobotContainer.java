@@ -161,7 +161,7 @@ public class RobotContainer {
                   sprocket.setPosition(Rotation2d.fromDegrees(45));
                 }));
 
-    operatorController.square().onTrue(Commands555.scoreSpeaker());
+    //operatorController.square().onTrue(Commands555.scoreSpeaker());
     operatorController.triangle().onTrue(Commands555.shootSpeaker());
     operatorController.circle().onTrue(Commands.run(() -> {
       sprocket.setPosition(Rotation2d.fromDegrees(45));
