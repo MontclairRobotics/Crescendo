@@ -52,8 +52,7 @@ public class Sprocket extends SubsystemBase {
   private double pidVoltage;
 
   public DutyCycleEncoder absEncoder = new DutyCycleEncoder(1);
-  private BreakBeam breakBeam =
-      new BreakBeam(4, SPROCKET_BEAM_INVERT);
+  
 
   public Sprocket() {
 
@@ -105,6 +104,7 @@ public class Sprocket extends SubsystemBase {
     Shuffleboard.getTab("Debug").addDouble("Pid Voltage", () -> {
       return pidController.calculate(getEncoderPosition());
     });
+    
   }
 
   public void setSpeed(double speed) {

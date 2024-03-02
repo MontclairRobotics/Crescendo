@@ -11,6 +11,8 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
@@ -75,12 +77,25 @@ public class Commands555 {
    *
    * @return A
    */
-  public static Command intake() {
-    return Commands.run(RobotContainer.intake::in, RobotContainer.intake)
+  public static Command loadNote() {
+    Command intakeAndTransport = Commands.parallel(Commands555.intake(), Commands555.transport());
+    return intakeAndTransport
         .withName("intake in")
-        .until(RobotContainer.intake::getSensor)
-        .withTimeout(10)
-        .andThen(stopIntake());
+        .until(() -> {
+          if (RobotContainer.shooter.isNoteInTransport() == true) {
+            System.out.println("<3");
+          }
+          
+          return RobotContainer.shooter.isNoteInTransport();})
+        .finallyDo(() -> {
+          RobotContainer.intake.stop();
+          RobotContainer.shooter.stopTransport();
+        });
+        
+  }
+
+  public static Command intake() {
+    return Commands.run(RobotContainer.intake::in);
   }
 
   public static Command reverseIntake() {
@@ -348,7 +363,7 @@ public class Commands555 {
   }
 
   public static Command transport() {
-    return Commands.runOnce(
+    return Commands.run(
         () -> {
           RobotContainer.shooter.transportStart();
         });
@@ -415,17 +430,17 @@ public class Commands555 {
   }
 
   // ***********************CLIMBER COMMANDS*************************//
-  public static Command climberUp() {
-    return Commands.runOnce(
-        () -> {
-          RobotContainer.climber.up();
-        });
-  }
+  // public static Command climberUp() {
+  //   return Commands.runOnce(
+  //       () -> {
+  //         RobotContainer.climber.up();
+  //       });
+  // }
 
-  public static Command climberDown() {
-    return Commands.runOnce(
-        () -> {
-          RobotContainer.climber.down();
-        });
-  }
+  // public static Command climberDown() {
+  //   return Commands.runOnce(
+  //       () -> {
+  //         RobotContainer.climber.down();
+  //       });
+  // }
 }

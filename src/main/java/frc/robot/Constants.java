@@ -68,7 +68,7 @@ public final class Constants {
   }
 
   public static class Ports { // TODO: add correct ports
-    public static final int LED_PWM_PORT = 9;
+    public static final int LED_PWM_PORT = 7;
 
     public static final int FLIPTOP_MOTOR_PORT = 101;
 
@@ -99,7 +99,7 @@ public final class Constants {
 
   public static class ClimberConstants {
     // Climbers
-    public static final double CLIMBER_SPEED = 1;
+    public static final double CLIMBER_SPEED = 0.5;
     public static final double MAX_HEIGHT = 18; // Inches
     public static final double ROTATIONS_PER_INCH = 12.0672 * Math.PI; // TODO:
   }
@@ -115,7 +115,7 @@ public final class Constants {
     public static final double MAX_VOLTAGE_V = 12.0;
     // TODO: needs to be set
     public static final int BOTTOM_LIMIT_SWITCH = 0;
-    public static final boolean SPROCKET_BEAM_INVERT = true;
+    public static final boolean SPROCKET_BEAM_INVERT = false;
     public static final int TOP_LIMIT_SWITCH = 1;
 
     public static final Tunable<Double> FF_VOLTAGE =

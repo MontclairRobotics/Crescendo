@@ -13,12 +13,13 @@ public class Intake extends SubsystemBase {
       new CANSparkMax(Ports.INTAKE_TOP_MOTOR, MotorType.kBrushless);
   private final CANSparkMax bottomMotor =
       new CANSparkMax(Ports.INTAKE_BOTTOM_MOTOR, MotorType.kBrushless);
-  private final BreakBeam beamBreak =
-      new BreakBeam(Ports.INTAKE_BEAM_BREAK_CHANNEL, IntakeConstants.INTAKE_BEAM_INVERT);
+  
   private boolean hasPickedUpNote;
   private Timer timeSinceNote;
 
   public Intake() {
+    topMotor.setInverted(true);
+    bottomMotor.setInverted(true);
     timeSinceNote = new Timer();
   }
 
@@ -45,9 +46,7 @@ public class Intake extends SubsystemBase {
    *
    * @return true if the sensor is broken (gamepiece intaked), false if unbroken
    */
-  public boolean getSensor() {
-    return beamBreak.get();
-  }
+  
 
   public boolean hasPickedUp() {
     return hasPickedUpNote;
@@ -55,15 +54,15 @@ public class Intake extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if (getSensor()) {
-      hasPickedUpNote = true;
-      timeSinceNote.reset();
-      timeSinceNote.start();
-    }
+    // if (getSensor()) {
+    //   hasPickedUpNote = true;
+    //   timeSinceNote.reset();
+    //   timeSinceNote.start();
+    // }
 
-    if (timeSinceNote.get() > 5) {
-      hasPickedUpNote = false;
-      timeSinceNote.stop();
-    }
+    // if (timeSinceNote.get() > 5) {
+    //   hasPickedUpNote = false;
+    //   timeSinceNote.stop();
+    // }
   }
 }

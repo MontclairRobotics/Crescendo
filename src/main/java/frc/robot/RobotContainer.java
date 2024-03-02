@@ -58,7 +58,7 @@ public class RobotContainer {
           new ConditionalAnimation(getTeleopDefaultAnim())
               .addCase(DriverStation::isDisabled, getDisabledAnimation()),
           new WipeTransition());
-  public static Climbers climber = new Climbers();
+  //public static Climbers climber = new Climbers();
 
   public static final Field2d field = new Field2d();
 
@@ -67,14 +67,16 @@ public class RobotContainer {
       Tunable.of(4500, "shooter/bottom-speaker-speed"); // 4500 was most consistent in testing
   private Tunable<Double> transportSpeakerSpeed = Tunable.of(1000, "shooter/transport-speed");
 
+  private Tunable<Double> angleSetpoint = Tunable.of(45, "sprocket setpoint");
   
-
+  public static Climbers climbers = new Climbers();
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
     auto.setupPathPlanner();
     setupAutoTab();
     setupDriverTab();
+    
 
     drivetrain.setDefaultCommand(
         Commands.run(
@@ -90,7 +92,7 @@ public class RobotContainer {
             },
             sprocket));
 
-    configureBindings();
+    
     intakeLimelight.setPipelineTo(DetectionType.NOTE);
 
     topShooterSpeakerSpeed.whenUpdate(
@@ -111,16 +113,19 @@ public class RobotContainer {
             shooter.transportVelocity(speed);
           }
         });
+
+    configureDriverBindings();
+    configureOperatorBindings();
   }
 
-  private void configureBindings() {
+  private void configureDriverBindings() {
 
     // ************* DRIVER CONTROLLER BINDINGS **************** //
     driverController
         .L1()
         .onTrue(Commands555.disableFieldRelative())
         .onFalse(Commands555.enableFieldRelative());
-    driverController.R1().whileTrue(Commands555.scoreMode());
+    
 
     driverController
         .triangle()
@@ -135,6 +140,7 @@ public class RobotContainer {
         .square()
         .onTrue(Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(270), false));
 
+    driverController.R1().whileTrue(Commands555.scoreMode());
     driverController.L2().onTrue(Commands555.alignToLimelightTarget(shooterLimelight));
     driverController.R2().onTrue(Commands555.alignToLimelightTarget(intakeLimelight));
 
@@ -147,41 +153,15 @@ public class RobotContainer {
                     })
                 .ignoringDisable(true));
 
-    // // TODO: probably wrong
-    // driverController.cross().onTrue(Commands555.scoreSpeaker()).onFalse(Commands555.stopShooter());
-    // driverController.circle().onTrue(Commands555.intake()).onFalse(Commands555.stopIntake());
+    
 
-    // ************** OPERATOR CONTROLLER BINDINGS ************** //
+    
+    
 
-    operatorController.R2().onTrue(Commands555.reverseIntake()).onFalse(Commands555.stopIntake());
-    operatorController.L2().onTrue(Commands555.intake()).onFalse(Commands555.stopIntake());
-
-    // operatorController.circle().onTrue(Commands555.scoreAmp());
-    operatorController
-        .circle()
-        .onTrue(
-            Commands.runOnce(
-                () -> {
-                  sprocket.setPosition(Rotation2d.fromDegrees(45));
-                }));
-
-    //operatorController.square().onTrue(Commands555.scoreSpeaker());
-    operatorController.triangle().onTrue(Commands555.shootSpeaker());
-    operatorController.circle().onTrue(Commands.run(() -> {
-      sprocket.setPosition(Rotation2d.fromDegrees(45));
-    }, sprocket));
-    operatorController.cross().onTrue(Commands555.transport()).onFalse(Commands.runOnce(() -> {
-      shooter.stopTransport();
-    }, shooter));
-
-    operatorController.L1().onTrue(Commands555.celebrate());
-    operatorController.touchpad().onTrue(Commands555.ampItUp());
-    operatorController.PS().onTrue(Commands555.cooperatition());
-
-    // operatorController.povUp().onTrue(Commands555.climberUp());
-    // operatorController.povDown().onTrue(Commands555.climberDown());
-    // operatorController.R1().onTrue(Commands555.sprocketToAprilTag()); TODO: We do this later!!!
-
+    
+    
+  }
+  private void configureOperatorBindings() {
     ControllerTools.getDPad(DPad.UP, operatorController)
         .toggleOnTrue(
             sprocket
@@ -195,19 +175,43 @@ public class RobotContainer {
                 .quasistatic(Direction.kReverse)
                 .onlyWhile(sprocket::isSprocketSafe));
 
-    // operatorController.options().onTrue(Commands555.getShooterSysIdCommand("top-bottom"));
-    // operatorController.create().onTrue(Commands555.getShooterSysIdCommand("transport"));
-
-    //////////////////////////////
-    ///// OPERATOR BINDINGS /////
-    ////////////////////////////
-
     ControllerTools.getDPad(DPad.RIGHT, operatorController)
         .toggleOnTrue(
             sprocket.getSysId().dynamic(Direction.kForward).onlyWhile(sprocket::isSprocketSafe));
     ControllerTools.getDPad(DPad.LEFT, operatorController)
         .toggleOnTrue(
             sprocket.getSysId().dynamic(Direction.kReverse).onlyWhile(sprocket::isSprocketSafe));
+
+    operatorController.R1().onTrue(Commands555.reverseIntake()).onFalse(Commands555.stopIntake());
+    operatorController.L1().whileTrue(Commands555.loadNote());
+
+
+   
+
+    operatorController.triangle().onTrue(Commands555.shootSpeaker());
+    operatorController.circle().onTrue(Commands.run(() -> {
+      sprocket.setPosition(Rotation2d.fromDegrees(angleSetpoint.get()));
+    }, sprocket));
+    // operatorController.cross().onTrue(Commands555.transport()).onFalse(Commands.runOnce(() -> {
+    //   shooter.stopTransport();
+    // }, shooter));
+    operatorController.square().onTrue(Commands.runOnce(() -> {
+      RobotContainer.climbers.up();
+    }, climbers)).onFalse(Commands.runOnce(() -> {
+      RobotContainer.climbers.stop();
+    }, climbers));
+
+    operatorController.cross().onTrue(Commands.runOnce(() -> {
+      RobotContainer.climbers.down();
+    }, climbers)).onFalse(Commands.runOnce(() -> {
+      RobotContainer.climbers.stop();
+    }, climbers));
+    
+
+    //operatorController.L1().onTrue(Commands555.celebrate());
+    operatorController.touchpad().onTrue(Commands555.ampItUp());
+    operatorController.PS().onTrue(Commands555.cooperatition());
+
   }
 
   

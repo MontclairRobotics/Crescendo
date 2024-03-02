@@ -6,6 +6,7 @@ import static edu.wpi.first.units.Units.RevolutionsPerSecond;
 import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Volts;
+import static frc.robot.Constants.ArmConstants.SPROCKET_BEAM_INVERT;
 
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -18,11 +19,13 @@ import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.MutableMeasure;
 import edu.wpi.first.units.Velocity;
 import edu.wpi.first.units.Voltage;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
 import frc.robot.Constants.*;
+import frc.robot.util.BreakBeam;
 
 // Drive by scoring angle calculation is: arctan(height/distance);
 
@@ -69,6 +72,8 @@ public class Shooter extends SubsystemBase {
   private boolean isShooting = false;
   private boolean isTransporting = false;
 
+  private BreakBeam breakBeam = new BreakBeam(9, true);
+
   public Shooter() {
     topMotor.restoreFactoryDefaults();
     bottomMotor.restoreFactoryDefaults();
@@ -77,6 +82,7 @@ public class Shooter extends SubsystemBase {
     topMotor.setInverted(true);
     bottomMotor.setInverted(true);
     transportMotor.setInverted(true);
+    
 
     topController.setP(Constants.ShooterConstants.TOP_SHOOTER_PID_KP, 1);
     topController.setI(Constants.ShooterConstants.TOP_SHOOTER_PID_KI, 1);
@@ -93,39 +99,10 @@ public class Shooter extends SubsystemBase {
     transportController.setD(Constants.ShooterConstants.TRANSPORT_PID_KD, 1);
     transportController.setOutputRange(-1, 1);
 
-    // topController.setI(ShooterConstants.ki.get());
-    // topController.setP(ShooterConstants.kp.get());
-    // topController.setD(ShooterConstants.kd.get());
-    // topController.setFF(ShooterConstants.ff.get());
-
-    // bottomController.setI(ShooterConstants.ki.get());
-    // bottomController.setP(ShooterConstants.kp.get());
-    // bottomController.setD(ShooterConstants.kd.get());
-    // bottomController.setFF(ShooterConstants.ff.get());
-
-    // ShooterConstants.ki.whenUpdate((ki) -> {
-    //     topController.setI(ki);
-    //     bottomController.setI(ki);
-    // });
-
-    // ShooterConstants.kp.whenUpdate((kp) -> {
-    //     topController.setP(kp);
-    //     bottomController.setP(kp);
-    // });
-
-    // ShooterConstants.kd.whenUpdate((kd) -> {
-    //     topController.setD(kd);
-    //     bottomController.setD(kd);
-    // });
-
-    // ShooterConstants.ff.whenUpdate((ff) -> {
-    //     topController.setFF(ff);
-    //     bottomController.setFF(ff);
-    // });
-
-    // topController.setOutputRange(-1, 1);
-    // bottomController.setOutputRange(-1, 1);
-  }
+    Shuffleboard.getTab("Debug").addBoolean("Transport Beam Break", () -> {
+      return isNoteInTransport();
+    });
+  } 
 
   /** Is shooting running? */
   public boolean isShooting() {
@@ -235,6 +212,9 @@ public class Shooter extends SubsystemBase {
     topMotor.set(-ShooterConstants.SPEAKER_EJECT_SPEED);
     bottomMotor.set(-ShooterConstants.SPEAKER_EJECT_SPEED);
   }
+  public boolean isNoteInTransport() {
+    return breakBeam.get();
+  }
 
   public Command shooterSysId(String type, String motors, SysIdRoutine.Direction direction) {
     // Mutable holder for unit-safe voltage values, persisted to avoid reallocation.
@@ -317,13 +297,7 @@ public class Shooter extends SubsystemBase {
 
   @Override
   public void periodic() {
-    super.periodic();
-    if (count++ == 50) {
-      // System.out.println("Top: " + topEncoder.getVelocity() + " Bottom: " +
-      // bottomEncoder.getVelocity() + " Transport: " + transportEncoder.getVelocity());
-      // System.out.println("TopV: " + topMotor.getAppliedOutput() + " BottomV: " +
-      // bottomMotor.getAppliedOutput() + " TransportV: " + transportMotor.getAppliedOutput());
-      count = 0;
-    }
+    
+    
   }
 }
