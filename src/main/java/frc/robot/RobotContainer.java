@@ -63,9 +63,7 @@ public class RobotContainer {
       Tunable.of(4500, "shooter/bottom-speaker-speed"); // 4500 was most consistent in testing
   private Tunable<Double> transportSpeakerSpeed = Tunable.of(1000, "shooter/transport-speed");
 
-  private Tunable<Double> topShooterAmpSpeed = Tunable.of(300.0, "shooter/top-amp-speed");
-  private Tunable<Double> bottomShooterAmpSpeed = Tunable.of(500.0, "shooter/bottom-amp-speed");
-  private Tunable<Double> transportAmpSpeed = Tunable.of(3000.0, "shooter/transport-speed");
+  
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -165,18 +163,12 @@ public class RobotContainer {
 
     operatorController.square().onTrue(Commands555.scoreSpeaker());
     operatorController.triangle().onTrue(Commands555.shootSpeaker());
-    operatorController
-        .cross()
-        .onTrue(
-            Commands.runOnce(
-                () -> {
-                  shooter.transportVelocity(transportSpeakerSpeed.get());
-                }))
-        .onFalse(
-            Commands.runOnce(
-                () -> {
-                  shooter.stopTransport();
-                }));
+    operatorController.circle().onTrue(Commands.run(() -> {
+      sprocket.setPosition(Rotation2d.fromDegrees(45));
+    }, sprocket));
+    operatorController.cross().onTrue(Commands555.transport()).onFalse(Commands.runOnce(() -> {
+      shooter.stopTransport();
+    }, shooter));
 
     operatorController.L1().onTrue(Commands555.celebrate());
     operatorController.touchpad().onTrue(Commands555.ampItUp());
@@ -214,9 +206,7 @@ public class RobotContainer {
             sprocket.getSysId().dynamic(Direction.kReverse).onlyWhile(sprocket::isSprocketSafe));
   }
 
-  // operatorController.circle().onTrue(Commands.run(() -> {
-  //   sprocket.goToAngle(45);
-  // }));
+  
 
   public static Animation getTeleopDefaultAnim() {
     return new AllianceAnimation();

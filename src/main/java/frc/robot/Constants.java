@@ -76,9 +76,9 @@ public final class Constants {
     public static final int INTAKE_BOTTOM_MOTOR = 20;
 
     // TODO get actual ports from other code
-    public static final int SHOOTER_MOTOR_BOTTOM_PORT = 51;
-    public static final int SHOOTER_MOTOR_TOP_PORT = 50;
-    public static final int SHOOTER_MOTOR_TRANSPORT_PORT = 52;
+    public static final int SHOOTER_MOTOR_BOTTOM_PORT = 40;
+    public static final int SHOOTER_MOTOR_TOP_PORT = 41;
+    public static final int SHOOTER_MOTOR_TRANSPORT_PORT = 42;
 
     // Sprocket motors
     public static final int LEFT_ANGLE_MOTOR_PORT = 30;
@@ -90,8 +90,8 @@ public final class Constants {
     public static final int SPROCKET_BEAM_BREAK_CHANNEL = 1;
 
     // Climber ports
-    public static final int CLIMBER_LEFT_MOTOR_PORT = 40;
-    public static final int CLIMBER_RIGHT_MOTOR_PORT = 41;
+    public static final int CLIMBER_LEFT_MOTOR_PORT = 48;
+    public static final int CLIMBER_RIGHT_MOTOR_PORT = 49;
 
     public static final int CLIMBER_TOP_LIMIT_SWITCH_PORT = 8;
     public static final int CLIMBER_BOTTOM_LIMIT_SWITCH_PORT = 9;
