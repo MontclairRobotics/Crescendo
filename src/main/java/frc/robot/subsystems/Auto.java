@@ -50,6 +50,7 @@ public class Auto extends SubsystemBase {
   private ArrayList<PathPlannerTrajectory> trajectories = new ArrayList<PathPlannerTrajectory>();
   private String feedbackValue = "Enter a command!";
   private Command autoCommand = Commands.runOnce(() -> {});
+  private Alliance alliance = Alliance.Blue;
 
   GenericEntry autoStringEntry;
   GenericEntry safetyEntry;
@@ -134,13 +135,15 @@ public class Auto extends SubsystemBase {
     clearField();
     for (int i = 0; i < trajectories.size(); i++) {
       PathPlannerTrajectory pathTraj = trajectories.get(i);
-
-      // if (DriverStation.getAlliance().get() == Alliance.Red) {
-      //   pathTraj =  PathPlannerTrajectory.transformTrajectoryForAlliance(pathTraj, Alliance.Red);
-      //   traj = ppTrajectories.get(i).relativeTo(new Pose2d(16.5, 8, Rotation2d.fromDegrees(180)));
-      // }
       List<State> states = convertStatesToStates(pathTraj.getStates());
       Trajectory displayTrajectory = new Trajectory(states);
+      
+      
+      // if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red) {
+        
+      //   // displayTrajectory = displayTrajectory.relativeTo(new Pose2d(33, 0, Rotation2d.fromDegrees(180)));
+      //   displayTrajectory = displayTrajectory.relativeTo(new Pose2d(33,16, Rotation2d.fromDegrees(180)));
+      // }
 
       RobotContainer.field.getObject("traj" + i).setTrajectory(displayTrajectory);
       // Shuffleboard.getTab("Auto").add(RobotContainer.field).withSize(6, 4).withPosition(3, 0);
@@ -150,10 +153,9 @@ public class Auto extends SubsystemBase {
   }
 
   public void clearField() {
-    System.out.println("clearing");
       for (int i  = 0; i < 100; i++) {
         FieldObject2d obj = RobotContainer.field.getObject("traj" + i);
-        obj.setPose(new Pose2d(-100, -100, Rotation2d.fromDegrees(0)));
+        // obj.setPose(new Pose2d(-100, -100, Rotation2d.fromDegrees(0)));
         obj.setTrajectory(new Trajectory());
       }
   }
@@ -240,13 +242,23 @@ public class Auto extends SubsystemBase {
     for (int i = 0; i < ppStates.size(); i++) {
       // PathPlannerPath
       PathPlannerTrajectory.State currentState = ppStates.get(i);
-      wpiStates.add(new State(
+      if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red) {
+        wpiStates.add(new State(
+          currentState.timeSeconds,
+          currentState.velocityMps,
+          currentState.accelerationMpsSq,
+          new Pose2d(16.54175-currentState.positionMeters.getX(), currentState.positionMeters.getY(), currentState.heading), //TODO get correct number
+          currentState.curvatureRadPerMeter
+      ));
+      } else {
+        wpiStates.add(new State(
           currentState.timeSeconds,
           currentState.velocityMps,
           currentState.accelerationMpsSq,
           new Pose2d(currentState.positionMeters.getX(), currentState.positionMeters.getY(), currentState.heading),
           currentState.curvatureRadPerMeter
       ));
+      }
     }
 
     return wpiStates;
@@ -337,13 +349,10 @@ public class Auto extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // // System.out.println("hi");
-    // String autoString = autoStringEntry.getString("");
-    // // System.out.println(autoString);
-    // if (previousString.equals(autoString)) return;
-    // // System.out.println("changed!");
-    
-    // // System.out.println(commandEntry.getString(""));
+   if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() != alliance) {
+    alliance = DriverStation.getAlliance().get();
+    validateAndCreatePaths();
+   }
     
   }
 
