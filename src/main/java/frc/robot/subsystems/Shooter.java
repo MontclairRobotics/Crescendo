@@ -14,16 +14,22 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.units.Angle;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.MutableMeasure;
 import edu.wpi.first.units.Velocity;
 import edu.wpi.first.units.Voltage;
+import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.PS5Controller;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.*;
 import frc.robot.util.BreakBeam;
 
@@ -73,6 +79,9 @@ public class Shooter extends SubsystemBase {
   private boolean isTransporting = false;
 
   private BreakBeam breakBeam = new BreakBeam(9, true);
+
+
+  Debouncer m_debouncer = new Debouncer(0.3, Debouncer.DebounceType.kRising);
 
   public Shooter() {
     topMotor.restoreFactoryDefaults();
@@ -213,6 +222,7 @@ public class Shooter extends SubsystemBase {
     bottomMotor.set(-ShooterConstants.SPEAKER_EJECT_SPEED);
   }
   public boolean isNoteInTransport() {
+
     return breakBeam.get();
   }
 
@@ -299,5 +309,8 @@ public class Shooter extends SubsystemBase {
   public void periodic() {
     
     
+  
+    // RobotContainer.operatorController.getHID().setRumble(RumbleType.kLeftRumble, 1);
+    RobotContainer.testController.setRumble(RumbleType.kBothRumble, 1);
   }
 }

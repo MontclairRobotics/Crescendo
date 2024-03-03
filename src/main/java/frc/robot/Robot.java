@@ -82,7 +82,9 @@ public class Robot extends LoggedRobot {
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    System.out.println("distance prob: " + RobotContainer.shooterLimelight.getDistanceToSpeaker()  + " : " + RobotContainer.shooterLimelight.getObjectTY());
+  }
 
   @Override
   public void testInit() {
@@ -91,7 +93,9 @@ public class Robot extends LoggedRobot {
   }
 
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+    
+  }
 
   @Override
   public void simulationInit() {}

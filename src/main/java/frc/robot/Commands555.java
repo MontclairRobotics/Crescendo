@@ -137,10 +137,10 @@ public class Commands555 {
               double ySpeed = 0;
 
               if (!lockDrive) {
-                xSpeed =
+                ySpeed =
                     -MathUtil.applyDeadband(RobotContainer.driverController.getLeftX(), 0.05)
                         * DriveConstants.MAX_SPEED;
-                ySpeed =
+                xSpeed =
                     -MathUtil.applyDeadband(RobotContainer.driverController.getLeftY(), 0.05)
                         * DriveConstants.MAX_SPEED;
               }
@@ -156,6 +156,35 @@ public class Commands555 {
                           - rot.get().getDegrees())
                   < DriveConstants.ANGLE_DEADBAND;
             });
+  }
+
+  public static Command alignContinuousFieldRelative(Supplier<Rotation2d> rot, boolean lockDrive) {
+    Drivetrain drive = RobotContainer.drivetrain;
+    return Commands.run(
+            () -> {
+              double thetaSpeed =
+                  drive
+                      .getSwerveDrive()
+                      .getSwerveController()
+                      .headingCalculate(
+                          drive.getWrappedRotation().getRadians(), rot.get().getRadians());
+
+              double xSpeed = 0;
+              double ySpeed = 0;
+
+              if (!lockDrive) {
+                ySpeed =
+                    -MathUtil.applyDeadband(RobotContainer.driverController.getLeftX(), 0.05)
+                        * DriveConstants.MAX_SPEED;
+                xSpeed =
+                    -MathUtil.applyDeadband(RobotContainer.driverController.getLeftY(), 0.05)
+                        * DriveConstants.MAX_SPEED;
+              }
+
+              RobotContainer.drivetrain.drive(new Translation2d(xSpeed, ySpeed), thetaSpeed);
+              // RobotContainer.drivetrain.drive(targetTranslation, thetaSpeed);
+            },
+            RobotContainer.drivetrain);
   }
 
   /***
@@ -175,6 +204,14 @@ public class Commands555 {
             () -> {
               initTurnAngle = RobotContainer.drivetrain.getWrappedRotation().getDegrees();
             });
+  }
+
+  public static Command alignToAngleRobotRelativeContinuous(Supplier<Rotation2d> rot, boolean lockDrive) {
+    return alignContinuousFieldRelative(
+            () -> {
+              return Rotation2d.fromDegrees((RobotContainer.drivetrain.getWrappedRotation().getDegrees() + rot.get().getDegrees()) % 360);
+            },
+            lockDrive);
   }
 
   /**
@@ -208,11 +245,12 @@ public class Commands555 {
    * @return a command that will align the robot to the target from the current limelight Will be
    *     canceled if the limelight loses its target
    */
-  public static Command alignToLimelightTarget(Limelight camera) {
+  public static Command 
+  alignToLimelightTarget(Limelight camera) {
     // TODO: needs to use both limelights
     // Rotation2d targetAngle = Rotation2d.fromDegrees(-camera.getObjectTX());
     return ifHasTarget(
-            alignToAngleRobotRelative(
+            alignToAngleRobotRelativeContinuous(
                 () -> {
                   Rotation2d targetAngle = Rotation2d.fromDegrees(-camera.getObjectTX());
                   return targetAngle;
@@ -430,17 +468,22 @@ public class Commands555 {
   }
 
   // ***********************CLIMBER COMMANDS*************************//
-  // public static Command climberUp() {
-  //   return Commands.runOnce(
-  //       () -> {
-  //         RobotContainer.climber.up();
-  //       });
-  // }
+  public static Command climberUp() {
+    return Commands.runOnce(
+        () -> {
+          RobotContainer.climbers.up();
+        });
+  }
 
-  // public static Command climberDown() {
-  //   return Commands.runOnce(
-  //       () -> {
-  //         RobotContainer.climber.down();
-  //       });
-  // }
+  public static Command climberDown() {
+    return Commands.runOnce(
+        () -> {
+          RobotContainer.climbers.down();
+        });
+  }
+  public static Command climberStop() {
+    return Commands.runOnce(() -> {
+      RobotContainer.climbers.stop();
+    });
+  }
 }

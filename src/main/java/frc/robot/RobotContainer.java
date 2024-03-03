@@ -14,9 +14,11 @@ import animation2.WipeTransition;
 import animation2.api.Animation;
 import animation2.api.ConditionalAnimation;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -24,6 +26,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.subsystems.Auto;
 import frc.robot.subsystems.Climbers;
@@ -42,7 +45,7 @@ public class RobotContainer {
 
   public static CommandPS5Controller driverController = new CommandPS5Controller(0);
   public static CommandPS5Controller operatorController = new CommandPS5Controller(1);
-
+  public static XboxController testController = new XboxController(2);
   public static Drivetrain drivetrain =
       new Drivetrain(new File(Filesystem.getDeployDirectory(), "swerve/"));
 
@@ -51,7 +54,7 @@ public class RobotContainer {
   public static Shooter shooter = new Shooter();
   public static Sprocket sprocket = new Sprocket();
   public static Limelight intakeLimelight = new Limelight("limelight");
-  public static Limelight shooterLimelight = new Limelight("shooterLimelight");
+  public static Limelight shooterLimelight = new Limelight("limelight-shooter");
   public static Auto auto = new Auto();
   public static LED led =
       new LED(
@@ -93,7 +96,7 @@ public class RobotContainer {
             sprocket));
 
     
-    intakeLimelight.setPipelineTo(DetectionType.NOTE);
+    shooterLimelight.setPipelineTo(DetectionType.APRIL_TAG);
 
     topShooterSpeakerSpeed.whenUpdate(
         (speed) -> {
@@ -114,6 +117,11 @@ public class RobotContainer {
           }
         });
 
+
+    // for(int port = 5800; port <= 5805; port++) {
+    //   PortForwarder.add(port, "limelight.local", port);
+    // }
+
     configureDriverBindings();
     configureOperatorBindings();
   }
@@ -130,9 +138,9 @@ public class RobotContainer {
     driverController
         .triangle()
         .onTrue(Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(0), false));
-    driverController
-        .circle()
-        .onTrue(Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(90), false));
+    // driverController
+    //     .circle()
+    //     .onTrue(Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(90), false));
     driverController
         .cross()
         .onTrue(Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(180), false));
@@ -162,36 +170,40 @@ public class RobotContainer {
     
   }
   private void configureOperatorBindings() {
-    ControllerTools.getDPad(DPad.UP, operatorController)
-        .toggleOnTrue(
-            sprocket
-                .getSysId()
-                .quasistatic(Direction.kForward)
-                .onlyWhile(sprocket::isSprocketSafe));
-    ControllerTools.getDPad(DPad.DOWN, operatorController)
-        .toggleOnTrue(
-            sprocket
-                .getSysId()
-                .quasistatic(Direction.kReverse)
-                .onlyWhile(sprocket::isSprocketSafe));
+    // ControllerTools.getDPad(DPad.UP, operatorController)
+    //     .toggleOnTrue(
+    //         sprocket
+    //             .getSysId()
+    //             .quasistatic(Direction.kForward)
+    //             .onlyWhile(sprocket::isSprocketSafe));
+    // ControllerTools.getDPad(DPad.DOWN, operatorController)
+    //     .toggleOnTrue(
+    //         sprocket
+    //             .getSysId()
+    //             .quasistatic(Direction.kReverse)
+    //             .onlyWhile(sprocket::isSprocketSafe));
 
-    ControllerTools.getDPad(DPad.RIGHT, operatorController)
-        .toggleOnTrue(
-            sprocket.getSysId().dynamic(Direction.kForward).onlyWhile(sprocket::isSprocketSafe));
-    ControllerTools.getDPad(DPad.LEFT, operatorController)
-        .toggleOnTrue(
-            sprocket.getSysId().dynamic(Direction.kReverse).onlyWhile(sprocket::isSprocketSafe));
+    // ControllerTools.getDPad(DPad.RIGHT, operatorController)
+    //     .toggleOnTrue(
+    //         sprocket.getSysId().dynamic(Direction.kForward).onlyWhile(sprocket::isSprocketSafe));
+    // ControllerTools.getDPad(DPad.LEFT, operatorController)
+    //     .toggleOnTrue(
+    //         sprocket.getSysId().dynamic(Direction.kReverse).onlyWhile(sprocket::isSprocketSafe));
 
-    operatorController.R1().onTrue(Commands555.reverseIntake()).onFalse(Commands555.stopIntake());
-    operatorController.L1().whileTrue(Commands555.loadNote());
+    ControllerTools.getDPad(DPad.UP, operatorController).onTrue(Commands555.climberUp()).onFalse(Commands555.climberStop());
+    ControllerTools.getDPad(DPad.DOWN, operatorController).onTrue(Commands555.climberDown()).onFalse(Commands555.climberStop());
+
+    operatorController.R2().onTrue(Commands555.reverseIntake()).onFalse(Commands555.stopIntake());
+    operatorController.L2().whileTrue(Commands555.loadNote());
 
 
    
 
     operatorController.triangle().onTrue(Commands555.shootSpeaker());
-    operatorController.circle().onTrue(Commands.run(() -> {
-      sprocket.setPosition(Rotation2d.fromDegrees(angleSetpoint.get()));
-    }, sprocket));
+    // operatorController.circle().onTrue(Commands.run(() -> {
+    //   sprocket.setPosition(Rotation2d.fromDegrees(angleSetpoint.get()));
+    // }, sprocket));
+    driverController.circle().onTrue(Commands555.alignToLimelightTarget(shooterLimelight));
     // operatorController.cross().onTrue(Commands555.transport()).onFalse(Commands.runOnce(() -> {
     //   shooter.stopTransport();
     // }, shooter));
