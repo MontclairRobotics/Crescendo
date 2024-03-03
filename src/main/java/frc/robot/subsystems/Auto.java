@@ -172,7 +172,7 @@ public class Auto extends SubsystemBase {
     // sets lane to the lane of the first character
     if (autoString.charAt(0) == '1') lane = Constants.AutoConstants.LANE1;
     else if (autoString.charAt(0) == '2') lane = Constants.AutoConstants.LANE2;
-    else if (autoString.charAt(0) == '3') lane = Constants.AutoConstants.LANE3;
+    else if (autoString.charAt(0) == '3' || autoString.charAt(0) == '4') lane = Constants.AutoConstants.LANE3;
     else return false;
     
     
@@ -270,8 +270,18 @@ public class Auto extends SubsystemBase {
       return Commands.runOnce(() -> {});
     }
 
+
     SequentialCommandGroup finalPath = new SequentialCommandGroup();
     trajectories.clear();
+
+    if (autoString.length() >= 1) {
+      char digit = autoString.charAt(0);
+      if (digit == '4') {
+          finalPath.addCommands(Commands555.scoreAmp());
+        } else {
+          finalPath.addCommands(Commands555.scoreSpeaker());
+        }
+    }
   
     for (int i = 0; i < autoString.length() - 1; i++) {
 

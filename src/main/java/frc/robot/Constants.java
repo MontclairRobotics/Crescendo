@@ -218,7 +218,7 @@ public final class Constants {
     public static final char[] LANE2 = {'2', 'B', 'E', 'F'};
     public static final char[] LANE1 = {'1', 'A', 'D', 'E'};
     public static final char[] ALL_POINTS = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', '1', '2', '3', '4'};
-    public static final char[] STARTING_POINTS = {'1', '2', '3'};    
+    public static final char[] STARTING_POINTS = {'1', '2', '3', '4'};    
         
 
 
