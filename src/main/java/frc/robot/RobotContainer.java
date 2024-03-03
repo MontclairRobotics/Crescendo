@@ -77,7 +77,7 @@ public class RobotContainer {
   public RobotContainer() {
 
     auto.setupPathPlanner();
-    setupAutoTab();
+    auto.setupAutoTab();
     setupDriverTab();
     
 
@@ -248,23 +248,9 @@ public class RobotContainer {
 
     driverTab.addDouble("Time Remaining", Timer::getMatchTime);
 
-    // driverTab.addBoolean("Note in Transport", sprocket::getSensor);
+    // driverTab.addBoolean("Note in Transport", shooter::getSensor);
   }
 
-  public void setupAutoTab() {
-    ShuffleboardTab autoTab = Shuffleboard.getTab("Auto");
-    // TODO make it the same string that was entered last time? I think i can mark nt key as
-    // persistent
-    autoTab.add("Enter Command", "").withSize(3, 1).withPosition(0, 0);
-    autoTab.add(field).withSize(6, 4).withPosition(3, 0);
-    // autoTab.addString("Feedback", () -> auto.getFeedback()).withSize(3,1).withPosition(0, 1);
-
-    autoTab
-        .add("Ignore Safety", false)
-        .withWidget(BuiltInWidgets.kToggleSwitch)
-        .withSize(2, 1)
-        .withPosition(0, 2);
-  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -272,10 +258,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // TODO: Actual auto command.
-    
-    PathPlannerPath path = PathPlannerPath.fromPathFile("1-A");
-    
-    return AutoBuilder.followPath(path);
+    return auto.getAutoCommand();
   }
 }

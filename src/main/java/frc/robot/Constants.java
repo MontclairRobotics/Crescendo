@@ -237,22 +237,14 @@ public final class Constants {
   }
 
   public static class AutoConstants {
-    public static final Set<Character> NOTES =
-        Arrays.stream(new Character[] {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'})
-            .collect(Collectors.toSet());
-    public static final Set<Character> SCORING_LOCATIONS =
-        Arrays.stream(new Character[] {'1', '2', '3', '4'}).collect(Collectors.toSet());
-    public static final Set<Character> LANE3 =
-        Arrays.stream(new Character[] {'A', '3', 'D', 'E'}).collect(Collectors.toSet());
-    public static final Set<Character> LANE2 =
-        Arrays.stream(new Character[] {'B', '2', 'F', 'G', 'E'}).collect(Collectors.toSet());
-    public static final Set<Character> LANE1 =
-        Arrays.stream(new Character[] {'C', '1', '4', 'G', 'H'}).collect(Collectors.toSet());
-    public static final Set<Character> ALL_POINTS =
-        Arrays.stream(new Character[] {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', '1', '2', '3', '4'})
-            .collect(Collectors.toSet());
-    public static final Set<Character> STARTING_POINTS =
-        Arrays.stream(new Character[] {'1', '2', '3'}).collect(Collectors.toSet());
+    public static final char[] NOTES = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'};
+    public static final char[] SCORING_LOCATIONS = {'1', '2', '3', '4'};
+    public static final char[] LANE3 = {'3', 'C', 'H', 'G', '4'};
+    public static final char[] LANE2 = {'2', 'B', 'E', 'F'};
+    public static final char[] LANE1 = {'1', 'A', 'D', 'E'};
+    public static final char[] ALL_POINTS = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', '1', '2', '3', '4'};
+    public static final char[] STARTING_POINTS = {'1', '2', '3'};    
+        
 
     public static final HolonomicPathFollowerConfig PATH_FOLLOWER_CONFIG =
         new HolonomicPathFollowerConfig(
@@ -269,20 +261,18 @@ public final class Constants {
 
     public static final double GOAL_END_VELOCITY = 0.0;
     public static final double ROTATION_DELAY_DISTANCE = 0.0;
+ 
+
+
     /*
-     * |X|(AMP)
-     *
-     * \ 3 A | D
-     * \ |
-     * SPKR| 2 B | E
-     * / /| |
-     * / 1 C \| | F
-     * |
-     * | G
-     * |
-     * | H
-     * (human player)
-     */
+    |4| (AMP)
+    *
+    * \ 3        A      D
+    *  #  2      B      G
+    * / 1        C      F
+    * 
+    * |4| (AMP)
+    * */
   }
 
   public static class LEDConstants {
