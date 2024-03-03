@@ -39,11 +39,11 @@ public class Shooter extends SubsystemBase {
 
   // The motors
   public final CANSparkMax topMotor =
-      new CANSparkMax(Ports.SHOOTER_MOTOR_TOP_PORT, MotorType.kBrushless);
+      new CANSparkMax(Ports.SHOOTER_TOP_MOTOR, MotorType.kBrushless);
   public final CANSparkMax bottomMotor =
-      new CANSparkMax(Ports.SHOOTER_MOTOR_BOTTOM_PORT, MotorType.kBrushless);
+      new CANSparkMax(Ports.SHOOTER_BOTTOM_MOTOR, MotorType.kBrushless);
   public final CANSparkMax transportMotor =
-      new CANSparkMax(Ports.SHOOTER_MOTOR_TRANSPORT_PORT, MotorType.kBrushless);
+      new CANSparkMax(Ports.SHOOTER_MOTOR_TRANSPORT, MotorType.kBrushless);
 
   // The encoders on each motor
   private RelativeEncoder topEncoder = topMotor.getEncoder();
@@ -78,7 +78,7 @@ public class Shooter extends SubsystemBase {
   private boolean isShooting = false;
   private boolean isTransporting = false;
 
-  private BreakBeam breakBeam = new BreakBeam(9, true);
+  private BreakBeam breakBeam = new BreakBeam(Ports.TRANSPORT_BEAM_BREAK, ShooterConstants.BEAM_BRAKE_INVERT);
 
 
   Debouncer m_debouncer = new Debouncer(0.3, Debouncer.DebounceType.kRising);

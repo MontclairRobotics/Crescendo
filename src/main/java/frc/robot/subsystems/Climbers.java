@@ -21,8 +21,8 @@ public class Climbers extends SubsystemBase {
 
   /** Creates objects for the motors, limits, and encoders Then sets the encoders */
   public Climbers() {
-    leftMotor = new CANSparkMax(Ports.CLIMBER_LEFT_MOTOR_PORT, MotorType.kBrushless);
-    rightMotor = new CANSparkMax(Ports.CLIMBER_RIGHT_MOTOR_PORT, MotorType.kBrushless);
+    leftMotor = new CANSparkMax(Ports.CLIMBER_LEFT_MOTOR, MotorType.kBrushless);
+    rightMotor = new CANSparkMax(Ports.CLIMBER_RIGHT_MOTOR, MotorType.kBrushless);
 
     leftMotor.setIdleMode(IdleMode.kBrake);
     rightMotor.setIdleMode(IdleMode.kBrake);

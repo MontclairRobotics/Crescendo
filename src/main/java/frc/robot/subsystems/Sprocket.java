@@ -34,9 +34,9 @@ import java.awt.geom.Point2D;
 public class Sprocket extends SubsystemBase {
 
   private final CANSparkMax leftMotor =
-      new CANSparkMax(Ports.LEFT_ANGLE_MOTOR_PORT, MotorType.kBrushless);
+      new CANSparkMax(Ports.LEFT_ANGLE_MOTOR, MotorType.kBrushless);
   private final CANSparkMax rightMotor =
-      new CANSparkMax(Ports.RIGHT_ANGLE_MOTOR_PORT, MotorType.kBrushless);
+      new CANSparkMax(Ports.RIGHT_ANGLE_MOTOR, MotorType.kBrushless);
   private InterpolatingDoubleTreeMap angleMap;
   private InterpolatingDoubleTreeMap speedMap;
 
@@ -101,9 +101,6 @@ public class Sprocket extends SubsystemBase {
     leftMotor.setIdleMode(IdleMode.kBrake);
     rightMotor.setIdleMode(IdleMode.kBrake);
 
-    Shuffleboard.getTab("Debug").addDouble("Pid Voltage", () -> {
-      return pidController.calculate(getEncoderPosition());
-    });
     
   }
 
@@ -182,8 +179,7 @@ public class Sprocket extends SubsystemBase {
     } else {
       stop();
     }
-    // leftMotor.setVoltage(12);
-    // rightMotor.setVoltage(12);
+
   }
 
   public SysIdRoutine getSysId() {

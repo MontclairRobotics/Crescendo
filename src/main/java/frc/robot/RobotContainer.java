@@ -139,9 +139,9 @@ public class RobotContainer {
     driverController
         .triangle()
         .onTrue(Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(0), false));
-    // driverController
-    //     .circle()
-    //     .onTrue(Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(90), false));
+    driverController
+        .circle()
+        .onTrue(Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(90), false));
     driverController
         .cross()
         .onTrue(Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(180), false));
@@ -201,27 +201,12 @@ public class RobotContainer {
    
 
     operatorController.triangle().onTrue(Commands555.shootSpeaker());
-    // operatorController.circle().onTrue(Commands.run(() -> {
-    //   sprocket.setPosition(Rotation2d.fromDegrees(angleSetpoint.get()));
-    // }, sprocket));
-    driverController.circle().onTrue(Commands555.alignToLimelightTarget(shooterLimelight));
-    // operatorController.cross().onTrue(Commands555.transport()).onFalse(Commands.runOnce(() -> {
-    //   shooter.stopTransport();
-    // }, shooter));
-    operatorController.square().onTrue(Commands.runOnce(() -> {
-      RobotContainer.climbers.up();
-    }, climbers)).onFalse(Commands.runOnce(() -> {
-      RobotContainer.climbers.stop();
-    }, climbers));
-
-    operatorController.cross().onTrue(Commands.runOnce(() -> {
-      RobotContainer.climbers.down();
-    }, climbers)).onFalse(Commands.runOnce(() -> {
-      RobotContainer.climbers.stop();
-    }, climbers));
+   
     
 
-    //operatorController.L1().onTrue(Commands555.celebrate());
+    
+
+    operatorController.L1().onTrue(Commands555.celebrate());
     operatorController.touchpad().onTrue(Commands555.ampItUp());
     operatorController.PS().onTrue(Commands555.cooperatition());
 
@@ -244,7 +229,7 @@ public class RobotContainer {
         () -> {
           return shooter.isAtSpeed() && sprocket.isAtAngle();
         });
-    driverTab.addBoolean("Note Intaked", intake::hasPickedUp);
+    // driverTab.addBoolean("Note Intaked", intake::hasPickedUp);
 
     driverTab.addDouble("Time Remaining", Timer::getMatchTime);
 

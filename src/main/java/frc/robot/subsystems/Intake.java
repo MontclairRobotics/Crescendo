@@ -14,7 +14,7 @@ public class Intake extends SubsystemBase {
   private final CANSparkMax bottomMotor =
       new CANSparkMax(Ports.INTAKE_BOTTOM_MOTOR, MotorType.kBrushless);
   
-  private boolean hasPickedUpNote;
+  
   private Timer timeSinceNote;
 
   public Intake() {
@@ -41,17 +41,9 @@ public class Intake extends SubsystemBase {
     bottomMotor.set(0);
   }
 
-  /**
-   * gets the state of the beam break sensor in the intake
-   *
-   * @return true if the sensor is broken (gamepiece intaked), false if unbroken
-   */
   
 
-  public boolean hasPickedUp() {
-    return hasPickedUpNote;
-  }
-
+  
   @Override
   public void periodic() {
     // if (getSensor()) {

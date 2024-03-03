@@ -57,8 +57,7 @@ public class Limelight extends SubsystemBase {
   public void setPipelineTo(DetectionType type) {
     if (type == DetectionType.DRIVER) {
       LimelightHelpers.setCameraMode_Driver(cameraName);
-    } else {
-      LimelightHelpers.setCameraMode_Processor(cameraName);
+    } else { LimelightHelpers.setCameraMode_Processor(cameraName);
     }
 
     LimelightHelpers.setPipelineIndex(cameraName, type.getPipe());
@@ -85,6 +84,6 @@ public class Limelight extends SubsystemBase {
     return distance;
   }
 
-  // public void getDistanceTo
+  
 
 }

@@ -3,6 +3,10 @@ package frc.robot.subsystems;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.PathPlannerTrajectory;
+import com.pathplanner.lib.path.PathPoint;
+
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -24,12 +28,13 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Commands555;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
+import frc.robot.Constants.AutoConstants;
 import frc.robot.util.Array555;
 
 import java.util.ArrayList;
@@ -284,7 +289,20 @@ public class Auto extends SubsystemBase {
       } else {
         finalPath.addCommands(
             Commands555.alignToLimelightTarget(RobotContainer.intakeLimelight),
-            Commands555.intake());
+            Commands.parallel(
+              Commands555.intake(),
+              Commands.runOnce(() -> {
+                RobotContainer.drivetrain.getSwerveDrive().setChassisSpeeds(new ChassisSpeeds(
+                  0.4,
+                  0,
+                  0
+                ));
+              }, RobotContainer.drivetrain).until(() -> {
+                return RobotContainer.shooter.isNoteInTransport();
+              }).withTimeout(3).finallyDo(() -> {
+                RobotContainer.shooter.stopTransport();
+                RobotContainer.intake.stop();
+              })));
       }
     }
     setFeedback("Successfully Created Auto Sequence!");
@@ -327,5 +345,33 @@ public class Auto extends SubsystemBase {
     
     // // System.out.println(commandEntry.getString(""));
     
+  }
+
+  public Command getPathSequenceOdometry(String autoString) {
+    SequentialCommandGroup finalPath = new SequentialCommandGroup();
+
+    for (int i = 0; i < autoString.length() - 1; i++) {
+      char current = autoString.charAt(i);
+      char next = autoString.charAt(i+1);
+
+      PathPlannerPath path = PathPlannerPath.fromPathFile("" + current + "-" + next);
+      trajectories.add(path.getTrajectory(RobotContainer.drivetrain.getSwerveDrive().getRobotVelocity(), RobotContainer.drivetrain.getRotation()));
+
+      ParallelCommandGroup segment = new ParallelCommandGroup(AutoBuilder.followPath(path));
+      
+      if (Array555.indexOf(AutoConstants.NOTES, next) != -1) {
+        segment.alongWith(Commands555.loadNote());
+      } 
+
+      finalPath.addCommands(segment);
+      if (next == 4) {
+        finalPath.addCommands(Commands555.scoreAmp());
+      } else { // speaker
+        finalPath.addCommands(Commands555.scoreSpeaker());
+      }
+    }
+
+
+    return Commands.sequence(finalPath);
   }
 }

@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class LED extends SubsystemBase {
-  private AddressableLED led = new AddressableLED(Constants.Ports.LED_PWM_PORT);
+  private AddressableLED led = new AddressableLED(Constants.Ports.LED_PWM);
   private AnimationStack stack;
 
   public static final double TRANSITION_LENGTH = 0.4;
