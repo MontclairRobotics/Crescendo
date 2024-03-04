@@ -54,6 +54,12 @@ public class Commands555 {
     return Commands.runOnce(RobotContainer.drivetrain.getSwerveDrive()::zeroGyro);
   }
 
+  public static Command lockDrive() {
+    return Commands.runOnce(() -> {
+      RobotContainer.drivetrain.getSwerveDrive().lockPose();
+    }, RobotContainer.drivetrain);
+  }
+
   /**
    * Drive to a field-relative point given a targetPose
    *
