@@ -212,8 +212,6 @@ public class RobotContainer {
 
   }
 
-  
-
   public static Animation getTeleopDefaultAnim() {
     return new AllianceAnimation();
   }
@@ -233,7 +231,7 @@ public class RobotContainer {
 
     driverTab.addDouble("Time Remaining", Timer::getMatchTime);
 
-    // driverTab.addBoolean("Note in Transport", shooter::getSensor);
+    driverTab.addBoolean("Note in Transport", shooter::isNoteInTransport);
   }
 
 

@@ -269,7 +269,7 @@ public class Auto extends SubsystemBase {
     return wpiStates;
   }
 
-  private Command getPathSequence(String autoString) {
+  private void buildPathSequence(String autoString) {
 
 
 
@@ -277,7 +277,9 @@ public class Auto extends SubsystemBase {
     trajectories.clear();
 
     if (autoString.length() == 0) {
-      return Commands.runOnce(() -> {});
+      autoCommand = Commands.runOnce(() -> {
+
+      });
     }
 
     if (autoString.length() >= 1) {
@@ -310,7 +312,7 @@ public class Auto extends SubsystemBase {
       } catch (Exception e) {
         // TODO: amazing error handling
         setFeedback("Path File Not Found");
-        return Commands.runOnce(() -> {}); //TODO this right?
+        autoCommand = Commands.runOnce(() -> {}); //TODO this right?
       }
 
       if (Character.isDigit(next)) {
@@ -331,20 +333,20 @@ public class Auto extends SubsystemBase {
               Commands555.intake(),
               Commands.runOnce(() -> {
                 RobotContainer.drivetrain.getSwerveDrive().setChassisSpeeds(new ChassisSpeeds(
-                  0.4,
+                  AutoConstants.INTAKING_MOVE_SPEED,
                   0,
                   0
                 ));
               }, RobotContainer.drivetrain).until(() -> {
                 return RobotContainer.shooter.isNoteInTransport();
-              }).withTimeout(3).finallyDo(() -> {
+              }).withTimeout(AutoConstants.INTAKING_TIMEOUT).finallyDo(() -> {
                 RobotContainer.shooter.stopTransport();
                 RobotContainer.intake.stop();
               })));
       }
     }
     setFeedback("Successfully Created Auto Sequence!");
-    return Commands.sequence(finalPath);
+    autoCommand = finalPath;
   }
 
   public void validateAndCreatePaths() {
@@ -364,10 +366,10 @@ public class Auto extends SubsystemBase {
     // setFeedback("boo!");
     if (isValidPath) {
       if (!ignoreSafety && isSafePath) {
-        autoCommand = getPathSequence(autoString);
+        buildPathSequence(autoString);
         drawPaths();
       } else if (ignoreSafety) {
-        autoCommand = getPathSequence(autoString);
+        buildPathSequence(autoString);
         drawPaths();
       }
     }
@@ -382,17 +384,26 @@ public class Auto extends SubsystemBase {
     
   }
 
-  public Command getPathSequenceOdometry(String autoString) {
+  public void buildPathSequenceOdometry(String autoString) {
     SequentialCommandGroup finalPath = new SequentialCommandGroup();
-
+    ParallelCommandGroup segment = new ParallelCommandGroup();
     for (int i = 0; i < autoString.length() - 1; i++) {
       char current = autoString.charAt(i);
       char next = autoString.charAt(i+1);
+      try {
+        PathPlannerPath path = PathPlannerPath.fromPathFile("" + current + "-" + next);
+        trajectories.add(path.getTrajectory(RobotContainer.drivetrain.getSwerveDrive().getRobotVelocity(), RobotContainer.drivetrain.getRotation()));
+        segment = new ParallelCommandGroup(AutoBuilder.followPath(path));
+        
+      } catch(Exception e) {
+        setFeedback("Path File Not Found");
+        autoCommand = Commands.runOnce(() -> {});
+        
+      }
 
-      PathPlannerPath path = PathPlannerPath.fromPathFile("" + current + "-" + next);
-      trajectories.add(path.getTrajectory(RobotContainer.drivetrain.getSwerveDrive().getRobotVelocity(), RobotContainer.drivetrain.getRotation()));
-
-      ParallelCommandGroup segment = new ParallelCommandGroup(AutoBuilder.followPath(path));
+       
+     
+      
       
       if (Array555.indexOf(AutoConstants.NOTES, next) != -1) {
         segment.addCommands(Commands555.setSprocketAngle(INTAKE_SCORE_ANGLE));
@@ -412,7 +423,7 @@ public class Auto extends SubsystemBase {
       }
     }
 
-
-    return Commands.sequence(finalPath);
+    setFeedback("Successfully Created Auto Sequence!");
+    autoCommand = finalPath;
   }
 }

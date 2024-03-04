@@ -243,6 +243,8 @@ public final class Constants {
 
     public static final double GOAL_END_VELOCITY = 0.0;
     public static final double ROTATION_DELAY_DISTANCE = 0.0;
+    public static final double INTAKING_TIMEOUT = 3; // in seconds
+    public static final double INTAKING_MOVE_SPEED = 0.04; // in M/s.
  
 
 
