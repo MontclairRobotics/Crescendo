@@ -55,7 +55,7 @@ public final class Constants {
     public static final Pose2d EDGE_OF_DRIVEBASE =
         new Pose2d(0, DRIVE_BASE_RADIUS + BUMPER_WIDTH, new Rotation2d());
     // TODO: correct angle deadband
-    public static final double ANGLE_DEADBAND = 0.5;
+    public static final double ANGLE_DEADBAND = 3;
   }
 
   public static class VisionConstants {
@@ -130,8 +130,8 @@ public final class Constants {
     public static final double ENCODER_MIN_ANGLE = 32;
     public static final double ENCODER_MAX_ANGLE = 75.787;
 
-    public static final double SPEAKER_SCORE_ANGLE = -1;
-    public static final double AMP_SCORE_ANGLE = -1;
+    public static final double SPEAKER_SCORE_ANGLE = 65;
+    public static final double AMP_SCORE_ANGLE = 50;
 
 
     public static final Tunable<Boolean> LEFT_INVERT = Tunable.of(true, "arm.invert.left");
@@ -150,8 +150,8 @@ public final class Constants {
 
   public static class ShooterConstants {
     // Shooter
-    public static final double SPEAKER_EJECT_SPEED = 1;
-    public static final double AMP_EJECT_SPEED = 0.1;
+    public static final double SPEAKER_EJECT_SPEED = 2500;
+    public static final double AMP_EJECT_SPEED = 1000;
 
     public static Tunable<Double> kp = Tunable.of(0.0005, "shooter.kp");
     public static Tunable<Double> ki = Tunable.of(0, "shooter.ki");
@@ -160,13 +160,13 @@ public final class Constants {
 
     public static final double MAX_RPM = 5700;
 
-    public static final int VELOCITY_DEADBAND = 10;
+    public static final int VELOCITY_DEADBAND = 150;
 
     public static final double TRANSPORT_SPEED = 0.6;
     
     public static final boolean BEAM_BRAKE_INVERT = true;
     
-
+    public static final double TRANSPORT_FERRY_SPEED = 0.3;
     // From SysId
     // public static final double TOP_SHOOTER_FF_KS = 0.20823;
     // public static final double TOP_SHOOTER_FF_KV = 0.0021625;

@@ -1,8 +1,12 @@
 package frc.robot;
 
+import java.util.function.BooleanSupplier;
+import java.util.function.Supplier;
+
+import com.pathplanner.lib.auto.AutoBuilder;
+
 import animation2.CelebrationAnimation;
 import animation2.FlashAnimation;
-import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -11,15 +15,13 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.vision.Limelight;
-import java.util.function.BooleanSupplier;
-import java.util.function.Supplier;
 
 public class Commands555 {
   private static double initTurnAngle;
@@ -84,15 +86,11 @@ public class Commands555 {
    * @return A
    */
   public static Command loadNote() {
-    Command alignSprocket = Commands555.setSprocketAngle(45);
-    Command intakeAndTransport = Commands.parallel(Commands555.intake(), Commands555.transport());
+    Command alignSprocket = Commands555.setSprocketAngle(52);
+    Command intakeAndTransport = Commands.sequence(alignSprocket, Commands.parallel(Commands555.intake(), Commands555.transport(ShooterConstants.TRANSPORT_SPEED)));
     return intakeAndTransport
         .withName("intake in")
         .until(() -> {
-          if (RobotContainer.shooter.isNoteInTransport() == true) {
-            System.out.println("<3");
-          }
-          
           return RobotContainer.shooter.isNoteInTransport();})
         .finallyDo(() -> {
           RobotContainer.intake.stop();
@@ -114,7 +112,9 @@ public class Commands555 {
     return Commands.runOnce(RobotContainer.intake::stop, RobotContainer.intake)
         .withName("intake stop");
   }
-
+  public static Command ferryNote() {
+    return Commands.parallel(Commands555.shootVelocity(30), Commands555.transport(ShooterConstants.TRANSPORT_FERRY_SPEED));
+  }
   // /**
   //  * Robot relative or field relative depending on isFieldRelative. Input angle MUST be between 0
   // and 360 degrees
@@ -352,11 +352,26 @@ public class Commands555 {
    * Shooter Commands
    * - - - - - - - - - -
    */
-  public static Command shootSpeaker() {
-    return Commands.runOnce(RobotContainer.shooter::shootSpeaker, RobotContainer.shooter)
-        .withName("shoot speaker");
+  public static Command shoot(double topShootSpeed, double bottomShootSpeed, double transportSpeed) {
+    
+    return Commands.sequence(
+      Commands.runOnce(() -> {
+        RobotContainer.shooter.shootVelocity(topShootSpeed,bottomShootSpeed);
+      }, RobotContainer.shooter),
+      waitUntil(() -> {return RobotContainer.shooter.isAtSpeed();}),
+      Commands555.transport(transportSpeed),
+      new WaitUntilCommand(0.5)
+    ).finallyDo(() -> {
+      RobotContainer.shooter.stopTransport();
+      RobotContainer.shooter.stopShooter();
+    });
   }
-
+  
+  public static Command stopTransport() {
+    return Commands.runOnce(() -> {
+      RobotContainer.shooter.stopTransport();
+    }, RobotContainer.shooter);
+  }
   public static Command shootAmp() {
     return Commands.runOnce(RobotContainer.shooter::shootAmp, RobotContainer.shooter)
         .withName("shoot amp");
@@ -379,22 +394,22 @@ public class Commands555 {
         });
   }
 
-  public Command shootSequence(double angle, double velocity) {
-    return Commands.sequence(
-        shootVelocity(velocity),
-        setSprocketAngle(angle),
-        waitUntil(
-            () -> {
-              return RobotContainer.shooter.isAtSetpoint(velocity)
-                  && RobotContainer.sprocket.isAtAngle();
-            }),
-        transport(),
-        waitForTime(3.5),
-        setSprocketAngle(ArmConstants.ENCODER_MIN_ANGLE),
-        shootVelocity(0));
-  }
+  // public Command shootSequence(double angle, double velocity) {
+  //   return Commands.sequence(
+  //       shootVelocity(velocity),
+  //       setSprocketAngle(angle),
+  //       waitUntil(
+  //           () -> {
+  //             return RobotContainer.shooter.isAtSetpoint(velocity)
+  //                 && RobotContainer.sprocket.isAtAngle();
+  //           }),
+  //       transport(ShooterConstants.TRANSPORT_SPEED),
+  //       waitForTime(3.5),
+  //       setSprocketAngle(ArmConstants.ENCODER_MIN_ANGLE),
+  //       shootVelocity(0));
+  // }
 
-  public Command waitUntil(BooleanSupplier condition) {
+  public static Command waitUntil(BooleanSupplier condition) {
     return new Command() {
       @Override
       public boolean isFinished() {
@@ -403,31 +418,33 @@ public class Commands555 {
     };
   }
 
-  public Command waitForTime(double seconds) {
+  public static Command waitForTime(double seconds) {
     return Commands.run(() -> {}).withTimeout(seconds);
   }
 
-  public static Command transport() {
+  public static Command transport(double transportSpeed) {
     return Commands.run(
         () -> {
-          RobotContainer.shooter.transportStart();
+          RobotContainer.shooter.transportStart(transportSpeed);
         });
   }
 
   public static Command scoreAmp() {
     return Commands.sequence(
-        alignToLimelightTarget(RobotContainer.shooterLimelight),
         setSprocketAngle(ArmConstants.AMP_SCORE_ANGLE),
-        shootAmp(),
-        setSprocketAngle(ArmConstants.ENCODER_MIN_ANGLE));
+        shoot(ShooterConstants.AMP_EJECT_SPEED, ShooterConstants.AMP_EJECT_SPEED, ShooterConstants.TRANSPORT_SPEED),
+        waitForTime(0.4),
+        setSprocketAngle(52));
+        
   }
 
-  public static Command scoreSpeaker() {
+  public static Command scoreSubwoofer() {
     return Commands.sequence(
-        alignToLimelightTarget(RobotContainer.shooterLimelight),
-        setSprocketAngle(ArmConstants.SPEAKER_SCORE_ANGLE),
-        shootSpeaker(),
-        setSprocketAngle(ArmConstants.ENCODER_MIN_ANGLE));
+        setSprocketAngle(RobotContainer.speakerAngle.get()),
+        shoot(ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.TRANSPORT_SPEED),
+        waitForTime(0.4),
+        setSprocketAngle(52)
+      );
   }
 
   public static Command receiveHumanPlayerNote() {
@@ -438,41 +455,41 @@ public class Commands555 {
         setSprocketAngle(ArmConstants.ENCODER_MIN_ANGLE));
   }
 
-  public static Command signalAmp() {
-    return Commands.runOnce(
-        () -> {
-          RobotContainer.led.add(new FlashAnimation(Color.kOrange));
-        });
-  }
+  // public static Command signalAmp() {
+  //   return Commands.runOnce(
+  //       () -> {
+  //         RobotContainer.led.add(new FlashAnimation(Color.kOrange));
+  //       });
+  // }
 
-  public static Command signalCoop() {
-    return Commands.runOnce(
-        () -> {
-          RobotContainer.led.add(new FlashAnimation(Color.kBlue));
-        });
-  }
+  // public static Command signalCoop() {
+  //   return Commands.runOnce(
+  //       () -> {
+  //         RobotContainer.led.add(new FlashAnimation(Color.kBlue));
+  //       });
+  // }
 
-  // LED bits
-  public static Command celebrate() {
-    return Commands.runOnce(
-        () -> {
-          RobotContainer.led.add(new CelebrationAnimation());
-        });
-  }
+  // // LED bits
+  // public static Command celebrate() {
+  //   return Commands.runOnce(
+  //       () -> {
+  //         RobotContainer.led.add(new CelebrationAnimation());
+  //       });
+  // }
 
-  public static Command ampItUp() {
-    return Commands.runOnce(
-        () -> {
-          RobotContainer.led.add(new FlashAnimation(Color.kYellow));
-        });
-  }
+  // public static Command ampItUp() {
+  //   return Commands.runOnce(
+  //       () -> {
+  //         RobotContainer.led.add(new FlashAnimation(Color.kYellow));
+  //       });
+  // }
 
-  public static Command cooperatition() {
-    return Commands.runOnce(
-        () -> {
-          RobotContainer.led.add(new FlashAnimation(Color.kBlueViolet));
-        });
-  }
+  // public static Command cooperatition() {
+  //   return Commands.runOnce(
+  //       () -> {
+  //         RobotContainer.led.add(new FlashAnimation(Color.kBlueViolet));
+  //       });
+  // }
 
   // ***********************CLIMBER COMMANDS*************************//
   public static Command climberUp() {

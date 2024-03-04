@@ -56,12 +56,13 @@ public class RobotContainer {
   public static Limelight intakeLimelight = new Limelight("limelight");
   public static Limelight shooterLimelight = new Limelight("limelight-shooter");
   public static Auto auto = new Auto();
-  public static LED led =
-      new LED(
-          new ConditionalAnimation(getTeleopDefaultAnim())
-              .addCase(DriverStation::isDisabled, getDisabledAnimation()),
-          new WipeTransition());
-  //public static Climbers climber = new Climbers();
+  // public static LED led =
+  //     new LED(
+  //         new ConditionalAnimation(getTeleopDefaultAnim())
+  //             .addCase(DriverStation::isDisabled, getDisabledAnimation()),
+  //         new WipeTransition());
+  public static Climbers climbers = new Climbers();
+  
 
   public static final Field2d field = new Field2d();
 
@@ -70,9 +71,10 @@ public class RobotContainer {
       Tunable.of(4500, "shooter/bottom-speaker-speed"); // 4500 was most consistent in testing
   private Tunable<Double> transportSpeakerSpeed = Tunable.of(1000, "shooter/transport-speed");
 
-  private Tunable<Double> angleSetpoint = Tunable.of(45, "sprocket setpoint");
+ 
+  private Tunable<Double> angleSetpoint = Tunable.of(52, "Angle Setpoint");
+  public static Tunable<Double> speakerAngle = Tunable.of(50, "speaker Setpoint");
   
-  public static Climbers climbers = new Climbers();
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
@@ -97,6 +99,7 @@ public class RobotContainer {
 
     
     shooterLimelight.setPipelineTo(DetectionType.APRIL_TAG);
+    intakeLimelight.setPipelineTo(DetectionType.NOTE);
 
     topShooterSpeakerSpeed.whenUpdate(
         (speed) -> {
@@ -199,16 +202,18 @@ public class RobotContainer {
 
 
    
-
-    operatorController.triangle().onTrue(Commands555.shootSpeaker());
-   
+    operatorController.cross().onTrue(Commands555.setSprocketAngle(angleSetpoint.get()));
+    operatorController.triangle().whileTrue(Commands555.scoreSubwoofer());
+    operatorController.square().whileTrue(Commands555.scoreAmp());
+    
+   operatorController.circle().whileTrue(Commands555.shoot(5000, 5000, 1));
     
 
     
 
-    operatorController.L1().onTrue(Commands555.celebrate());
-    operatorController.touchpad().onTrue(Commands555.ampItUp());
-    operatorController.PS().onTrue(Commands555.cooperatition());
+    // operatorController.L1().onTrue(Commands555.celebrate());
+    // operatorController.touchpad().onTrue(Commands555.ampItUp());
+    // operatorController.PS().onTrue(Commands555.cooperatition());
 
   }
 

@@ -287,7 +287,7 @@ public class Auto extends SubsystemBase {
       if (digit == '4') {
           finalPath.addCommands(Commands555.scoreAmp());
         } else {
-          finalPath.addCommands(Commands555.scoreSpeaker());
+          finalPath.addCommands(Commands555.scoreSubwoofer());
         }
     }
   
@@ -319,7 +319,7 @@ public class Auto extends SubsystemBase {
         if (next == '4') {
           finalPath.addCommands(Commands555.scoreAmp());
         } else {
-          finalPath.addCommands(Commands555.scoreSpeaker());
+          finalPath.addCommands(Commands555.scoreSubwoofer());
         }
 
       } else {
@@ -419,7 +419,7 @@ public class Auto extends SubsystemBase {
       if (next == 4) {
         finalPath.addCommands(Commands555.scoreAmp());
       } else { // speaker
-        finalPath.addCommands(Commands555.scoreSpeaker());
+        finalPath.addCommands(Commands555.scoreSubwoofer());
       }
     }
 

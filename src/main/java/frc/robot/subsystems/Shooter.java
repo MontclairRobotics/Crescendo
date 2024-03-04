@@ -107,7 +107,7 @@ public class Shooter extends SubsystemBase {
     transportController.setI(Constants.ShooterConstants.TRANSPORT_PID_KI, 1);
     transportController.setD(Constants.ShooterConstants.TRANSPORT_PID_KD, 1);
     transportController.setOutputRange(-1, 1);
-
+    
     Shuffleboard.getTab("Debug").addBoolean("Transport Beam Break", () -> {
       return isNoteInTransport();
     });
@@ -130,7 +130,7 @@ public class Shooter extends SubsystemBase {
 
   /** Runs top and bottom shooter motors at different velocties */
   public void shootVelocity(double topVelocity, double bottomVelocity) {
-    topVelocitySetpoint = topVelocity;
+    topVelocitySetpoint = -topVelocity;
     bottomVelocitySetpoint = bottomVelocity;
     System.out.println("shootVelocity: " + topVelocity + " " + bottomVelocity);
 
@@ -158,10 +158,10 @@ public class Shooter extends SubsystemBase {
 
   public boolean isAtSpeed() {
     boolean topAtPoint =
-        Math.abs(topVelocitySetpoint - topEncoder.getVelocity())
+        Math.abs(Math.abs(topVelocitySetpoint) - topEncoder.getVelocity())
             < ShooterConstants.VELOCITY_DEADBAND;
     boolean bottomAtPoint =
-        Math.abs(bottomVelocitySetpoint - bottomEncoder.getVelocity())
+        Math.abs(Math.abs(bottomVelocitySetpoint) - bottomEncoder.getVelocity())
             < ShooterConstants.VELOCITY_DEADBAND;
 
     return topAtPoint && bottomAtPoint;
@@ -192,8 +192,8 @@ public class Shooter extends SubsystemBase {
         && Math.abs(bottomEncoder.getVelocity() - setpoint) < ShooterConstants.VELOCITY_DEADBAND;
   }
 
-  public void transportStart() {
-    transportMotor.set(ShooterConstants.TRANSPORT_SPEED);
+  public void transportStart(double transportSpeed) {
+    transportMotor.set(transportSpeed);
   }
 
   public double getTopVelocity() {
