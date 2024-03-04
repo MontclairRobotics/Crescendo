@@ -130,7 +130,7 @@ public final class Constants {
     public static final double ENCODER_MIN_ANGLE = 32;
     public static final double ENCODER_MAX_ANGLE = 75.787;
 
-    public static final double SPEAKER_SCORE_ANGLE = 65;
+    public static final double SPEAKER_SCORE_ANGLE = 62.7;
     public static final double AMP_SCORE_ANGLE = 50;
 
 
@@ -150,7 +150,7 @@ public final class Constants {
 
   public static class ShooterConstants {
     // Shooter
-    public static final double SPEAKER_EJECT_SPEED = 2500;
+    public static final double SPEAKER_EJECT_SPEED = 3500;
     public static final double AMP_EJECT_SPEED = 1000;
 
     public static Tunable<Double> kp = Tunable.of(0.0005, "shooter.kp");
@@ -204,7 +204,7 @@ public final class Constants {
 
   public static class SprocketConstants {
     public static final double MAX_SPEED = 0.5;
-
+    public static final double INTAKE_ANGLE = 52;
     // First number in meters, second in degrees
     public static final Point2D.Double[] ANGLE_POINTS = {
       new Point2D.Double(0, 0) // example

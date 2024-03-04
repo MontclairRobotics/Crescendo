@@ -203,10 +203,10 @@ public class RobotContainer {
 
    
     operatorController.cross().onTrue(Commands555.setSprocketAngle(angleSetpoint.get()));
-    operatorController.triangle().whileTrue(Commands555.scoreSubwoofer());
-    operatorController.square().whileTrue(Commands555.scoreAmp());
+    operatorController.square().whileTrue(Commands555.scoreSubwoofer());
+    operatorController.triangle().whileTrue(Commands555.scoreAmp());
     
-   operatorController.circle().whileTrue(Commands555.shoot(5000, 5000, 1));
+   
     
 
     
