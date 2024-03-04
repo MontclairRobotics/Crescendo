@@ -16,6 +16,7 @@ import edu.wpi.first.math.trajectory.Trajectory.State;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableEvent;
 import edu.wpi.first.networktables.NetworkTableEvent.Kind;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StringSubscriber;
@@ -232,8 +233,9 @@ public class Auto extends SubsystemBase {
         (table, key, event) -> {
          validateAndCreatePaths();
         });    
-
     
+    //TODO needed In case there is already data in networktables?
+    // validateAndCreatePaths();
 
   }
 
@@ -266,13 +268,14 @@ public class Auto extends SubsystemBase {
 
   private Command getPathSequence(String autoString) {
 
-    if (autoString.length() == 0) {
-      return Commands.runOnce(() -> {});
-    }
 
 
     SequentialCommandGroup finalPath = new SequentialCommandGroup();
     trajectories.clear();
+
+    if (autoString.length() == 0) {
+      return Commands.runOnce(() -> {});
+    }
 
     if (autoString.length() >= 1) {
       char digit = autoString.charAt(0);
