@@ -78,6 +78,7 @@ public class Commands555 {
    * @return A
    */
   public static Command loadNote() {
+    Command alignSprocket = Commands555.setSprocketAngle(45);
     Command intakeAndTransport = Commands.parallel(Commands555.intake(), Commands555.transport());
     return intakeAndTransport
         .withName("intake in")
@@ -337,7 +338,7 @@ public class Commands555 {
    */
   public static Command setSprocketAngle(double angle) {
     return Commands.runOnce(
-        () -> RobotContainer.sprocket.setPosition(Rotation2d.fromDegrees(angle)));
+        () -> RobotContainer.sprocket.setPosition(Rotation2d.fromDegrees(angle)), RobotContainer.sprocket);
   }
 
   /*

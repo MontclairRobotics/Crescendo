@@ -130,7 +130,7 @@ public final class Constants {
     public static final double ENCODER_MIN_ANGLE = 32;
     public static final double ENCODER_MAX_ANGLE = 75.787;
 
-    public static final double SPEAKER_SCORE_ANGLE = 45;
+    public static final double SPEAKER_SCORE_ANGLE = -1;
     public static final double AMP_SCORE_ANGLE = -1;
 
 
@@ -142,6 +142,8 @@ public final class Constants {
     public static final double SPROCKET_ANGLE_MOVE_SPEED = 0.5;
     public static final double SPROCKET_ANGLE_DEADBAND = 2;
     public static final double SPROCKET_ANGLE_LIMIT_DEADBAND = 2.5;
+
+    public static final double INTAKE_SCORE_ANGLE = 45;
 
     
   }

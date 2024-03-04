@@ -32,11 +32,14 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Commands555;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.util.Array555;
+
+import static frc.robot.Constants.ArmConstants.INTAKE_SCORE_ANGLE;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -292,7 +295,13 @@ public class Auto extends SubsystemBase {
       char next = autoString.charAt(i + 1);
       try {
         PathPlannerPath path = PathPlannerPath.fromPathFile("" + current + "-" + next);
-        finalPath.addCommands(AutoBuilder.followPath(path));
+        
+        ParallelCommandGroup segment = new ParallelCommandGroup(AutoBuilder.followPath(path));
+        if (!Character.isDigit(next)) {
+          segment.addCommands(Commands555.setSprocketAngle(INTAKE_SCORE_ANGLE));
+
+        }
+        finalPath.addCommands(segment);
         trajectories.add(
             path.getTrajectory(
                 RobotContainer.drivetrain.getSwerveDrive().getRobotVelocity(),
@@ -312,8 +321,12 @@ public class Auto extends SubsystemBase {
         }
 
       } else {
+        
         finalPath.addCommands(
             Commands555.alignToLimelightTarget(RobotContainer.intakeLimelight),
+            new WaitUntilCommand(() -> {
+              return RobotContainer.sprocket.isAtAngle();
+            }),
             Commands.parallel(
               Commands555.intake(),
               Commands.runOnce(() -> {
@@ -382,10 +395,16 @@ public class Auto extends SubsystemBase {
       ParallelCommandGroup segment = new ParallelCommandGroup(AutoBuilder.followPath(path));
       
       if (Array555.indexOf(AutoConstants.NOTES, next) != -1) {
-        segment.alongWith(Commands555.loadNote());
+        segment.addCommands(Commands555.setSprocketAngle(INTAKE_SCORE_ANGLE));
+        
+        segment.alongWith(Commands.sequence(new WaitUntilCommand(() -> {
+          return RobotContainer.sprocket.isAtAngle();
+        }), Commands555.loadNote()));
+        
+        
       } 
-
       finalPath.addCommands(segment);
+
       if (next == 4) {
         finalPath.addCommands(Commands555.scoreAmp());
       } else { // speaker
