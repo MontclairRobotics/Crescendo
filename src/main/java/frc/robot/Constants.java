@@ -68,7 +68,7 @@ public final class Constants {
   }
 
   public static class Ports { // TODO: add correct ports
-    public static final int LED_PWM = 7;
+    public static final int LED_PWM = 5;
 
     public static final int INTAKE_TOP_MOTOR = 21;
     public static final int INTAKE_BOTTOM_MOTOR = 20;
@@ -82,14 +82,15 @@ public final class Constants {
     public static final int LEFT_ANGLE_MOTOR = 30;
     public static final int RIGHT_ANGLE_MOTOR = 31;
 
-    public static final int TRANSPORT_BEAM_BREAK = 9;
+    public static final int TRANSPORT_BEAM_BREAK = 7;
 
     // Climber ports
     public static final int CLIMBER_LEFT_MOTOR = 48;
     public static final int CLIMBER_RIGHT_MOTOR = 49;
 
-    public static final int CLIMBER_TOP_LIMIT_SWITCH = 8;
-    public static final int CLIMBER_BOTTOM_LIMIT_SWITCH = 9;
+    
+
+    public static final int SPROCKET_ABS_ENCODER = 9;
   }
 
   public static class ClimberConstants {

@@ -31,6 +31,8 @@ import frc.robot.Constants.*;
 import frc.robot.util.BreakBeam;
 import java.awt.geom.Point2D;
 
+import javax.sound.sampled.Port;
+
 public class Sprocket extends SubsystemBase {
 
   private final CANSparkMax leftMotor =
@@ -51,7 +53,7 @@ public class Sprocket extends SubsystemBase {
           ArmConstants.angleKP.get(), ArmConstants.angleKI.get(), ArmConstants.angleKD.get());
   private double pidVoltage;
 
-  public DutyCycleEncoder absEncoder = new DutyCycleEncoder(1);
+  public DutyCycleEncoder absEncoder = new DutyCycleEncoder(Ports.SPROCKET_ABS_ENCODER);
   
 
   public Sprocket() {
