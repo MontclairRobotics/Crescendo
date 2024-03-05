@@ -31,18 +31,16 @@ public class Commands555 {
    * Drive to a robot-relative point given a Translation2d & target Rotation2d.
    *
    * @param targetTranslation Field-relative Translation2d to drive the robot to.
-   * @param theta Target angle for end position.
+   * @param theta             Target angle for end position.
    */
   public static Command driveToRobotRelativePoint(
       Translation2d targetTranslation, Rotation2d theta) {
     Pose2d currentRobotPosition = RobotContainer.drivetrain.getSwerveDrive().getPose();
-    Rotation2d currentOdometryHeading =
-        RobotContainer.drivetrain.getSwerveDrive().getOdometryHeading();
+    Rotation2d currentOdometryHeading = RobotContainer.drivetrain.getSwerveDrive().getOdometryHeading();
 
-    Translation2d targetTranslation2d =
-        currentRobotPosition
-            .getTranslation()
-            .plus(targetTranslation.rotateBy(currentOdometryHeading));
+    Translation2d targetTranslation2d = currentRobotPosition
+        .getTranslation()
+        .plus(targetTranslation.rotateBy(currentOdometryHeading));
     Pose2d targetPose = new Pose2d(targetTranslation2d.getX(), targetTranslation2d.getY(), theta);
 
     return AutoBuilder.pathfindToPose(
@@ -88,16 +86,18 @@ public class Commands555 {
    */
   public static Command loadNote() {
     Command alignSprocket = Commands555.setSprocketAngle(SprocketConstants.INTAKE_ANGLE);
-    Command intakeAndTransport = Commands.sequence(alignSprocket, Commands.parallel(Commands555.intake(), Commands555.transport(ShooterConstants.TRANSPORT_SPEED)));
+    Command intakeAndTransport = Commands.sequence(alignSprocket,
+        Commands.parallel(Commands555.intake(), Commands555.transport(ShooterConstants.TRANSPORT_SPEED)));
     return intakeAndTransport
         .withName("intake in")
         .until(() -> {
-          return RobotContainer.shooter.isNoteInTransport();})
+          return RobotContainer.shooter.isNoteInTransport();
+        })
         .finallyDo(() -> {
           RobotContainer.intake.stop();
           RobotContainer.shooter.stopTransport();
         });
-        
+
   }
 
   public static Command intake() {
@@ -113,101 +113,99 @@ public class Commands555 {
     return Commands.runOnce(RobotContainer.intake::stop, RobotContainer.intake)
         .withName("intake stop");
   }
+
   public static Command ferryNote() {
-    return Commands.parallel(Commands555.shootVelocity(30), Commands555.transport(ShooterConstants.TRANSPORT_FERRY_SPEED));
+    return Commands.parallel(Commands555.shootVelocity(30),
+        Commands555.transport(ShooterConstants.TRANSPORT_FERRY_SPEED));
   }
   // /**
-  //  * Robot relative or field relative depending on isFieldRelative. Input angle MUST be between 0
+  // * Robot relative or field relative depending on isFieldRelative. Input angle
+  // MUST be between 0
   // and 360 degrees
-  //  * @param angle
-  //  * @return a command
-  //  */
+  // * @param angle
+  // * @return a command
+  // */
 
   /***
    *
-   * @param rot a field relative Rotation2d supplier for the target angle
+   * @param rot       a field relative Rotation2d supplier for the target angle
    * @param lockDrive should translational motion be locked during the command
-   * @return a command that will lock angular control in favor of an angle that is provided
+   * @return a command that will lock angular control in favor of an angle that is
+   *         provided
    *
    */
   public static Command alignToAngleFieldRelative(Supplier<Rotation2d> rot, boolean lockDrive) {
     Drivetrain drive = RobotContainer.drivetrain;
     return Commands.run(
-            () -> {
-              double thetaSpeed =
-                  drive
-                      .getSwerveDrive()
-                      .getSwerveController()
-                      .headingCalculate(
-                          drive.getWrappedRotation().getRadians(), rot.get().getRadians());
+        () -> {
+          double thetaSpeed = drive
+              .getSwerveDrive()
+              .getSwerveController()
+              .headingCalculate(
+                  drive.getWrappedRotation().getRadians(), rot.get().getRadians());
 
-              double xSpeed = 0;
-              double ySpeed = 0;
+          double xSpeed = 0;
+          double ySpeed = 0;
 
-              if (!lockDrive) {
-                ySpeed =
-                    -MathUtil.applyDeadband(RobotContainer.driverController.getLeftX(), 0.05)
-                        * DriveConstants.MAX_SPEED;
-                xSpeed =
-                    -MathUtil.applyDeadband(RobotContainer.driverController.getLeftY(), 0.05)
-                        * DriveConstants.MAX_SPEED;
-              }
+          if (!lockDrive) {
+            ySpeed = -MathUtil.applyDeadband(RobotContainer.driverController.getLeftX(), 0.05)
+                * DriveConstants.MAX_SPEED;
+            xSpeed = -MathUtil.applyDeadband(RobotContainer.driverController.getLeftY(), 0.05)
+                * DriveConstants.MAX_SPEED;
+          }
 
-              RobotContainer.drivetrain.drive(new Translation2d(xSpeed, ySpeed), thetaSpeed);
-              // RobotContainer.drivetrain.drive(targetTranslation, thetaSpeed);
-            },
-            RobotContainer.drivetrain)
+          RobotContainer.drivetrain.drive(new Translation2d(xSpeed, ySpeed), thetaSpeed);
+          // RobotContainer.drivetrain.drive(targetTranslation, thetaSpeed);
+        },
+        RobotContainer.drivetrain)
         .until(
             () -> {
               return Math.abs(
-                      RobotContainer.drivetrain.getWrappedRotation().getDegrees()
-                          - rot.get().getDegrees())
-                  < DriveConstants.ANGLE_DEADBAND;
+                  RobotContainer.drivetrain.getWrappedRotation().getDegrees()
+                      - rot.get().getDegrees()) < DriveConstants.ANGLE_DEADBAND;
             });
   }
 
   public static Command alignContinuousFieldRelative(Supplier<Rotation2d> rot, boolean lockDrive) {
     Drivetrain drive = RobotContainer.drivetrain;
     return Commands.run(
-            () -> {
-              double thetaSpeed =
-                  drive
-                      .getSwerveDrive()
-                      .getSwerveController()
-                      .headingCalculate(
-                          drive.getWrappedRotation().getRadians(), rot.get().getRadians());
+        () -> {
+          double thetaSpeed = drive
+              .getSwerveDrive()
+              .getSwerveController()
+              .headingCalculate(
+                  drive.getWrappedRotation().getRadians(), rot.get().getRadians());
 
-              double xSpeed = 0;
-              double ySpeed = 0;
+          double xSpeed = 0;
+          double ySpeed = 0;
 
-              if (!lockDrive) {
-                ySpeed =
-                    -MathUtil.applyDeadband(RobotContainer.driverController.getLeftX(), 0.05)
-                        * DriveConstants.MAX_SPEED;
-                xSpeed =
-                    -MathUtil.applyDeadband(RobotContainer.driverController.getLeftY(), 0.05)
-                        * DriveConstants.MAX_SPEED;
-              }
+          if (!lockDrive) {
+            ySpeed = -MathUtil.applyDeadband(RobotContainer.driverController.getLeftX(), 0.05)
+                * DriveConstants.MAX_SPEED;
+            xSpeed = -MathUtil.applyDeadband(RobotContainer.driverController.getLeftY(), 0.05)
+                * DriveConstants.MAX_SPEED;
+          }
 
-              RobotContainer.drivetrain.drive(new Translation2d(xSpeed, ySpeed), thetaSpeed);
-              // RobotContainer.drivetrain.drive(targetTranslation, thetaSpeed);
-            },
-            RobotContainer.drivetrain);
+          RobotContainer.drivetrain.drive(new Translation2d(xSpeed, ySpeed), thetaSpeed);
+          // RobotContainer.drivetrain.drive(targetTranslation, thetaSpeed);
+        },
+        RobotContainer.drivetrain);
   }
 
   /***
    *
-   * @param rot a robot relative Rotation2d supplier for the target angle
+   * @param rot       a robot relative Rotation2d supplier for the target angle
    * @param lockDrive should translational motion be locked during the command
-   * @return a command that will lock angular control in favor of an angle that is provided
+   * @return a command that will lock angular control in favor of an angle that is
+   *         provided
    *
    */
   public static Command alignToAngleRobotRelative(Supplier<Rotation2d> rot, boolean lockDrive) {
     return alignToAngleFieldRelative(
-            () -> {
-              return Rotation2d.fromDegrees((initTurnAngle + rot.get().getDegrees()) % 360);
-            },
-            lockDrive)
+        () -> {
+          return Rotation2d.fromDegrees((initTurnAngle + rot.get().getDegrees()) % 360);
+        },
+        lockDrive)
         .beforeStarting(
             () -> {
               initTurnAngle = RobotContainer.drivetrain.getWrappedRotation().getDegrees();
@@ -216,14 +214,15 @@ public class Commands555 {
 
   public static Command alignToAngleRobotRelativeContinuous(Supplier<Rotation2d> rot, boolean lockDrive) {
     return alignContinuousFieldRelative(
-            () -> {
-              return Rotation2d.fromDegrees((RobotContainer.drivetrain.getWrappedRotation().getDegrees() + rot.get().getDegrees()) % 360);
-            },
-            lockDrive);
+        () -> {
+          return Rotation2d.fromDegrees(
+              (RobotContainer.drivetrain.getWrappedRotation().getDegrees() + rot.get().getDegrees()) % 360);
+        },
+        lockDrive);
   }
 
   /**
-   * @param angle the target angle in field space
+   * @param angle     the target angle in field space
    * @param lockDrive should translational motion be locked
    * @return
    */
@@ -236,7 +235,7 @@ public class Commands555 {
   }
 
   /**
-   * @param angle the target angle in robot space
+   * @param angle     the target angle in robot space
    * @param lockDrive should translational motion be locked
    * @return
    */
@@ -250,21 +249,21 @@ public class Commands555 {
 
   /**
    * @param camera the limelight to use
-   * @return a command that will align the robot to the target from the current limelight Will be
-   *     canceled if the limelight loses its target
+   * @return a command that will align the robot to the target from the current
+   *         limelight Will be
+   *         canceled if the limelight loses its target
    */
-  public static Command 
-  alignToLimelightTarget(Limelight camera) {
+  public static Command alignToLimelightTarget(Limelight camera) {
     // TODO: needs to use both limelights
     // Rotation2d targetAngle = Rotation2d.fromDegrees(-camera.getObjectTX());
     return ifHasTarget(
-            alignToAngleRobotRelativeContinuous(
-                () -> {
-                  Rotation2d targetAngle = Rotation2d.fromDegrees(-camera.getObjectTX());
-                  return targetAngle;
-                },
-                false),
-            camera)
+        alignToAngleRobotRelativeContinuous(
+            () -> {
+              Rotation2d targetAngle = Rotation2d.fromDegrees(-camera.getObjectTX());
+              return targetAngle;
+            },
+            false),
+        camera)
         .finallyDo(
             () -> {
               RobotContainer.drivetrain.setChassisSpeeds(new ChassisSpeeds(0, 0, 0));
@@ -278,7 +277,7 @@ public class Commands555 {
   /**
    * A command decorator to cancel a command if the limelight loses its target
    *
-   * @param cmd the command to be decorated
+   * @param cmd   the command to be decorated
    * @param limey the limelight to be targeted
    * @return
    */
@@ -292,18 +291,21 @@ public class Commands555 {
    * @return A command that drives to the currently targeted april tag
    */
   // public static Command driveToAprilTag(Limelight limey) {
-  //     double[] aprilTagPoseArray = LimelightHelpers.getLimelightNTDoubleArray(limey.getName(),
+  // double[] aprilTagPoseArray =
+  // LimelightHelpers.getLimelightNTDoubleArray(limey.getName(),
   // "targetpose_robotspace");
-  //     Pose2d aprilTagPose = new Pose2d(new Translation2d(aprilTagPoseArray[0],
+  // Pose2d aprilTagPose = new Pose2d(new Translation2d(aprilTagPoseArray[0],
   // aprilTagPoseArray[1]), new Rotation2d(aprilTagPoseArray[5]));
-  //     Pose2d targetPose = aprilTagPose.relativeTo(DriveConstants.EDGE_OF_DRIVEBASE); //TODO does
+  // Pose2d targetPose =
+  // aprilTagPose.relativeTo(DriveConstants.EDGE_OF_DRIVEBASE); //TODO does
   // this work the way I think it does
-  //     return driveToFieldRelativePoint(targetPose);
+  // return driveToFieldRelativePoint(targetPose);
 
   // }
 
   /***
    * Enables field relative mode
+   * 
    * @return a command that enables field relative
    */
   public static Command enableFieldRelative() {
@@ -323,12 +325,12 @@ public class Commands555 {
    * - - - - - - - - - -
    */
   // public static Command goUp() {
-  //     return Commands.runOnce(RobotContainer.sprocket::goUp,
+  // return Commands.runOnce(RobotContainer.sprocket::goUp,
   // RobotContainer.sprocket).withName("sprocket up");
   // }
 
   // public static Command goDown() {
-  //     return Commands.runOnce(RobotContainer.sprocket::goDown,
+  // return Commands.runOnce(RobotContainer.sprocket::goDown,
   // RobotContainer.sprocket).withName("sprocket down");
   // }
 
@@ -354,25 +356,27 @@ public class Commands555 {
    * - - - - - - - - - -
    */
   public static Command shoot(double topShootSpeed, double bottomShootSpeed, double transportSpeed) {
-    
+
     return Commands.sequence(
-      Commands.runOnce(() -> {
-        RobotContainer.shooter.shootVelocity(topShootSpeed,bottomShootSpeed);
-      }, RobotContainer.shooter),
-      waitUntil(() -> {return RobotContainer.shooter.isAtSpeed();}),
-      Commands555.transport(transportSpeed),
-      new WaitUntilCommand(0.5)
-    ).finallyDo(() -> {
-      RobotContainer.shooter.stopTransport();
-      RobotContainer.shooter.stopShooter();
-    });
+        Commands.runOnce(() -> {
+          RobotContainer.shooter.shootVelocity(topShootSpeed, bottomShootSpeed);
+        }, RobotContainer.shooter),
+        waitUntil(() -> {
+          return RobotContainer.shooter.isAtSpeed();
+        }),
+        Commands555.transport(transportSpeed),
+        new WaitUntilCommand(0.5)).finallyDo(() -> {
+          RobotContainer.shooter.stopTransport();
+          RobotContainer.shooter.stopShooter();
+        });
   }
-  
+
   public static Command stopTransport() {
     return Commands.runOnce(() -> {
       RobotContainer.shooter.stopTransport();
     }, RobotContainer.shooter);
   }
+
   public static Command shootAmp() {
     return Commands.runOnce(RobotContainer.shooter::shootAmp, RobotContainer.shooter)
         .withName("shoot amp");
@@ -396,18 +400,18 @@ public class Commands555 {
   }
 
   // public Command shootSequence(double angle, double velocity) {
-  //   return Commands.sequence(
-  //       shootVelocity(velocity),
-  //       setSprocketAngle(angle),
-  //       waitUntil(
-  //           () -> {
-  //             return RobotContainer.shooter.isAtSetpoint(velocity)
-  //                 && RobotContainer.sprocket.isAtAngle();
-  //           }),
-  //       transport(ShooterConstants.TRANSPORT_SPEED),
-  //       waitForTime(3.5),
-  //       setSprocketAngle(ArmConstants.ENCODER_MIN_ANGLE),
-  //       shootVelocity(0));
+  // return Commands.sequence(
+  // shootVelocity(velocity),
+  // setSprocketAngle(angle),
+  // waitUntil(
+  // () -> {
+  // return RobotContainer.shooter.isAtSetpoint(velocity)
+  // && RobotContainer.sprocket.isAtAngle();
+  // }),
+  // transport(ShooterConstants.TRANSPORT_SPEED),
+  // waitForTime(3.5),
+  // setSprocketAngle(ArmConstants.ENCODER_MIN_ANGLE),
+  // shootVelocity(0));
   // }
 
   public static Command waitUntil(BooleanSupplier condition) {
@@ -419,8 +423,33 @@ public class Commands555 {
     };
   }
 
+  public static Command autonomousIntake() {
+    return Commands.sequence(
+      Commands555.alignToLimelightTarget(RobotContainer.intakeLimelight),
+      new WaitUntilCommand(RobotContainer.sprocket::isAtAngle),
+      Commands.parallel(
+        Commands555.intake(),
+        driveFromSpeeds(new ChassisSpeeds(AutoConstants.INTAKING_MOVE_SPEED, 0, 0))
+      )
+      .until(() ->
+        RobotContainer.shooter.isNoteInTransport()
+      )
+      .withTimeout(AutoConstants.INTAKING_TIMEOUT)
+      .finallyDo(() -> {
+        RobotContainer.shooter.stopTransport();
+        RobotContainer.intake.stop();
+        RobotContainer.drivetrain.getSwerveDrive().drive(new ChassisSpeeds());
+      })
+    );    
+  }
+
+  public static Command driveFromSpeeds(ChassisSpeeds speeds) {
+    return Commands.runOnce(() -> RobotContainer.drivetrain.getSwerveDrive().drive(speeds));
+  }
+
   public static Command waitForTime(double seconds) {
-    return Commands.run(() -> {}).withTimeout(seconds);
+    return Commands.run(() -> {
+    }).withTimeout(seconds);
   }
 
   public static Command transport(double transportSpeed) {
@@ -435,15 +464,15 @@ public class Commands555 {
         setSprocketAngle(ArmConstants.AMP_SCORE_ANGLE),
         shoot(ShooterConstants.AMP_EJECT_SPEED, ShooterConstants.AMP_EJECT_SPEED, ShooterConstants.TRANSPORT_SPEED),
         setSprocketAngle(SprocketConstants.INTAKE_ANGLE));
-        
+
   }
 
   public static Command scoreSubwoofer() {
     return Commands.sequence(
         setSprocketAngle(ArmConstants.SPEAKER_SCORE_ANGLE),
-        shoot(ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.TRANSPORT_SPEED),
-        setSprocketAngle(SprocketConstants.INTAKE_ANGLE)
-      );
+        shoot(ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.SPEAKER_EJECT_SPEED,
+            ShooterConstants.TRANSPORT_SPEED),
+        setSprocketAngle(SprocketConstants.INTAKE_ANGLE));
   }
 
   public static Command receiveHumanPlayerNote() {
@@ -455,39 +484,39 @@ public class Commands555 {
   }
 
   // public static Command signalAmp() {
-  //   return Commands.runOnce(
-  //       () -> {
-  //         RobotContainer.led.add(new FlashAnimation(Color.kOrange));
-  //       });
+  // return Commands.runOnce(
+  // () -> {
+  // RobotContainer.led.add(new FlashAnimation(Color.kOrange));
+  // });
   // }
 
   // public static Command signalCoop() {
-  //   return Commands.runOnce(
-  //       () -> {
-  //         RobotContainer.led.add(new FlashAnimation(Color.kBlue));
-  //       });
+  // return Commands.runOnce(
+  // () -> {
+  // RobotContainer.led.add(new FlashAnimation(Color.kBlue));
+  // });
   // }
 
   // // LED bits
   // public static Command celebrate() {
-  //   return Commands.runOnce(
-  //       () -> {
-  //         RobotContainer.led.add(new CelebrationAnimation());
-  //       });
+  // return Commands.runOnce(
+  // () -> {
+  // RobotContainer.led.add(new CelebrationAnimation());
+  // });
   // }
 
   // public static Command ampItUp() {
-  //   return Commands.runOnce(
-  //       () -> {
-  //         RobotContainer.led.add(new FlashAnimation(Color.kYellow));
-  //       });
+  // return Commands.runOnce(
+  // () -> {
+  // RobotContainer.led.add(new FlashAnimation(Color.kYellow));
+  // });
   // }
 
   // public static Command cooperatition() {
-  //   return Commands.runOnce(
-  //       () -> {
-  //         RobotContainer.led.add(new FlashAnimation(Color.kBlueViolet));
-  //       });
+  // return Commands.runOnce(
+  // () -> {
+  // RobotContainer.led.add(new FlashAnimation(Color.kBlueViolet));
+  // });
   // }
 
   // ***********************CLIMBER COMMANDS*************************//
@@ -504,6 +533,7 @@ public class Commands555 {
           RobotContainer.climbers.down();
         });
   }
+
   public static Command climberStop() {
     return Commands.runOnce(() -> {
       RobotContainer.climbers.stop();

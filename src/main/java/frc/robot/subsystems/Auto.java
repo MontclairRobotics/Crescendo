@@ -306,8 +306,9 @@ public class Auto extends SubsystemBase {
         finalPath.addCommands(segment);
         trajectories.add(
             path.getTrajectory(
-                RobotContainer.drivetrain.getSwerveDrive().getRobotVelocity(),
-                RobotContainer.drivetrain.getRotation()));
+              new ChassisSpeeds(),
+              path.getPreviewStartingHolonomicPose().getRotation()
+            ));
 
       } catch (Exception e) {
         // TODO: amazing error handling
@@ -324,25 +325,7 @@ public class Auto extends SubsystemBase {
 
       } else {
         
-        finalPath.addCommands(
-            Commands555.alignToLimelightTarget(RobotContainer.intakeLimelight),
-            new WaitUntilCommand(() -> {
-              return RobotContainer.sprocket.isAtAngle();
-            }),
-            Commands.parallel(
-              Commands555.intake(),
-              Commands.runOnce(() -> {
-                RobotContainer.drivetrain.getSwerveDrive().setChassisSpeeds(new ChassisSpeeds(
-                  AutoConstants.INTAKING_MOVE_SPEED,
-                  0,
-                  0
-                ));
-              }, RobotContainer.drivetrain).until(() -> {
-                return RobotContainer.shooter.isNoteInTransport();
-              }).withTimeout(AutoConstants.INTAKING_TIMEOUT).finallyDo(() -> {
-                RobotContainer.shooter.stopTransport();
-                RobotContainer.intake.stop();
-              })));
+        finalPath.addCommands(Commands555.autonomousIntake());
       }
     }
     setFeedback("Successfully Created Auto Sequence!");
