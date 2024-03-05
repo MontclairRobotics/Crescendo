@@ -20,7 +20,7 @@ import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ShooterConstants;
-import frc.robot.Constants.SprocketConstants;
+
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.vision.Limelight;
 
@@ -85,7 +85,7 @@ public class Commands555 {
    * @return A
    */
   public static Command loadNote() {
-    Command alignSprocket = Commands555.setSprocketAngle(SprocketConstants.INTAKE_ANGLE);
+    Command alignSprocket = Commands555.setSprocketAngle(ArmConstants.INTAKE_ANGLE);
     Command intakeAndTransport = Commands.sequence(alignSprocket,
         Commands.parallel(Commands555.intake(), Commands555.transport(ShooterConstants.TRANSPORT_SPEED)));
     return intakeAndTransport
@@ -463,8 +463,8 @@ public class Commands555 {
     return Commands.sequence(
         setSprocketAngle(ArmConstants.AMP_SCORE_ANGLE),
         shoot(ShooterConstants.AMP_EJECT_SPEED, ShooterConstants.AMP_EJECT_SPEED, ShooterConstants.TRANSPORT_SPEED),
-        setSprocketAngle(SprocketConstants.INTAKE_ANGLE));
-
+        setSprocketAngle(ArmConstants.INTAKE_ANGLE));
+        
   }
 
   public static Command scoreSubwoofer() {
@@ -472,7 +472,7 @@ public class Commands555 {
         setSprocketAngle(ArmConstants.SPEAKER_SCORE_ANGLE),
         shoot(ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.SPEAKER_EJECT_SPEED,
             ShooterConstants.TRANSPORT_SPEED),
-        setSprocketAngle(SprocketConstants.INTAKE_ANGLE));
+        setSprocketAngle(ArmConstants.INTAKE_ANGLE));
   }
 
   public static Command receiveHumanPlayerNote() {
