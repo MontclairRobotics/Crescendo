@@ -355,14 +355,15 @@ public class Auto extends SubsystemBase {
 
     boolean ignoreSafety = safetyEntry.getBoolean(false);
 
-    boolean isValidPath = isValidPathSequence(autoString);
+
     boolean isSafePath = false;
     if (ignoreSafety) {
       isSafePath = true;
     } else {
       isSafePath = isStayingInLane(autoString); // :)
     }
-    System.out.println(isSafePath);
+    
+    boolean isValidPath = isValidPathSequence(autoString);
     // setFeedback("boo!");
     if (isValidPath) {
       if (!ignoreSafety && isSafePath) {
