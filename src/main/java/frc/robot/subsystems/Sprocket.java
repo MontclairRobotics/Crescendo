@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import static frc.robot.Constants.ArmConstants.*;
 
+
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
