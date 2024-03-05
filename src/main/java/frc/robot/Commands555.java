@@ -86,8 +86,7 @@ public class Commands555 {
    */
   public static Command loadNote() {
     Command alignSprocket = Commands555.setSprocketAngle(ArmConstants.INTAKE_ANGLE);
-    Command intakeAndTransport = Commands.sequence(alignSprocket,
-        Commands.parallel(Commands555.intake(), Commands555.transport(ShooterConstants.TRANSPORT_SPEED)));
+    Command intakeAndTransport = Commands.sequence(alignSprocket, Commands.parallel(Commands555.intake(), Commands555.transport(ShooterConstants.TRANSPORT_SPEED)));
     return intakeAndTransport
         .withName("intake in")
         .until(() -> {
@@ -115,8 +114,7 @@ public class Commands555 {
   }
 
   public static Command ferryNote() {
-    return Commands.parallel(Commands555.shootVelocity(30),
-        Commands555.transport(ShooterConstants.TRANSPORT_FERRY_SPEED));
+    return Commands555.shoot(30, 30, 0.3);
   }
   // /**
   // * Robot relative or field relative depending on isFieldRelative. Input angle
@@ -254,7 +252,7 @@ public class Commands555 {
    *         canceled if the limelight loses its target
    */
   public static Command alignToLimelightTarget(Limelight camera) {
-    // TODO: needs to use both limelights
+    
     // Rotation2d targetAngle = Rotation2d.fromDegrees(-camera.getObjectTX());
     return ifHasTarget(
         alignToAngleRobotRelativeContinuous(
@@ -306,7 +304,7 @@ public class Commands555 {
   /***
    * Enables field relative mode
    * 
-   * @return a command that enables field relative
+   * @return a command that enables field relative control
    */
   public static Command enableFieldRelative() {
     return Commands.runOnce(RobotContainer.drivetrain::enableFieldRelative);
@@ -342,8 +340,8 @@ public class Commands555 {
   /**
    * Angle in degrees
    *
-   * @param angle
-   * @return
+   * @param angle target angle
+   * @return Command that sets the target sprocket position to the given angle
    */
   public static Command setSprocketAngle(double angle) {
     return Commands.runOnce(
@@ -354,6 +352,13 @@ public class Commands555 {
    * - - - - - - - - - -
    * Shooter Commands
    * - - - - - - - - - -
+   */
+  /**
+   * 
+   * @param topShootSpeed Top Motor (RPM)
+   * @param bottomShootSpeed Bottom Motor (RPM)
+   * @param transportSpeed Transport Motor (-1 / 1)
+   * @return Command that waits for shooter to reach setpoint RPM, then starts transport with given speed
    */
   public static Command shoot(double topShootSpeed, double bottomShootSpeed, double transportSpeed) {
 
@@ -395,7 +400,7 @@ public class Commands555 {
   public static Command shootVelocity(double velocity) {
     return Commands.runOnce(
         () -> {
-          RobotContainer.shooter.shootVelocity(5000);
+          RobotContainer.shooter.shootVelocity(velocity);
         });
   }
 
@@ -423,6 +428,15 @@ public class Commands555 {
     };
   }
 
+   /**
+   * 
+   * Used during auton for intaking notes:
+   * aligns to intake limelight, sets sprocket to intake angle, drives forward 
+   * with intake spinning until the transport beam break is tripped at INTAKING_MOVE_SPEED, with a timeout of INTAKING_TIMEOUT
+   * 
+   * 
+   * @return Command that waits for shooter to reach setpoint RPM, then starts transport with given speed
+   */
   public static Command autonomousIntake() {
     return Commands.sequence(
       Commands555.alignToLimelightTarget(RobotContainer.intakeLimelight),
@@ -461,7 +475,7 @@ public class Commands555 {
 
   public static Command scoreAmp() {
     return Commands.sequence(
-        setSprocketAngle(ArmConstants.AMP_SCORE_ANGLE),
+        //setSprocketAngle(ArmConstants.AMP_SCORE_ANGLE),
         shoot(ShooterConstants.AMP_EJECT_SPEED, ShooterConstants.AMP_EJECT_SPEED, ShooterConstants.TRANSPORT_SPEED),
         setSprocketAngle(ArmConstants.INTAKE_ANGLE));
         
@@ -520,21 +534,21 @@ public class Commands555 {
   // }
 
   // ***********************CLIMBER COMMANDS*************************//
-  public static Command climberUp() {
+  public static Command climbersUp() {
     return Commands.runOnce(
         () -> {
           RobotContainer.climbers.up();
         });
   }
 
-  public static Command climberDown() {
+  public static Command climbersDown() {
     return Commands.runOnce(
         () -> {
           RobotContainer.climbers.down();
         });
   }
 
-  public static Command climberStop() {
+  public static Command climbersStop() {
     return Commands.runOnce(() -> {
       RobotContainer.climbers.stop();
     });

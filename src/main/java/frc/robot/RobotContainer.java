@@ -73,8 +73,11 @@ public class RobotContainer {
 
  
   private Tunable<Double> angleSetpoint = Tunable.of(52, "Angle Setpoint");
-  public static Tunable<Double> speakerAngle = Tunable.of(50, "speaker Setpoint");
+  //public static Tunable<Double> speakerAngle = Tunable.of(50, "speaker Setpoint");
   
+
+  private Tunable<Double> topShooterAmpSpeed = Tunable.of(1000, "shooter/top-amp-speed");
+  private Tunable<Double> bottomShooterAmpSpeed = Tunable.of(1000, "shooter/bottom-amp-speed"); // 4500 was most consistent in testing
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
@@ -164,7 +167,7 @@ public class RobotContainer {
                       drivetrain.getSwerveDrive().zeroGyro();
                     })
                 .ignoringDisable(true));
-
+    driverController.PS().onTrue(Commands555.lockDrive());
     
 
     
@@ -194,22 +197,22 @@ public class RobotContainer {
     //     .toggleOnTrue(
     //         sprocket.getSysId().dynamic(Direction.kReverse).onlyWhile(sprocket::isSprocketSafe));
 
-    ControllerTools.getDPad(DPad.UP, operatorController).onTrue(Commands555.climberUp()).onFalse(Commands555.climberStop());
-    ControllerTools.getDPad(DPad.DOWN, operatorController).onTrue(Commands555.climberDown()).onFalse(Commands555.climberStop());
+    ControllerTools.getDPad(DPad.UP, operatorController).onTrue(Commands555.climbersUp()).onFalse(Commands555.climbersStop());
+    ControllerTools.getDPad(DPad.DOWN, operatorController).onTrue(Commands555.climbersDown()).onFalse(Commands555.climbersStop());
 
     operatorController.R2().onTrue(Commands555.reverseIntake()).onFalse(Commands555.stopIntake());
     operatorController.L2().whileTrue(Commands555.loadNote());
 
 
-   
-    operatorController.cross().onTrue(Commands555.setSprocketAngle(angleSetpoint.get()));
+      
+    operatorController.cross().whileTrue(Commands555.setSprocketAngle(angleSetpoint.get()));
     operatorController.square().whileTrue(Commands555.scoreSubwoofer());
     operatorController.triangle().whileTrue(Commands555.scoreAmp());
     
-   
     
+    operatorController.circle().whileTrue(Commands555.shoot(topShooterAmpSpeed.get(), bottomShooterAmpSpeed.get(), 0.6));
 
-    
+
 
     // operatorController.L1().onTrue(Commands555.celebrate());
     // operatorController.touchpad().onTrue(Commands555.ampItUp());
@@ -246,6 +249,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return auto.getAutoCommand();
+    PathPlannerPath path = PathPlannerPath.fromPathFile("test");
+    return AutoBuilder.followPath(path);
   }
 }

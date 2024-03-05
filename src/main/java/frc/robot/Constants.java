@@ -161,7 +161,7 @@ public final class Constants {
 
   public static class ShooterConstants {
     // Shooter
-    public static final double SPEAKER_EJECT_SPEED = 3500;
+    public static final double SPEAKER_EJECT_SPEED = 4000;
     public static final double AMP_EJECT_SPEED = 1000;
 
     public static Tunable<Double> kp = Tunable.of(0.0005, "shooter.kp");
