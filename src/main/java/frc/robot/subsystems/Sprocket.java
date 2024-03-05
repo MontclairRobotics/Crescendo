@@ -1,7 +1,7 @@
 package frc.robot.subsystems;
 
 import static frc.robot.Constants.ArmConstants.*;
-import static frc.robot.Constants.SprocketConstants.*;
+
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
