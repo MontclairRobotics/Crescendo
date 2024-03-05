@@ -146,7 +146,18 @@ public final class Constants {
     public static final double INTAKE_SCORE_ANGLE = 45;
 
     
+    public static final double MAX_SPEED = 0.5;
+    public static final double INTAKE_ANGLE = 52;
+    // First number in meters, second in degrees
+    public static final Point2D.Double[] ANGLE_POINTS = {
+      new Point2D.Double(0, 0) // example
+    };
+
+    // First number in meters, second in RPM
+    public static final Point2D.Double[] SPEED_POINTS = {};
   }
+    
+  
 
   public static class ShooterConstants {
     // Shooter
@@ -202,17 +213,7 @@ public final class Constants {
     public static final double TRANSPORT_PID_KD = 0;
   }
 
-  public static class SprocketConstants {
-    public static final double MAX_SPEED = 0.5;
-    public static final double INTAKE_ANGLE = 52;
-    // First number in meters, second in degrees
-    public static final Point2D.Double[] ANGLE_POINTS = {
-      new Point2D.Double(0, 0) // example
-    };
 
-    // First number in meters, second in RPM
-    public static final Point2D.Double[] SPEED_POINTS = {};
-  }
 
   public static class AutoConstants {
     public static final char[] NOTES = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'};
