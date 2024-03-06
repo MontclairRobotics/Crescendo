@@ -374,14 +374,38 @@ public class Auto extends SubsystemBase {
   }
 
   public void buildPathSequenceOdometry(String autoString) {
+
+    
     SequentialCommandGroup finalPath = new SequentialCommandGroup();
+    
+    trajectories.clear();
+
+    if (autoString.length() == 0) {
+      autoCommand = Commands555.setAutoPose(autoString);
+      return;
+    }
+
+    finalPath.addCommands(Commands555.setAutoPose(autoString));
+
+    if (autoString.length() >= 1) {
+      char digit = autoString.charAt(0);
+      if (digit == '4') {
+          finalPath.addCommands(Commands555.scoreAmp());
+        } else {
+          finalPath.addCommands(Commands555.scoreSubwoofer());
+        }
+    }
     ParallelCommandGroup segment = new ParallelCommandGroup();
     for (int i = 0; i < autoString.length() - 1; i++) {
       char current = autoString.charAt(i);
       char next = autoString.charAt(i+1);
       try {
         PathPlannerPath path = PathPlannerPath.fromPathFile("" + current + "-" + next);
-        trajectories.add(path.getTrajectory(RobotContainer.drivetrain.getSwerveDrive().getRobotVelocity(), RobotContainer.drivetrain.getRotation()));
+        trajectories.add(
+            path.getTrajectory(
+              new ChassisSpeeds(),
+              path.getPreviewStartingHolonomicPose().getRotation()
+            ));
         segment = new ParallelCommandGroup(AutoBuilder.followPath(path));
         
       } catch(Exception e) {
