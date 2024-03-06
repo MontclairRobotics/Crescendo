@@ -414,10 +414,6 @@ public class Auto extends SubsystemBase {
         
       }
 
-       
-     
-      
-      
       if (Array555.indexOf(AutoConstants.NOTES, next) != -1) {
         segment.addCommands(Commands555.setSprocketAngle(INTAKE_SCORE_ANGLE));
         
