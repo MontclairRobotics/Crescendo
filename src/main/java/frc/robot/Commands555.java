@@ -12,6 +12,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -22,6 +25,7 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ShooterConstants;
 
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.vision.DetectionType;
 import frc.robot.vision.Limelight;
 
 public class Commands555 {
@@ -251,27 +255,43 @@ public class Commands555 {
    *         limelight Will be
    *         canceled if the limelight loses its target
    */
-  public static Command alignToLimelightTarget(Limelight camera) {
+  public static Command alignToLimelightTarget(Limelight camera, DetectionType targetType) {
     
     // Rotation2d targetAngle = Rotation2d.fromDegrees(-camera.getObjectTX());
-    return ifHasTarget(
-        alignToAngleRobotRelativeContinuous(
-            () -> {
-              Rotation2d targetAngle = Rotation2d.fromDegrees(-camera.getObjectTX());
-              return targetAngle;
-            },
-            false),
-        camera)
-        .finallyDo(
-            () -> {
-              RobotContainer.drivetrain.setChassisSpeeds(new ChassisSpeeds(0, 0, 0));
-            }); // TODO should we lock drive?
+    return Commands.sequence(
+      waitForPipe(camera, targetType),
+      ifHasTarget(
+          alignToAngleRobotRelativeContinuous(
+              () -> {
+                Rotation2d targetAngle = Rotation2d.fromDegrees(-camera.getObjectTX());
+                return targetAngle;
+              },
+              false),
+          camera)
+          .finallyDo(
+              () -> {
+                RobotContainer.drivetrain.setChassisSpeeds(new ChassisSpeeds(0, 0, 0));
+                camera.setDefaultPipeline();
+              })
+    ); // TODO should we lock drive?
   }
 
   public static Command scoreMode() {
-    return alignToLimelightTarget(RobotContainer.shooterLimelight);
+    return alignToLimelightTarget(RobotContainer.shooterLimelight, DetectionType.APRIL_TAG);
   }
 
+  // public static Command testPipeSwitch(Limelight camera, DetectionType pipe) {
+  //   Timer timer = new Timer();
+  //   return Commands.run(() -> {
+  //     timer.reset();
+  //     timer.start();
+  //     camera.setPipelineTo(pipe);
+  //     // System.out.println(Timer.getFPGATimestamp());
+  //   }).until(() -> {return camera.getPipelineType() == pipe;}).finallyDo(() -> {
+  //     System.out.println(timer.get());
+  //     timer.stop();
+  //   });
+  // }
   /**
    * A command decorator to cancel a command if the limelight loses its target
    *
@@ -370,13 +390,55 @@ public class Commands555 {
           return RobotContainer.shooter.isAtSpeed();
         }),
         Commands555.transport(transportSpeed),
-        new WaitUntilCommand(0.5)).finallyDo(() -> {
+        log("Transported"),
+        waitForTime(0.5))
+        .finallyDo(() -> {
           RobotContainer.shooter.stopTransport();
           RobotContainer.shooter.stopShooter();
         });
   }
   public static Command shoot(double speed, double transportSpeed) {
     return shoot(speed, speed, transportSpeed);
+  }
+
+  public static Command log(String msg) {
+    return Commands.runOnce(() -> {System.out.println(msg);});
+  }
+
+  public static Command setAutoPose(String autoString) {
+    return Commands.runOnce(() -> {
+      Pose2d startPose = new Pose2d();
+      if (RobotContainer.shooterLimelight.hasValidTarget() && RobotContainer.shooterLimelight.getPipelineType() == DetectionType.APRIL_TAG) {
+        startPose = RobotContainer.shooterLimelight.getBotPose();
+      } else if (RobotContainer.intakeLimelight.hasValidTarget() && RobotContainer.intakeLimelight.getPipelineType() == DetectionType.APRIL_TAG) {
+        startPose = RobotContainer.intakeLimelight.getBotPose();
+      } else {
+        if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red) {
+          switch (autoString.charAt(0)) {
+            case '1': startPose = AutoConstants.POSE_1_RED;
+                      break;
+            case '2': startPose = AutoConstants.POSE_2_RED;
+                      break;
+            case '3': startPose = AutoConstants.POSE_3_RED;
+                      break;
+            case '4': startPose = AutoConstants.POSE_4_RED;
+                      break;
+          }
+        } else {
+          switch (autoString.charAt(0)) {
+            case '1': startPose = AutoConstants.POSE_1;
+                      break;
+            case '2': startPose = AutoConstants.POSE_2;
+                      break;
+            case '3': startPose = AutoConstants.POSE_3;
+                      break;
+            case '4': startPose = AutoConstants.POSE_4;
+                      break;
+          }
+        }
+      }
+      RobotContainer.drivetrain.getSwerveDrive().resetOdometry(startPose);
+    });
   }
 
   public static Command stopTransport() {
@@ -416,6 +478,14 @@ public class Commands555 {
     };
   }
 
+  public static Command waitForPipe(Limelight camera, DetectionType pipeline) {
+    return Commands.run(() -> {}).beforeStarting(() -> {
+      camera.setPipelineTo(pipeline);
+    }).until(() -> {
+      return camera.getPipelineType() == pipeline; //TODO need to check driver mode?
+    });
+  }
+
    /**
    * 
    * Used during auton for intaking notes using vision.
@@ -424,7 +494,7 @@ public class Commands555 {
    */
   public static Command autonomousIntake() {
     return Commands.sequence(
-      Commands555.alignToLimelightTarget(RobotContainer.intakeLimelight),
+      Commands555.alignToLimelightTarget(RobotContainer.intakeLimelight, DetectionType.NOTE),
       new WaitUntilCommand(RobotContainer.sprocket::isAtAngle),
       Commands.parallel(
         Commands555.intake(),
@@ -468,15 +538,17 @@ public class Commands555 {
 
   public static Command scoreSubwoofer() {
     return Commands.sequence(
+        Commands.runOnce(() -> System.out.println("Shooting!")),
         setSprocketAngle(ArmConstants.SPEAKER_SCORE_ANGLE),
         shoot(ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.SPEAKER_EJECT_SPEED,
             ShooterConstants.TRANSPORT_SPEED),
+        Commands.runOnce(() -> System.out.println("Done Shooting!")),
         setSprocketAngle(ArmConstants.INTAKE_ANGLE));
   }
 
   public static Command receiveHumanPlayerNote() {
     return Commands.sequence(
-        alignToLimelightTarget(RobotContainer.shooterLimelight),
+        alignToLimelightTarget(RobotContainer.shooterLimelight, DetectionType.APRIL_TAG),
         setSprocketAngle(ArmConstants.SPEAKER_SCORE_ANGLE),
         reverseShooter(),
         setSprocketAngle(ArmConstants.ENCODER_MIN_ANGLE));

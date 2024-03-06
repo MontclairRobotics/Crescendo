@@ -53,8 +53,8 @@ public class RobotContainer {
   public static Intake intake = new Intake();
   public static Shooter shooter = new Shooter();
   public static Sprocket sprocket = new Sprocket();
-  public static Limelight intakeLimelight = new Limelight("limelight");
-  public static Limelight shooterLimelight = new Limelight("limelight-shooter");
+  public static Limelight intakeLimelight = new Limelight("limelight-intake", DetectionType.APRIL_TAG);
+  public static Limelight shooterLimelight = new Limelight("limelight-shooter", DetectionType.APRIL_TAG);
   public static Auto auto = new Auto();
   // public static LED led =
   //     new LED(
@@ -147,17 +147,17 @@ public class RobotContainer {
         .onTrue(Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(0), false));
     driverController
         .circle()
-        .onTrue(Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(90), false));
+        .onTrue(Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(-90), false));
     driverController
         .cross()
         .onTrue(Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(180), false));
     driverController
         .square()
-        .onTrue(Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(270), false));
+        .onTrue(Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(90), false));
 
     driverController.R1().whileTrue(Commands555.scoreMode());
-    driverController.L2().onTrue(Commands555.alignToLimelightTarget(shooterLimelight));
-    driverController.R2().onTrue(Commands555.alignToLimelightTarget(intakeLimelight));
+    // driverController.L2().onTrue(Commands555.alignToLimelightTarget(shooterLimelight));
+    // driverController.R2().onTrue(Commands555.alignToLimelightTarget(intakeLimelight));
 
     driverController
         .touchpad()
@@ -177,6 +177,7 @@ public class RobotContainer {
     
   }
   private void configureOperatorBindings() {
+    // Shuffleboard.getTab("Debug").addBoolean("At speed", RobotContainer.shooter::isAtSpeed);
     // ControllerTools.getDPad(DPad.UP, operatorController)
     //     .toggleOnTrue(
     //         sprocket
@@ -201,6 +202,7 @@ public class RobotContainer {
     ControllerTools.getDPad(DPad.DOWN, operatorController).onTrue(Commands555.climbersDown()).onFalse(Commands555.climbersStop());
 
     operatorController.R2().onTrue(Commands555.reverseIntake()).onFalse(Commands555.stopIntake());
+    // operatorController.R2().onTrue(Commands555.testPipeSwitch(intakeLimelight, DetectionType.APRIL_TAG));
     operatorController.L2().whileTrue(Commands555.loadNote());
 
 
@@ -252,7 +254,8 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    PathPlannerPath path = PathPlannerPath.fromPathFile("test");
-    return AutoBuilder.followPath(path);
+    // PathPlannerPath path = PathPlannerPath.fromPathFile("test");
+    // return AutoBuilder.followPath(path);
+    return auto.getAutoCommand();
   }
 }

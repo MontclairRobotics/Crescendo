@@ -13,6 +13,7 @@ import animation2.RainbowAnimation;
 import animation2.WipeTransition;
 import animation2.api.Animation;
 import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.util.GeometryUtil;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
@@ -172,7 +173,7 @@ public final class Constants {
 
     public static final double MAX_RPM = 5700;
 
-    public static final int VELOCITY_DEADBAND = 150;
+    public static final int VELOCITY_DEADBAND = 300;
 
     public static final double TRANSPORT_SPEED = 0.6;
     
@@ -223,7 +224,17 @@ public final class Constants {
     public static final char[] LANE2 = {'2', 'B', 'E', 'F'};
     public static final char[] LANE1 = {'1', 'A', 'D', 'E'};
     public static final char[] ALL_POINTS = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', '1', '2', '3', '4'};
-    public static final char[] STARTING_POINTS = {'1', '2', '3', '4'};    
+    public static final char[] STARTING_POINTS = {'1', '2', '3', '4'};
+    
+    public static final Pose2d POSE_1 = new Pose2d(0.68, 4.38, Rotation2d.fromDegrees(16.69)); //TODO check angles
+    public static final Pose2d POSE_2 = new Pose2d(1.37, 5.55, Rotation2d.fromDegrees(-179.78));
+    public static final Pose2d POSE_3 = new Pose2d(0.72, 6.72, Rotation2d.fromDegrees(-30.30));
+    public static final Pose2d POSE_4 = new Pose2d(1.82, 7.23, Rotation2d.fromDegrees(-79.40));
+
+    public static final Pose2d POSE_1_RED = GeometryUtil.flipFieldPose(POSE_1);
+    public static final Pose2d POSE_2_RED = GeometryUtil.flipFieldPose(POSE_2);
+    public static final Pose2d POSE_3_RED = GeometryUtil.flipFieldPose(POSE_3);
+    public static final Pose2d POSE_4_RED = GeometryUtil.flipFieldPose(POSE_4);
         
 
 

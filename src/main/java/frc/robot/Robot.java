@@ -58,6 +58,8 @@ public class Robot extends LoggedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
+    RobotContainer.shooterLimelight.setDefaultPipeline();
+    RobotContainer.intakeLimelight.setDefaultPipeline();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
@@ -79,7 +81,8 @@ public class Robot extends LoggedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    
+    RobotContainer.shooterLimelight.setDefaultPipeline();
+    RobotContainer.intakeLimelight.setDefaultPipeline();
   }
 
   /** This function is called periodically during operator control. */
