@@ -171,7 +171,7 @@ public final class Constants {
 
     public static final double MAX_RPM = 5700;
 
-    public static final int VELOCITY_DEADBAND = 150;
+    public static final int VELOCITY_DEADBAND = 300;
 
     public static final double TRANSPORT_SPEED = 0.6;
     

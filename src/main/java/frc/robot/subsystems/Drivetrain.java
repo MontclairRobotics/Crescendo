@@ -6,8 +6,10 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.DriveConstants;
 import java.io.File;
 import org.littletonrobotics.junction.AutoLogOutput;
@@ -70,7 +72,12 @@ public class Drivetrain extends SubsystemBase {
     Logger.recordOutput("Drivetrain/Module-Positions", getSwerveDrive().getModulePositions());
     Logger.recordOutput("Drivetrain/Gyro-Rotation", getSwerveDrive().getGyroRotation3d());
     Logger.recordOutput("Drivetrain/Pose", getSwerveDrive().getPose());
-    // RobotContainer.field.setRobotPose(swerveDrive.getPose());
+
+    RobotContainer.field.setRobotPose(swerveDrive.getPose());
+  }
+
+  public void addVisionMeasurement(Pose2d pose, double time) {
+    swerveDrive.addVisionMeasurement(pose, time);
   }
 
   /** sets isFieldRelative to either true or false, used for getIsFieldRelative */

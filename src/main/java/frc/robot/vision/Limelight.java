@@ -2,8 +2,12 @@ package frc.robot.vision;
 
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.VisionConstants;
 import org.littletonrobotics.junction.AutoLogOutput;
 
@@ -11,11 +15,12 @@ public class Limelight extends SubsystemBase {
   private double lastTx = 0;
 
   private String cameraName;
+  private DetectionType defaultPipe;
   private Debouncer targetDebouncer =
       new Debouncer(VisionConstants.TARGET_DEBOUNCE_TIME, DebounceType.kFalling);
 
-  public Limelight(String cameraName) {
-
+  public Limelight(String cameraName, DetectionType defaultPipe) {
+    this.defaultPipe = defaultPipe;
     double[] camerapose_robotspace = new double[] {-1, -1, -1, 0.0, 0.0, 0.0};
     LimelightHelpers.setLimelightNTDoubleArray(
         cameraName, "camerapose_robotspace", camerapose_robotspace);
@@ -73,6 +78,18 @@ public class Limelight extends SubsystemBase {
     return LimelightHelpers.getLimelightNTDouble(cameraName, "ty");
   }
 
+  public double getPipeline() {
+    return LimelightHelpers.getLimelightNTDouble(cameraName, "getpipe");
+  }
+
+  public DetectionType getPipelineType() {
+    if (LimelightHelpers.getLimelightNTDouble(cameraName, "camMode") == 1) {
+      return DetectionType.DRIVER;
+    }
+    return DetectionType.getType((int) getPipeline());
+  }
+
+
   public double getDistanceToSpeaker() {
 
     double distance =
@@ -82,6 +99,26 @@ public class Limelight extends SubsystemBase {
                     * (VisionConstants.SHOOTER_LIMELIGHT_ANGLE_DEGREES + getObjectTY()));
 
     return distance;
+  }
+
+  public void setDefaultPipeline() {
+    if (DriverStation.isTeleop()) {
+      setPipelineTo(DetectionType.DRIVER);
+    } else {
+      setPipelineTo(defaultPipe);
+    }
+  }
+
+  @Override
+  public void periodic() {
+    if (getPipelineType() == DetectionType.APRIL_TAG && hasValidTarget()) {
+      double[] targetArr = LimelightHelpers.getBotPose(cameraName);
+      RobotContainer.drivetrain.addVisionMeasurement(
+        new Pose2d(targetArr[0], targetArr[1], Rotation2d.fromDegrees(targetArr[5])),
+        targetArr[6]
+      );
+    }
+
   }
 
   

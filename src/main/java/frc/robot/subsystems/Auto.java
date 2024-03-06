@@ -270,7 +270,7 @@ public class Auto extends SubsystemBase {
   }
 
   private void buildPathSequence(String autoString) {
-
+    boolean firstPath = true;
 
 
     SequentialCommandGroup finalPath = new SequentialCommandGroup();
@@ -278,9 +278,10 @@ public class Auto extends SubsystemBase {
 
     if (autoString.length() == 0) {
       autoCommand = Commands.runOnce(() -> {
-
+      return;
       });
     }
+
 
     if (autoString.length() >= 1) {
       char digit = autoString.charAt(0);
@@ -310,6 +311,10 @@ public class Auto extends SubsystemBase {
               path.getPreviewStartingHolonomicPose().getRotation()
             ));
 
+        if (firstPath) {
+          RobotContainer.drivetrain.getSwerveDrive().resetOdometry(path.getPreviewStartingHolonomicPose());
+          firstPath = false;
+        }
       } catch (Exception e) {
         // TODO: amazing error handling
         setFeedback("Path File Not Found");

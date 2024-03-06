@@ -14,4 +14,10 @@ public enum DetectionType { // TODO: UPDATE PIPELINES
   public int getPipe() {
     return pipe;
   }
+
+  public static DetectionType getType(int pipe) {
+    if (pipe == 1) return NOTE;
+    if (pipe == 0) return APRIL_TAG;
+    return DRIVER;
+  }
 }
