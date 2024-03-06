@@ -89,7 +89,7 @@ public class Auto extends SubsystemBase {
         RobotContainer.drivetrain.getSwerveDrive()
             ::getRobotVelocity, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
         (ChassisSpeeds x) -> {
-          RobotContainer.drivetrain.getSwerveDrive().drive(x, true, new Translation2d());
+          RobotContainer.drivetrain.getSwerveDrive().drive(new ChassisSpeeds(x.vxMetersPerSecond, x.vyMetersPerSecond, x.omegaRadiansPerSecond), true, new Translation2d());
         }, // Method that will drive the robot given ROBOT RELATIVE, // Method that will drive the robot given ROBOT RELATIVE
         // ChassisSpeeds
         Constants.AutoConstants.PATH_FOLLOWER_CONFIG,
@@ -357,10 +357,10 @@ public class Auto extends SubsystemBase {
     // setFeedback("boo!");
     if (isValidPath) {
       if (!ignoreSafety && isSafePath) {
-        buildPathSequence(autoString);
+        buildPathSequenceOdometry(autoString);
         drawPaths();
       } else if (ignoreSafety) {
-        buildPathSequence(autoString);
+        buildPathSequenceOdometry(autoString);
         drawPaths();
       }
     }
@@ -408,7 +408,7 @@ public class Auto extends SubsystemBase {
               new ChassisSpeeds(),
               path.getPreviewStartingHolonomicPose().getRotation()
             ));
-        segment = new ParallelCommandGroup(AutoBuilder.followPath(path));
+        segment.addCommands(AutoBuilder.followPath(path));
         
       } catch(Exception e) {
         setFeedback("Path File Not Found");
@@ -417,11 +417,8 @@ public class Auto extends SubsystemBase {
       }
 
       if (Array555.indexOf(AutoConstants.NOTES, next) != -1) {
-        segment.addCommands(Commands555.setSprocketAngle(INTAKE_SCORE_ANGLE));
-        
-        segment.alongWith(Commands.sequence(new WaitUntilCommand(() -> {
-          return RobotContainer.sprocket.isAtAngle();
-        }), Commands555.loadNote()));
+
+        segment.addCommands(Commands555.loadNote());
         
         
       } 

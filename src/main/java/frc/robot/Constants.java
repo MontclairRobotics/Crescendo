@@ -163,8 +163,8 @@ public final class Constants {
 
   public static class ShooterConstants {
     // Shooter
-    public static final double SPEAKER_EJECT_SPEED = 4000;
-    public static final double AMP_EJECT_SPEED = 1000;
+    public static final double SPEAKER_EJECT_SPEED = 0.95; //4000
+    public static final double AMP_EJECT_SPEED = 0.2; //1000
 
     public static Tunable<Double> kp = Tunable.of(0.0005, "shooter.kp");
     public static Tunable<Double> ki = Tunable.of(0, "shooter.ki");
@@ -226,8 +226,8 @@ public final class Constants {
     public static final char[] ALL_POINTS = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', '1', '2', '3', '4'};
     public static final char[] STARTING_POINTS = {'1', '2', '3', '4'};
     
-    public static final Pose2d POSE_1 = new Pose2d(0.68, 4.38, Rotation2d.fromDegrees(16.69)); //TODO check angles
-    public static final Pose2d POSE_2 = new Pose2d(1.37, 5.55, Rotation2d.fromDegrees(-179.78));
+    public static final Pose2d POSE_1 = new Pose2d(0.68, 4.38, Rotation2d.fromDegrees(-59.50)); //TODO check angles
+    public static final Pose2d POSE_2 = new Pose2d(1.37, 5.55, Rotation2d.fromDegrees(0));
     public static final Pose2d POSE_3 = new Pose2d(0.72, 6.72, Rotation2d.fromDegrees(-30.30));
     public static final Pose2d POSE_4 = new Pose2d(1.82, 7.23, Rotation2d.fromDegrees(-79.40));
 
