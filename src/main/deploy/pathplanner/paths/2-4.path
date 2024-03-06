@@ -8,29 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.6419230556007463,
-        "y": 6.2887192250846695
+        "x": 1.9592615633421846,
+        "y": 5.8288870796195225
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "2"
     },
     {
       "anchor": {
-        "x": 1.84,
-        "y": 7.62
+        "x": 1.8599500059604868,
+        "y": 7.315034028975755
       },
       "prevControl": {
-<<<<<<< Updated upstream
-        "x": 1.785359979580137,
-        "y": 6.567623175000263
-=======
-        "x": 1.8995614596079393,
-        "y": 6.640044321458116
->>>>>>> Stashed changes
+        "x": 1.9472387784655492,
+        "y": 6.953988377106529
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "4"
     }
   ],
   "rotationTargets": [],
