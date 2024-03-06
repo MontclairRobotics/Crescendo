@@ -10,6 +10,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 // import com.pathplanner.lib.path.PathPlannerTrajectory.State;
 import edu.wpi.first.math.trajectory.Trajectory.State;
@@ -87,8 +88,9 @@ public class Auto extends SubsystemBase {
         // pose)
         RobotContainer.drivetrain.getSwerveDrive()
             ::getRobotVelocity, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-        RobotContainer.drivetrain.getSwerveDrive()
-            ::setChassisSpeeds, // Method that will drive the robot given ROBOT RELATIVE
+        (ChassisSpeeds x) -> {
+          RobotContainer.drivetrain.getSwerveDrive().drive(x, true, new Translation2d());
+        }, // Method that will drive the robot given ROBOT RELATIVE, // Method that will drive the robot given ROBOT RELATIVE
         // ChassisSpeeds
         Constants.AutoConstants.PATH_FOLLOWER_CONFIG,
         () -> {
