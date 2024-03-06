@@ -82,6 +82,10 @@ public class Limelight extends SubsystemBase {
     return LimelightHelpers.getLimelightNTDouble(cameraName, "getpipe");
   }
 
+  public Pose2d getBotPose() {
+    return LimelightHelpers.getBotPose2d(cameraName);
+  }
+
   public DetectionType getPipelineType() {
     if (LimelightHelpers.getLimelightNTDouble(cameraName, "camMode") == 1) {
       return DetectionType.DRIVER;

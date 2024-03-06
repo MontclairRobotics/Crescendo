@@ -12,7 +12,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -398,6 +400,42 @@ public class Commands555 {
 
   public static Command log(String msg) {
     return Commands.runOnce(() -> {System.out.println(msg);});
+  }
+
+  public static Command setAutoPose(String autoString) {
+    return Commands.runOnce(() -> {
+      Pose2d startPose = new Pose2d();
+      if (RobotContainer.shooterLimelight.hasValidTarget() && RobotContainer.shooterLimelight.getPipelineType() == DetectionType.APRIL_TAG) {
+        startPose = RobotContainer.shooterLimelight.getBotPose();
+      } else if (RobotContainer.intakeLimelight.hasValidTarget() && RobotContainer.intakeLimelight.getPipelineType() == DetectionType.APRIL_TAG) {
+        startPose = RobotContainer.intakeLimelight.getBotPose();
+      } else {
+        if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red) {
+          switch (autoString.charAt(0)) {
+            case '1': startPose = AutoConstants.POSE_1_RED;
+                      break;
+            case '2': startPose = AutoConstants.POSE_2_RED;
+                      break;
+            case '3': startPose = AutoConstants.POSE_3_RED;
+                      break;
+            case '4': startPose = AutoConstants.POSE_4_RED;
+                      break;
+          }
+        } else {
+          switch (autoString.charAt(0)) {
+            case '1': startPose = AutoConstants.POSE_1;
+                      break;
+            case '2': startPose = AutoConstants.POSE_2;
+                      break;
+            case '3': startPose = AutoConstants.POSE_3;
+                      break;
+            case '4': startPose = AutoConstants.POSE_4;
+                      break;
+          }
+        }
+      }
+      RobotContainer.drivetrain.getSwerveDrive().resetOdometry(startPose);
+    });
   }
 
   public static Command stopTransport() {

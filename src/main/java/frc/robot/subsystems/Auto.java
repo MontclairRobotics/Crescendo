@@ -270,18 +270,17 @@ public class Auto extends SubsystemBase {
   }
 
   private void buildPathSequence(String autoString) {
-    boolean firstPath = true;
 
 
     SequentialCommandGroup finalPath = new SequentialCommandGroup();
     trajectories.clear();
 
     if (autoString.length() == 0) {
-      autoCommand = Commands.runOnce(() -> {
+      autoCommand = Commands555.setAutoPose(autoString);
       return;
-      });
     }
 
+    finalPath.addCommands(Commands555.setAutoPose(autoString));
 
     if (autoString.length() >= 1) {
       char digit = autoString.charAt(0);
@@ -291,6 +290,7 @@ public class Auto extends SubsystemBase {
           finalPath.addCommands(Commands555.scoreSubwoofer());
         }
     }
+
   
     for (int i = 0; i < autoString.length() - 1; i++) {
 
@@ -311,10 +311,10 @@ public class Auto extends SubsystemBase {
               path.getPreviewStartingHolonomicPose().getRotation()
             ));
 
-        if (firstPath) {
-          RobotContainer.drivetrain.getSwerveDrive().resetOdometry(path.getPreviewStartingHolonomicPose());
-          firstPath = false;
-        }
+        // if (firstPath) {
+        //   RobotContainer.drivetrain.getSwerveDrive().resetOdometry(path.getPreviewStartingHolonomicPose());
+        //   firstPath = false;
+        // } //TODO make this a command, this won't work if they move the robot after
       } catch (Exception e) {
         // TODO: amazing error handling
         setFeedback("Path File Not Found");
