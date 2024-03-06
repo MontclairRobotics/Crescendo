@@ -375,6 +375,9 @@ public class Commands555 {
           RobotContainer.shooter.stopShooter();
         });
   }
+  public static Command shoot(double speed, double transportSpeed) {
+    return shoot(speed, speed, transportSpeed);
+  }
 
   public static Command stopTransport() {
     return Commands.runOnce(() -> {
@@ -404,21 +407,6 @@ public class Commands555 {
         });
   }
 
-  // public Command shootSequence(double angle, double velocity) {
-  // return Commands.sequence(
-  // shootVelocity(velocity),
-  // setSprocketAngle(angle),
-  // waitUntil(
-  // () -> {
-  // return RobotContainer.shooter.isAtSetpoint(velocity)
-  // && RobotContainer.sprocket.isAtAngle();
-  // }),
-  // transport(ShooterConstants.TRANSPORT_SPEED),
-  // waitForTime(3.5),
-  // setSprocketAngle(ArmConstants.ENCODER_MIN_ANGLE),
-  // shootVelocity(0));
-  // }
-
   public static Command waitUntil(BooleanSupplier condition) {
     return new Command() {
       @Override
@@ -430,12 +418,9 @@ public class Commands555 {
 
    /**
    * 
-   * Used during auton for intaking notes:
-   * aligns to intake limelight, sets sprocket to intake angle, drives forward 
-   * with intake spinning until the transport beam break is tripped at INTAKING_MOVE_SPEED, with a timeout of INTAKING_TIMEOUT
+   * Used during auton for intaking notes using vision.
    * 
-   * 
-   * @return Command that waits for shooter to reach setpoint RPM, then starts transport with given speed
+   * @return Command that aligns using intake limelight, sets sprocket to intake angle, and drives forward until either note is intaked or timeout is reached
    */
   public static Command autonomousIntake() {
     return Commands.sequence(
@@ -467,7 +452,7 @@ public class Commands555 {
   }
 
   public static Command transport(double transportSpeed) {
-    return Commands.run(
+    return Commands.runOnce(
         () -> {
           RobotContainer.shooter.transportStart(transportSpeed);
         });

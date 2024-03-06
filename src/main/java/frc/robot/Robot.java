@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.littletonrobotics.junction.LoggedRobot;
@@ -78,6 +79,7 @@ public class Robot extends LoggedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    
   }
 
   /** This function is called periodically during operator control. */
@@ -85,6 +87,7 @@ public class Robot extends LoggedRobot {
   public void teleopPeriodic() {
     //System.out.println("distance prob: " + RobotContainer.shooterLimelight.getDistanceToSpeaker()  + " : " + RobotContainer.shooterLimelight.getObjectTY());
     //System.out.println(RobotContainer.sprocket.getEncoderPosition());
+    System.out.println("Distance:" + RobotContainer.shooterLimelight.getDistanceToSpeaker() + "Angle: " + RobotContainer.shooterLimelight.getAngleForSpeaker());
   }
 
   @Override

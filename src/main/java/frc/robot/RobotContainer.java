@@ -207,11 +207,14 @@ public class RobotContainer {
       
     operatorController.cross().whileTrue(Commands555.setSprocketAngle(angleSetpoint.get()));
     operatorController.square().whileTrue(Commands555.scoreSubwoofer());
-    operatorController.triangle().whileTrue(Commands555.scoreAmp());
+    // operatorController.triangle().whileTrue(Commands555.scoreAmp());
     
     
-    operatorController.circle().whileTrue(Commands555.shoot(topShooterAmpSpeed.get(), bottomShooterAmpSpeed.get(), 0.6));
-
+    operatorController.circle().onTrue(Commands555.shoot(topShooterAmpSpeed.get(), bottomShooterAmpSpeed.get(), 0.6));
+    operatorController.triangle().onTrue(Commands.sequence(
+      Commands555.setSprocketAngle(RobotContainer.shooterLimelight.getAngleForSpeaker())
+      // Commands555.shoot(4500, 4500, 1)
+    ));
 
 
     // operatorController.L1().onTrue(Commands555.celebrate());

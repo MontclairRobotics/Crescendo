@@ -63,6 +63,7 @@ public final class Constants {
     public static final double SHOOTER_LIMELIGHT_HEIGHT = 10.375;
     public static final double INTAKE_LIMELIGHT_HEIGHT = 10.227995;
     public static final double SPEAKER_APRILTAG_HEIGHT = 57.875;
+    public static final double SPEAKER_GOAL_HEIGHT = 79; //78.13-82.90
     public static final double SHOOTER_LIMELIGHT_ANGLE_DEGREES = 27.5;
     public static final double INTAKE_LIMELIGHT_ANGLE_DEGREES = 0;
   }

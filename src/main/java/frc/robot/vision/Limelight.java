@@ -2,8 +2,10 @@ package frc.robot.vision;
 
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.VisionConstants;
 import org.littletonrobotics.junction.AutoLogOutput;
 
@@ -84,6 +86,15 @@ public class Limelight extends SubsystemBase {
     return distance;
   }
 
-  
+  public double getAngleForSpeaker() {
+    double distance = getDistanceToSpeaker() + Units.metersToInches(DriveConstants.DRIVE_BASE_RADIUS);
+    double targetHeight = VisionConstants.SPEAKER_GOAL_HEIGHT - 7.5;
+
+    double angle = Math.atan((targetHeight / distance));
+
+    return angle * (180.0 / Math.PI);
+
+  }
 
 }
+
