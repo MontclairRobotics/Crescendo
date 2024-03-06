@@ -80,6 +80,8 @@ public class Shooter extends SubsystemBase {
 
   private BreakBeam breakBeam = new BreakBeam(Ports.TRANSPORT_BEAM_BREAK, ShooterConstants.BEAM_BRAKE_INVERT);
 
+  private double targetTopSpeed = 0;
+  private double targetBottomSpeed = 0;
 
   Debouncer m_debouncer = new Debouncer(0.3, Debouncer.DebounceType.kRising);
 
@@ -158,18 +160,25 @@ public class Shooter extends SubsystemBase {
     isTransporting = true;
   }
 
-  public boolean isAtSpeed() {
-    boolean topAtPoint =
-        Math.abs(Math.abs(topVelocitySetpoint) - topEncoder.getVelocity())
-            < ShooterConstants.VELOCITY_DEADBAND;
-    boolean bottomAtPoint =
-        Math.abs(Math.abs(bottomVelocitySetpoint) - bottomEncoder.getVelocity())
-            < ShooterConstants.VELOCITY_DEADBAND;
-    return topAtPoint && bottomAtPoint;
-  }
+  // public boolean isAtSpeed() {
+  //   double currentTopSpeed = topMotor.get();
+  //   double currentBottomSpeed = bottomMotor.get();
+  //   if (targetTopSpeed - currentTopSpeed > .15) {
+  //     return false;
+  //   }
+  //   if (targetBottomSpeed - currentBottomSpeed > .15) {
+  //     return false;
+  //   }
+
+  //   return true;
+
+    
+  // }
 
   /** Stops the shooter */
   public void stopShooter() {
+    targetTopSpeed = 0;
+    targetBottomSpeed = 0;
     topMotor.stopMotor();
     bottomMotor.stopMotor();
     isShooting = false;
@@ -188,10 +197,16 @@ public class Shooter extends SubsystemBase {
     
   }
 
-  public boolean isAtSetpoint(double setpoint) {
-    return Math.abs(topEncoder.getVelocity() - setpoint) < ShooterConstants.VELOCITY_DEADBAND
-        && Math.abs(bottomEncoder.getVelocity() - setpoint) < ShooterConstants.VELOCITY_DEADBAND;
+  public void shootActually(double topSpeed, double bottomSpeed) {
+    targetTopSpeed = topSpeed;
+    targetBottomSpeed = bottomSpeed;
+
+    topMotor.set(topSpeed);
+    bottomMotor.set(bottomSpeed);
+   
   }
+
+  
 
   public void transportStart(double transportSpeed) {
     transportMotor.set(transportSpeed);

@@ -113,8 +113,8 @@ public class Limelight extends SubsystemBase {
 
 
   public double getAngleForSpeaker() {
-    double distance = getDistanceToSpeaker() + Units.metersToInches(DriveConstants.DRIVE_BASE_RADIUS);
-    double targetHeight = VisionConstants.SPEAKER_GOAL_HEIGHT - 7.5;
+    double distance = getDistanceToSpeaker() + 14.5 - 6.0; // in the middle of speaker, not the edge.
+    double targetHeight = VisionConstants.SPEAKER_GOAL_HEIGHT - 4.5;
 
     double angle = Math.atan((targetHeight / distance));
 
@@ -123,11 +123,12 @@ public class Limelight extends SubsystemBase {
   }
 
   public void setDefaultPipeline() {
-    if (DriverStation.isTeleop()) {
-      setPipelineTo(DetectionType.DRIVER);
-    } else {
-      setPipelineTo(defaultPipe);
-    }
+    // if (DriverStation.isTeleop()) {
+    //   setPipelineTo(DetectionType.DRIVER);
+    // } else {
+    //   setPipelineTo(defaultPipe);
+    // }
+    setPipelineTo(defaultPipe);
   }
 
   @Override

@@ -384,14 +384,12 @@ public class Commands555 {
 
     return Commands.sequence(
         Commands.runOnce(() -> {
-          RobotContainer.shooter.shootVelocity(topShootSpeed, bottomShootSpeed);
+          RobotContainer.shooter.shootActually(topShootSpeed, bottomShootSpeed);
         }, RobotContainer.shooter),
-        waitUntil(() -> {
-          return RobotContainer.shooter.isAtSpeed();
-        }),
+        Commands555.waitForTime(1.5),
         Commands555.transport(transportSpeed),
         log("Transported"),
-        waitForTime(0.5))
+        Commands555.waitForTime(0.75))
         .finallyDo(() -> {
           RobotContainer.shooter.stopTransport();
           RobotContainer.shooter.stopShooter();

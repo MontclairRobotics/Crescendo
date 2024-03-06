@@ -214,9 +214,13 @@ public class RobotContainer {
     
     operatorController.circle().onTrue(Commands555.shoot(topShooterAmpSpeed.get(), bottomShooterAmpSpeed.get(), 0.6));
     operatorController.triangle().onTrue(Commands.sequence(
-      Commands555.setSprocketAngle(RobotContainer.shooterLimelight.getAngleForSpeaker())
-      // Commands555.shoot(4500, 4500, 1)
+      Commands555.setSprocketAngle(RobotContainer.shooterLimelight.getAngleForSpeaker()),
+      Commands555.waitUntil(() -> {
+        return sprocket.isAtAngle();
+      }),
+      Commands555.shoot(.9, .9, .9)
     ));
+
 
 
     // operatorController.L1().onTrue(Commands555.celebrate());
@@ -235,11 +239,11 @@ public class RobotContainer {
 
   public void setupDriverTab() {
     ShuffleboardTab driverTab = Shuffleboard.getTab("Driver");
-    driverTab.addBoolean(
-        "Good to shoot!",
-        () -> {
-          return shooter.isAtSpeed() && sprocket.isAtAngle();
-        });
+    // driverTab.addBoolean(
+    //     "Good to shoot!",
+    //     () -> {
+    //       return shooter.isAtSpeed() && sprocket.isAtAngle();
+    //     });
     // driverTab.addBoolean("Note Intaked", intake::hasPickedUp);
 
     driverTab.addDouble("Time Remaining", Timer::getMatchTime);
