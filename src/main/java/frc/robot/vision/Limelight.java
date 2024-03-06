@@ -1,7 +1,7 @@
 package frc.robot.vision;
 
 import edu.wpi.first.math.filter.Debouncer;
-
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
