@@ -4,6 +4,7 @@ import static frc.robot.Constants.ArmConstants.*;
 
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.RobotCentric;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkBase.IdleMode;
@@ -27,6 +28,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Mechanism;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.*;
 import frc.robot.util.BreakBeam;
 import java.awt.geom.Point2D;
@@ -73,6 +75,13 @@ public class Sprocket extends SubsystemBase {
         (k) -> {
           pidController.setP(k);
         });
+
+    Shuffleboard.getTab("Debug").addDouble("Limelight Distance", () -> {
+      return RobotContainer.shooterLimelight.getDistanceToSpeaker();
+    });
+    Shuffleboard.getTab("Debug").addDouble("Current Distance", () -> {
+      return getEncoderPosition();
+    });
 
     // TODO check conversion factors
     leftEncoder = leftMotor.getEncoder();

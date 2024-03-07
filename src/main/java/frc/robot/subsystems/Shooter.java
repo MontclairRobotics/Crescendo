@@ -88,11 +88,11 @@ public class Shooter extends SubsystemBase {
   public Shooter() {
     Shuffleboard.getTab("Debug").addDouble("Top velocity", () -> {return topEncoder.getVelocity();});
     Shuffleboard.getTab("Debug").addDouble("Bottom velocity", () -> {return bottomEncoder.getVelocity();});
-    topMotor.restoreFactoryDefaults();
-    bottomMotor.restoreFactoryDefaults();
-    transportMotor.restoreFactoryDefaults();
+    // topMotor.restoreFactoryDefaults();
+    // bottomMotor.restoreFactoryDefaults();
+    // transportMotor.restoreFactoryDefaults();
 
-    topMotor.setInverted(true);
+    topMotor.setInverted(false);
     bottomMotor.setInverted(true);
     transportMotor.setInverted(true);
     
@@ -201,7 +201,7 @@ public class Shooter extends SubsystemBase {
     targetTopSpeed = topSpeed;
     targetBottomSpeed = bottomSpeed;
 
-    topMotor.set(topSpeed);
+    topMotor.set(-topSpeed);
     bottomMotor.set(bottomSpeed);
    
   }
