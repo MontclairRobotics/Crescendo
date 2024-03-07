@@ -42,7 +42,8 @@ import frc.robot.Constants.ShooterConstants;
 import frc.robot.util.Array555;
 import frc.robot.vision.DetectionType;
 
-import static frc.robot.Constants.ArmConstants.INTAKE_SCORE_ANGLE;
+import static frc.robot.Constants.ArmConstants.INTAKE_ANGLE;
+// import static frc.robot.Constants.ArmConstants.INTAKE_SCORE_ANGLE;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -305,7 +306,7 @@ public class Auto extends SubsystemBase {
         
         ParallelCommandGroup segment = new ParallelCommandGroup(AutoBuilder.followPath(path));
         if (!Character.isDigit(next)) {
-          segment.addCommands(Commands555.setSprocketAngle(INTAKE_SCORE_ANGLE));
+          segment.addCommands(Commands555.setSprocketAngle(INTAKE_ANGLE));
 
         }
         finalPath.addCommands(segment);

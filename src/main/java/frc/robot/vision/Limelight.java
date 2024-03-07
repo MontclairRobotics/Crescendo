@@ -123,12 +123,12 @@ public class Limelight extends SubsystemBase {
   }
 
   public void setDefaultPipeline() {
-    // if (DriverStation.isTeleop()) {
-    //   setPipelineTo(DetectionType.DRIVER);
-    // } else {
-    //   setPipelineTo(defaultPipe);
-    // }
-    setPipelineTo(defaultPipe);
+    if (DriverStation.isTeleop()) {
+      setPipelineTo(DetectionType.DRIVER);
+    } else {
+      setPipelineTo(defaultPipe);
+    }
+    // setPipelineTo(defaultPipe);
   }
 
   @Override
