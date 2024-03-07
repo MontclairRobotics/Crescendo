@@ -228,8 +228,8 @@ public final class Constants {
     
     public static final Pose2d POSE_1 = new Pose2d(0.68, 4.38, Rotation2d.fromDegrees(-59.50)); //TODO check angles
     public static final Pose2d POSE_2 = new Pose2d(1.37, 5.55, Rotation2d.fromDegrees(0));
-    public static final Pose2d POSE_3 = new Pose2d(0.72, 6.72, Rotation2d.fromDegrees(-30.30));
-    public static final Pose2d POSE_4 = new Pose2d(1.82, 7.23, Rotation2d.fromDegrees(-79.40));
+    public static final Pose2d POSE_3 = new Pose2d(0.72, 6.72, Rotation2d.fromDegrees(59.50));
+    public static final Pose2d POSE_4 = new Pose2d(1.82, 7.23, Rotation2d.fromDegrees(-90.00));
 
     public static final Pose2d POSE_1_RED = GeometryUtil.flipFieldPose(POSE_1);
     public static final Pose2d POSE_2_RED = GeometryUtil.flipFieldPose(POSE_2);
@@ -257,7 +257,7 @@ public final class Constants {
     public static final double GOAL_END_VELOCITY = 0.0;
     public static final double ROTATION_DELAY_DISTANCE = 0.0;
     public static final double INTAKING_TIMEOUT = 3; // in seconds
-    public static final double INTAKING_MOVE_SPEED = 0.04; // in M/s.
+    public static final double INTAKING_MOVE_SPEED = 0.3; // in M/s.
  
 
 

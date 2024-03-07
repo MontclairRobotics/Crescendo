@@ -119,7 +119,7 @@ public class Commands555 {
   }
 
   public static Command ferryNote() {
-    return Commands555.shoot(30, 30, 0.3);
+    return Commands555.shoot(30, 30, 0.3, 0.2);
   }
   // /**
   // * Robot relative or field relative depending on isFieldRelative. Input angle
@@ -407,23 +407,23 @@ public class Commands555 {
    * @param transportSpeed Transport Motor (-1 / 1)
    * @return Command that waits for shooter to reach setpoint RPM, then starts transport with given speed
    */
-  public static Command shoot(double topShootSpeed, double bottomShootSpeed, double transportSpeed) {
+  public static Command shoot(double topShootSpeed, double bottomShootSpeed, double transportSpeed, double rampUpTime) {
 
     return Commands.sequence(
         Commands.runOnce(() -> {
           RobotContainer.shooter.shootActually(topShootSpeed, bottomShootSpeed);
         }, RobotContainer.shooter),
-        Commands555.waitForTime(1.5),
+        Commands555.waitForTime(rampUpTime),
         Commands555.transport(transportSpeed),
         log("Transported"),
-        Commands555.waitForTime(0.75))
+        Commands555.waitForTime(0.5))
         .finallyDo(() -> {
           RobotContainer.shooter.stopTransport();
           RobotContainer.shooter.stopShooter();
         });
   }
   public static Command shoot(double speed, double transportSpeed) {
-    return shoot(speed, speed, transportSpeed);
+    return shoot(speed, speed, transportSpeed, 1);
   }
 
   public static Command log(String msg) {
@@ -435,6 +435,7 @@ public class Commands555 {
       Pose2d startPose = new Pose2d();
       // if (RobotContainer.shooterLimelight.hasValidTarget() && RobotContainer.shooterLimelight.getPipelineType() == DetectionType.APRIL_TAG) {
       //   startPose = RobotContainer.shooterLimelight.getBotPose();
+      //   RobotContainer.field.setRobotPose(startPose);
       // } else if (RobotContainer.intakeLimelight.hasValidTarget() && RobotContainer.intakeLimelight.getPipelineType() == DetectionType.APRIL_TAG) {
       //   startPose = RobotContainer.intakeLimelight.getBotPose();
       // } else {
@@ -459,8 +460,8 @@ public class Commands555 {
                       break;
             case '4': startPose = AutoConstants.POSE_4;
                       break;
-          // }
-        }
+          }
+        // }
       }
       RobotContainer.drivetrain.getSwerveDrive().resetOdometry(startPose);
     });
@@ -556,17 +557,19 @@ public class Commands555 {
   public static Command scoreAmp() {
     return Commands.sequence(
         //setSprocketAngle(ArmConstants.AMP_SCORE_ANGLE),
-        shoot(ShooterConstants.AMP_EJECT_SPEED, ShooterConstants.AMP_EJECT_SPEED, ShooterConstants.TRANSPORT_SPEED),
+        shoot(ShooterConstants.AMP_EJECT_SPEED, ShooterConstants.AMP_EJECT_SPEED, ShooterConstants.TRANSPORT_SPEED, 1),
         setSprocketAngle(ArmConstants.INTAKE_ANGLE));
         
   }
 
+  //ONLY USE IN AUTO
   public static Command scoreSubwoofer() {
     return Commands.sequence(
         Commands.runOnce(() -> System.out.println("Shooting!")),
         setSprocketAngle(ArmConstants.SPEAKER_SCORE_ANGLE),
+        waitUntil(() -> {return RobotContainer.sprocket.isAtAngle();}),
         shoot(ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.SPEAKER_EJECT_SPEED,
-            ShooterConstants.TRANSPORT_SPEED),
+            ShooterConstants.TRANSPORT_SPEED, 0),
         Commands.runOnce(() -> System.out.println("Done Shooting!")),
         setSprocketAngle(ArmConstants.INTAKE_ANGLE));
   }

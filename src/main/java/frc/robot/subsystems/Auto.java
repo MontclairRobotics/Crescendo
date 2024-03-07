@@ -38,6 +38,7 @@ import frc.robot.Commands555;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.util.Array555;
 import frc.robot.vision.DetectionType;
 
@@ -279,7 +280,7 @@ public class Auto extends SubsystemBase {
     trajectories.clear();
 
     if (autoString.length() == 0) {
-      autoCommand = Commands555.setAutoPose(autoString);
+      autoCommand = Commands.sequence(Commands555.setAutoPose(autoString), Commands555.scoreSubwoofer());
       return;
     }
     
@@ -389,15 +390,18 @@ public class Auto extends SubsystemBase {
     }
 
     finalPath.addCommands(Commands555.setAutoPose(autoString));
+    finalPath.addCommands(Commands.runOnce(() -> {
+      RobotContainer.shooter.shootActually(ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.SPEAKER_EJECT_SPEED);
+    }));
 
-    // if (autoString.length() >= 1) {
-    //   char digit = autoString.charAt(0);
-    //   if (digit == '4') {
-    //       finalPath.addCommands(Commands555.scoreAmp());
-    //     } else {
-    //       finalPath.addCommands(Commands555.scoreSubwoofer());
-    //     }
-    // }
+    if (autoString.length() >= 1) {
+      char digit = autoString.charAt(0);
+      if (digit == '4') {
+          finalPath.addCommands(Commands555.scoreAmp());
+        } else {
+          finalPath.addCommands(Commands555.scoreSubwoofer());
+        }
+    }
 
     
     ParallelCommandGroup segment = new ParallelCommandGroup();
@@ -436,6 +440,9 @@ public class Auto extends SubsystemBase {
       }
       
     }
+    finalPath.addCommands(Commands.runOnce(() -> {
+      RobotContainer.shooter.stop();
+    }));
 
     setFeedback("Successfully Created Auto Sequence!");
     autoCommand = finalPath;
