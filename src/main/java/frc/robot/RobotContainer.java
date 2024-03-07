@@ -141,7 +141,7 @@ public class RobotContainer {
 
     // ************* DRIVER CONTROLLER BINDINGS **************** //
     driverController
-        .L1()
+        .L2()
         .onTrue(Commands555.disableFieldRelative())
         .onFalse(Commands555.enableFieldRelative());
     
@@ -211,13 +211,13 @@ public class RobotContainer {
 
 
       
-    operatorController.square().onTrue(Commands555.setSprocketAngle(shooterLimelight.bestFit()));
-    operatorController.cross().onTrue(Commands.runOnce(() -> {     
-      System.out.println(angleSetpoint.get()); 
-      RobotContainer.sprocket.setPosition(Rotation2d.fromDegrees(angleSetpoint.get()));
-    }));
-    //operatorController.square().whileTrue(Commands555.scoreSubwoofer());
-    // operatorController.triangle().whileTrue(Commands555.scoreAmp());
+    // operatorController.square().onTrue(Commands555.setSprocketAngle(shooterLimelight.bestFit()));
+    // operatorController.cross().onTrue(Commands.runOnce(() -> {     
+    //   System.out.println(angleSetpoint.get()); 
+    //   RobotContainer.sprocket.setPosition(Rotation2d.fromDegrees(angleSetpoint.get()));
+    // }));
+    operatorController.square().whileTrue(Commands555.scoreSubwoofer());
+    operatorController.triangle().whileTrue(Commands555.scoreAmp());
     
     
 

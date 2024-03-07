@@ -134,7 +134,7 @@ public final class Constants {
     public static final double ENCODER_MAX_ANGLE = 75.787;
 
     public static final double SPEAKER_SCORE_ANGLE = 62.7;
-    public static final double AMP_SCORE_ANGLE = 50;
+    public static final double AMP_SCORE_ANGLE = 62;
 
 
     public static final Tunable<Boolean> LEFT_INVERT = Tunable.of(true, "arm.invert.left");
@@ -146,7 +146,7 @@ public final class Constants {
     public static final double SPROCKET_ANGLE_DEADBAND = 2;
     public static final double SPROCKET_ANGLE_LIMIT_DEADBAND = 2.5;
 
-    public static final double INTAKE_SCORE_ANGLE = 45;
+    // public static final double INTAKE_SCORE_ANGLE = 45;
 
     
     public static final double MAX_SPEED = 0.5;

@@ -556,9 +556,10 @@ public class Commands555 {
 
   public static Command scoreAmp() {
     return Commands.sequence(
-        //setSprocketAngle(ArmConstants.AMP_SCORE_ANGLE),
-        shoot(ShooterConstants.AMP_EJECT_SPEED, ShooterConstants.AMP_EJECT_SPEED, ShooterConstants.TRANSPORT_SPEED, 1),
-        setSprocketAngle(ArmConstants.INTAKE_ANGLE));
+        setSprocketAngle(ArmConstants.AMP_SCORE_ANGLE),
+        waitUntil(RobotContainer.sprocket::isAtAngle),
+        shoot(ShooterConstants.AMP_EJECT_SPEED, ShooterConstants.AMP_EJECT_SPEED, ShooterConstants.TRANSPORT_SPEED, 1));
+        // setSprocketAngle(ArmConstants.INTAKE_ANGLE));
         
   }
 
