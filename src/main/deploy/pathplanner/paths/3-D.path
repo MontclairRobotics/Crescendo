@@ -44,13 +44,7 @@
       "linkedName": "D"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 1.65,
-      "rotationDegrees": 0,
-      "rotateFast": false
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {

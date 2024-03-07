@@ -20,15 +20,21 @@
         "y": 7.315034028975755
       },
       "prevControl": {
-        "x": 3.677787433025209,
-        "y": 6.806119848828144
+        "x": 1.8122481124881233,
+        "y": 4.915577150743422
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "4"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.75,
+      "rotationDegrees": 0,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
