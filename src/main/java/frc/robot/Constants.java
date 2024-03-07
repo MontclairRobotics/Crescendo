@@ -65,7 +65,7 @@ public final class Constants {
     public static final double INTAKE_LIMELIGHT_HEIGHT = 10.227995;
     public static final double SPEAKER_APRILTAG_HEIGHT = 57.875;
     public static final double SPEAKER_GOAL_HEIGHT = 81.8; //78.13-82.90
-    public static final double SHOOTER_LIMELIGHT_ANGLE_DEGREES = 27.5;
+    public static final double SHOOTER_LIMELIGHT_ANGLE_DEGREES = 31.07;
     public static final double INTAKE_LIMELIGHT_ANGLE_DEGREES = 0;
   }
 
@@ -76,9 +76,9 @@ public final class Constants {
     public static final int INTAKE_BOTTOM_MOTOR = 20;
 
     
-    public static final int SHOOTER_BOTTOM_MOTOR = 40;
-    public static final int SHOOTER_TOP_MOTOR = 41;
-    public static final int SHOOTER_MOTOR_TRANSPORT = 42;
+    public static final int SHOOTER_BOTTOM_MOTOR = 29;
+    public static final int SHOOTER_TOP_MOTOR = 28;
+    public static final int SHOOTER_MOTOR_TRANSPORT = 27;
 
     // Sprocket motors
     public static final int LEFT_ANGLE_MOTOR = 30;
@@ -93,7 +93,7 @@ public final class Constants {
     
 
     public static final int SPROCKET_ABS_ENCODER = 9;
-  }
+  } 
 
   public static class ClimberConstants {
     // Climbers

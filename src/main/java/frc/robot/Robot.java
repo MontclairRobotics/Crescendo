@@ -90,7 +90,7 @@ public class Robot extends LoggedRobot {
   public void teleopPeriodic() {
     //System.out.println("distance prob: " + RobotContainer.shooterLimelight.getDistanceToSpeaker()  + " : " + RobotContainer.shooterLimelight.getObjectTY());
     //System.out.println(RobotContainer.sprocket.getEncoderPosition());
-    System.out.println("Distance:" + RobotContainer.shooterLimelight.getDistanceToSpeaker() + "Angle: " + RobotContainer.shooterLimelight.getAngleForSpeaker());
+    System.out.println(RobotContainer.shooterLimelight.bestFit());
   }
 
   @Override

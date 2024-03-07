@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.Auto;
 import frc.robot.subsystems.Climbers;
 import frc.robot.subsystems.Drivetrain;
@@ -70,6 +71,8 @@ public class RobotContainer {
   private Tunable<Double> bottomShooterSpeakerSpeed =
       Tunable.of(4500, "shooter/bottom-speaker-speed"); // 4500 was most consistent in testing
   private Tunable<Double> transportSpeakerSpeed = Tunable.of(1000, "shooter/transport-speed");
+
+  public static boolean isDriverMode = false;
 
  
   private Tunable<Double> angleSetpoint = Tunable.of(52, "Angle Setpoint");
@@ -207,12 +210,19 @@ public class RobotContainer {
 
 
       
-    operatorController.cross().whileTrue(Commands555.setSprocketAngle(angleSetpoint.get()));
-    operatorController.square().whileTrue(Commands555.scoreSubwoofer());
+    operatorController.square().onTrue(Commands555.setSprocketAngle(shooterLimelight.bestFit()));
+    operatorController.cross().onTrue(Commands.runOnce(() -> {     
+      System.out.println(angleSetpoint.get()); 
+      RobotContainer.sprocket.setPosition(Rotation2d.fromDegrees(angleSetpoint.get()));
+    }));
+    //operatorController.square().whileTrue(Commands555.scoreSubwoofer());
     // operatorController.triangle().whileTrue(Commands555.scoreAmp());
     
     
-    operatorController.circle().onTrue(Commands555.shoot(topShooterAmpSpeed.get(), bottomShooterAmpSpeed.get(), 0.6));
+
+    operatorController.circle().and(() -> !isDriverMode).onTrue(Commands555.shoot(ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.TRANSPORT_SPEED));
+    operatorController.circle().and(() -> isDriverMode).whileTrue(Commands555.runTransportManual());
+
     operatorController.triangle().onTrue(Commands.sequence(
       Commands555.setSprocketAngle(RobotContainer.shooterLimelight.getAngleForSpeaker()),
       Commands555.waitUntil(() -> {

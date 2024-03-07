@@ -1,6 +1,7 @@
 package frc.robot;
 
 import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -277,7 +278,26 @@ public class Commands555 {
   }
 
   public static Command scoreMode() {
-    return alignToLimelightTarget(RobotContainer.shooterLimelight, DetectionType.APRIL_TAG);
+    return Commands.parallel(
+      alignToLimelightTarget(RobotContainer.shooterLimelight, DetectionType.APRIL_TAG),
+      setSprocketAngle(RobotContainer.shooterLimelight::bestFit),
+      Commands.runOnce(() -> {
+        RobotContainer.isDriverMode = true;
+        RobotContainer.shooter.shootActually(ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.SPEAKER_EJECT_SPEED);
+        // RobotContainer.shooter.transportStart(ShooterConstants.TRANSPORT_SPEED);
+      })
+    ).finallyDo(() -> {
+      RobotContainer.shooter.stop();
+      RobotContainer.isDriverMode = false;
+    });
+  }
+
+  public static Command runTransportManual() {
+    return Commands.run(() -> {
+      RobotContainer.shooter.transportStart(ShooterConstants.TRANSPORT_SPEED);
+    }).finallyDo(() -> {
+      RobotContainer.shooter.stopTransport();
+    });
   }
 
   // public static Command testPipeSwitch(Limelight camera, DetectionType pipe) {
@@ -364,8 +384,15 @@ public class Commands555 {
    * @return Command that sets the target sprocket position to the given angle
    */
   public static Command setSprocketAngle(double angle) {
+    System.out.println(angle);
     return Commands.runOnce(
         () -> RobotContainer.sprocket.setPosition(Rotation2d.fromDegrees(angle)), RobotContainer.sprocket);
+  }
+
+   public static Command setSprocketAngle(DoubleSupplier angle) {
+    // System.out.println(angle);
+    return Commands.run(
+        () -> RobotContainer.sprocket.setPosition(Rotation2d.fromDegrees(angle.getAsDouble())), RobotContainer.sprocket);
   }
 
   /*

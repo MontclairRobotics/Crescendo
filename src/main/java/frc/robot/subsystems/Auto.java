@@ -281,7 +281,7 @@ public class Auto extends SubsystemBase {
       autoCommand = Commands555.setAutoPose(autoString);
       return;
     }
-
+    
     finalPath.addCommands(Commands555.setAutoPose(autoString));
 
     if (autoString.length() >= 1) {
@@ -434,4 +434,6 @@ public class Auto extends SubsystemBase {
     setFeedback("Successfully Created Auto Sequence!");
     autoCommand = finalPath;
   }
+
+  
 }

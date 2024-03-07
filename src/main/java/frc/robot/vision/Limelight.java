@@ -108,7 +108,7 @@ public class Limelight extends SubsystemBase {
                 (Math.PI / 180.0)
                     * (VisionConstants.SHOOTER_LIMELIGHT_ANGLE_DEGREES + getObjectTY()));
 
-    return distance;
+    return distance/Math.cos(getObjectTX() * (Math.PI / 180));
   }
 
 
@@ -141,6 +141,11 @@ public class Limelight extends SubsystemBase {
       );
     }
 
+  }
+
+  public double bestFit() {
+    double x = getDistanceToSpeaker();
+    return (0.001717 * (Math.pow(x, 2))) + (-0.6251 * x) + (83.41);
   }
 
   
