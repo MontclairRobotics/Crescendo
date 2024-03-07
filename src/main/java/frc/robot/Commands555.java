@@ -620,17 +620,15 @@ public class Commands555 {
 
   // ***********************CLIMBER COMMANDS*************************//
   public static Command climbersUp() {
-    return Commands.runOnce(
-        () -> {
-          RobotContainer.climbers.up();
-        });
+    return Commands.run(
+      () -> RobotContainer.climbers.up()
+    );
   }
 
   public static Command climbersDown() {
-    return Commands.runOnce(
-        () -> {
-          RobotContainer.climbers.down();
-        });
+    return Commands.run(() -> 
+      RobotContainer.climbers.down()
+    );
   }
 
   public static Command climbersStop() {

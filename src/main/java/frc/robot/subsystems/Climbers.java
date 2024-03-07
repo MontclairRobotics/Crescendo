@@ -14,10 +14,12 @@ public class Climbers extends SubsystemBase {
   private final CANSparkMax leftMotor;
   private final CANSparkMax rightMotor;
 
-  // private final LimitSwitch topLimit;
-  // private final LimitSwitch bottomLimit;
+  private final LimitSwitch leftLimit;
+  private final LimitSwitch rightLimit;
   private final RelativeEncoder rightEncoder;
   private final RelativeEncoder leftEncoder;
+
+  private boolean wentUpLast = false;
 
   /** Creates objects for the motors, limits, and encoders Then sets the encoders */
   public Climbers() {
@@ -26,8 +28,8 @@ public class Climbers extends SubsystemBase {
 
     leftMotor.setIdleMode(IdleMode.kBrake);
     rightMotor.setIdleMode(IdleMode.kBrake);
-    // topLimit = new LimitSwitch(Ports.CLIMBER_TOP_LIMIT_SWITCH_PORT, false);
-    // bottomLimit = new LimitSwitch(Ports.CLIMBER_BOTTOM_LIMIT_SWITCH_PORT, false);
+    leftLimit = new LimitSwitch(Ports.CLIMBER_LEFT_LIMIT_SWITCH_PORT, false);
+    rightLimit = new LimitSwitch(Ports.CLIMBER_RIGHT_LIMIT_SWITCH_PORT, false);
     leftMotor.setInverted(true);
     rightMotor.setInverted(false);
     leftEncoder = leftMotor.getEncoder();
@@ -42,18 +44,29 @@ public class Climbers extends SubsystemBase {
 
     leftEncoder.setPosition(0);
     rightEncoder.setPosition(0);
+
   }
 
   /** Makes the climber go up */
   public void up() {
-    leftMotor.set(ClimberConstants.CLIMBER_SPEED);
-    rightMotor.set(ClimberConstants.CLIMBER_SPEED);
+    wentUpLast = true;
+    if(!(getLimits() && wentUpLast)) {
+      leftMotor.set(ClimberConstants.CLIMBER_SPEED);
+      rightMotor.set(ClimberConstants.CLIMBER_SPEED);
+    } else {
+      stop();
+    }
   }
 
   /** Climber arm goes down */
   public void down() {
-    leftMotor.set(-ClimberConstants.CLIMBER_SPEED);
-    rightMotor.set(-ClimberConstants.CLIMBER_SPEED);
+    wentUpLast = false;
+    if(!(getLimits() && !wentUpLast)) {
+      leftMotor.set(-ClimberConstants.CLIMBER_SPEED);
+      rightMotor.set(-ClimberConstants.CLIMBER_SPEED);
+    } else {
+      stop();
+    }
   }
 
   /** Stops The Climbers */
@@ -62,18 +75,19 @@ public class Climbers extends SubsystemBase {
     rightMotor.set(0);
   }
 
+  /** gets the limits */
+  public boolean getLimits() {
+    if(rightLimit.get() || leftLimit.get() ) {
+      return true;
+    }
+    return false;
+  }
+
   /** If the arm reaches the bottom limit, it will stop Same for top */
   public void periodic() {
 
-  //   if (bottomLimit.get()) {
-  //     stop();
-  //     leftEncoder.setPosition(0);
-  //     rightEncoder.setPosition(0);
-  //   } else if (topLimit.get()) {
-  //     stop();
-  //     leftEncoder.setPosition(ClimberConstants.MAX_HEIGHT);
-  //     rightEncoder.setPosition(ClimberConstants.MAX_HEIGHT);
-  //   }
-  // }
+    if(rightLimit.get() || leftLimit.get()) {
+
+    }
   }
 }
