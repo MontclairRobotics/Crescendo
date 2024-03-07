@@ -141,7 +141,7 @@ public class RobotContainer {
 
     // ************* DRIVER CONTROLLER BINDINGS **************** //
     driverController
-        .L1()
+        .L2()
         .onTrue(Commands555.disableFieldRelative())
         .onFalse(Commands555.enableFieldRelative());
     
@@ -159,9 +159,9 @@ public class RobotContainer {
         .square()
         .onTrue(Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(90), false));
 
-    driverController.R1().whileTrue(Commands555.scoreMode());
-    // driverController.L2().onTrue(Commands555.alignToLimelightTarget(shooterLimelight));
-    // driverController.R2().onTrue(Commands555.alignToLimelightTarget(intakeLimelight));
+    driverController.R2().whileTrue(Commands555.scoreMode());
+    driverController.L1().onTrue(Commands555.alignToLimelightTarget(shooterLimelight, DetectionType.APRIL_TAG));
+    driverController.R1().onTrue(Commands555.alignToLimelightTarget(intakeLimelight, DetectionType.NOTE));
 
     driverController
         .touchpad()
@@ -211,26 +211,26 @@ public class RobotContainer {
 
 
       
-    operatorController.square().onTrue(Commands555.setSprocketAngle(shooterLimelight.bestFit()));
-    operatorController.cross().onTrue(Commands.runOnce(() -> {     
-      System.out.println(angleSetpoint.get()); 
-      RobotContainer.sprocket.setPosition(Rotation2d.fromDegrees(angleSetpoint.get()));
-    }));
-    //operatorController.square().whileTrue(Commands555.scoreSubwoofer());
-    // operatorController.triangle().whileTrue(Commands555.scoreAmp());
+    // operatorController.square().onTrue(Commands555.setSprocketAngle(shooterLimelight.bestFit()));
+    // operatorController.cross().onTrue(Commands.runOnce(() -> {     
+    //   System.out.println(angleSetpoint.get()); 
+    //   RobotContainer.sprocket.setPosition(Rotation2d.fromDegrees(angleSetpoint.get()));
+    // }));
+    operatorController.square().whileTrue(Commands555.scoreSubwoofer());
+    operatorController.triangle().whileTrue(Commands555.scoreAmp());
     
     
 
-    operatorController.circle().and(() -> !isDriverMode).onTrue(Commands555.shoot(ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.TRANSPORT_SPEED));
+    operatorController.circle().and(() -> !isDriverMode).onTrue(Commands555.shoot(ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.TRANSPORT_SPEED, 1));
     operatorController.circle().and(() -> isDriverMode).whileTrue(Commands555.runTransportManual());
 
-    operatorController.triangle().onTrue(Commands.sequence(
-      Commands555.setSprocketAngle(RobotContainer.shooterLimelight.getAngleForSpeaker()),
-      Commands555.waitUntil(() -> {
-        return sprocket.isAtAngle();
-      }),
-      Commands555.shoot(.9, .9, .9)
-    ));
+    // operatorController.triangle().onTrue(Commands.sequence(
+    //   Commands555.setSprocketAngle(RobotContainer.shooterLimelight.getAngleForSpeaker()),
+    //   Commands555.waitUntil(() -> {
+    //     return sprocket.isAtAngle();
+    //   }),
+    //   Commands555.shoot(.9, .9, .9)
+    // ));
 
 
 

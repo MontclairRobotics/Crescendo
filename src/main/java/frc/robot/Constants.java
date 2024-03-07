@@ -94,6 +94,10 @@ public final class Constants {
     
 
     public static final int SPROCKET_ABS_ENCODER = 9;
+
+    public static final int CLIMBER_LEFT_LIMIT_SWITCH_PORT = 5;
+
+    public static final int CLIMBER_RIGHT_LIMIT_SWITCH_PORT = 6;
   } 
 
   public static class ClimberConstants {
@@ -134,7 +138,7 @@ public final class Constants {
     public static final double ENCODER_MAX_ANGLE = 75.787;
 
     public static final double SPEAKER_SCORE_ANGLE = 62.7;
-    public static final double AMP_SCORE_ANGLE = 50;
+    public static final double AMP_SCORE_ANGLE = 62;
 
 
     public static final Tunable<Boolean> LEFT_INVERT = Tunable.of(true, "arm.invert.left");
@@ -146,7 +150,7 @@ public final class Constants {
     public static final double SPROCKET_ANGLE_DEADBAND = 2;
     public static final double SPROCKET_ANGLE_LIMIT_DEADBAND = 2.5;
 
-    public static final double INTAKE_SCORE_ANGLE = 45;
+    // public static final double INTAKE_SCORE_ANGLE = 45;
 
     
     public static final double MAX_SPEED = 0.5;
@@ -229,8 +233,8 @@ public final class Constants {
     
     public static final Pose2d POSE_1 = new Pose2d(0.68, 4.38, Rotation2d.fromDegrees(-59.50)); //TODO check angles
     public static final Pose2d POSE_2 = new Pose2d(1.37, 5.55, Rotation2d.fromDegrees(0));
-    public static final Pose2d POSE_3 = new Pose2d(0.72, 6.72, Rotation2d.fromDegrees(-30.30));
-    public static final Pose2d POSE_4 = new Pose2d(1.82, 7.23, Rotation2d.fromDegrees(-79.40));
+    public static final Pose2d POSE_3 = new Pose2d(0.72, 6.72, Rotation2d.fromDegrees(59.50));
+    public static final Pose2d POSE_4 = new Pose2d(1.82, 7.23, Rotation2d.fromDegrees(-90.00));
 
     public static final Pose2d POSE_1_RED = GeometryUtil.flipFieldPose(POSE_1);
     public static final Pose2d POSE_2_RED = GeometryUtil.flipFieldPose(POSE_2);
@@ -258,7 +262,7 @@ public final class Constants {
     public static final double GOAL_END_VELOCITY = 0.0;
     public static final double ROTATION_DELAY_DISTANCE = 0.0;
     public static final double INTAKING_TIMEOUT = 3; // in seconds
-    public static final double INTAKING_MOVE_SPEED = 0.04; // in M/s.
+    public static final double INTAKING_MOVE_SPEED = 0.3; // in M/s.
  
 
 

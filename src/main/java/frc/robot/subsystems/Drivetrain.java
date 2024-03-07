@@ -73,7 +73,7 @@ public class Drivetrain extends SubsystemBase {
     Logger.recordOutput("Drivetrain/Gyro-Rotation", getSwerveDrive().getGyroRotation3d());
     Logger.recordOutput("Drivetrain/Pose", getSwerveDrive().getPose());
 
-    RobotContainer.field.setRobotPose(swerveDrive.getPose());
+    // RobotContainer.field.setRobotPose(RobotContainer.shooterLimelight.getBotPose_wpiRed());
   }
 
   public void addVisionMeasurement(Pose2d pose, double time) {
