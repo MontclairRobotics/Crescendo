@@ -408,7 +408,7 @@ public class Auto extends SubsystemBase {
               new ChassisSpeeds(),
               path.getPreviewStartingHolonomicPose().getRotation()
             ));
-        segment.addCommands(AutoBuilder.followPath(path));
+        segment = new ParallelCommandGroup(AutoBuilder.followPath(path));
         
       } catch(Exception e) {
         setFeedback("Path File Not Found");
