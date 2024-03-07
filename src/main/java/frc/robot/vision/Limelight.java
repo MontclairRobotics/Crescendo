@@ -133,13 +133,13 @@ public class Limelight extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if (getPipelineType() == DetectionType.APRIL_TAG && hasValidTarget()) {
-      double[] targetArr = LimelightHelpers.getBotPose(cameraName);
-      RobotContainer.drivetrain.addVisionMeasurement(
-        new Pose2d(targetArr[0], targetArr[1], Rotation2d.fromDegrees(targetArr[5])),
-        targetArr[6]
-      );
-    }
+    // if (getPipelineType() == DetectionType.APRIL_TAG && hasValidTarget()) {
+    //   double[] targetArr = LimelightHelpers.getBotPose(cameraName);
+    //   RobotContainer.drivetrain.addVisionMeasurement(
+    //     new Pose2d(targetArr[0], targetArr[1], Rotation2d.fromDegrees(targetArr[5])),
+    //     targetArr[6]
+    //   );
+    // }
 
   }
 

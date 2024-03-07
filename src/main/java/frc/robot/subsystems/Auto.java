@@ -39,6 +39,7 @@ import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.util.Array555;
+import frc.robot.vision.DetectionType;
 
 import static frc.robot.Constants.ArmConstants.INTAKE_SCORE_ANGLE;
 
@@ -383,22 +384,25 @@ public class Auto extends SubsystemBase {
     trajectories.clear();
 
     if (autoString.length() == 0) {
-      autoCommand = Commands555.setAutoPose(autoString);
+      autoCommand = Commands.sequence(Commands555.setAutoPose(autoString), Commands555.scoreSubwoofer());
       return;
     }
 
     finalPath.addCommands(Commands555.setAutoPose(autoString));
 
-    if (autoString.length() >= 1) {
-      char digit = autoString.charAt(0);
-      if (digit == '4') {
-          finalPath.addCommands(Commands555.scoreAmp());
-        } else {
-          finalPath.addCommands(Commands555.scoreSubwoofer());
-        }
-    }
+    // if (autoString.length() >= 1) {
+    //   char digit = autoString.charAt(0);
+    //   if (digit == '4') {
+    //       finalPath.addCommands(Commands555.scoreAmp());
+    //     } else {
+    //       finalPath.addCommands(Commands555.scoreSubwoofer());
+    //     }
+    // }
+
+    
     ParallelCommandGroup segment = new ParallelCommandGroup();
     for (int i = 0; i < autoString.length() - 1; i++) {
+
       char current = autoString.charAt(i);
       char next = autoString.charAt(i+1);
       try {
@@ -410,25 +414,27 @@ public class Auto extends SubsystemBase {
             ));
         segment = new ParallelCommandGroup(AutoBuilder.followPath(path));
         
-      } catch(Exception e) {
+      } catch (Exception e) {
         setFeedback("Path File Not Found");
         autoCommand = Commands.runOnce(() -> {});
         
       }
 
       if (Array555.indexOf(AutoConstants.NOTES, next) != -1) {
-
         segment.addCommands(Commands555.loadNote());
-        
-        
       } 
+
+      
       finalPath.addCommands(segment);
 
-      if (next == 4) {
-        finalPath.addCommands(Commands555.scoreAmp());
-      } else { // speaker
-        finalPath.addCommands(Commands555.scoreSubwoofer());
+      if (!Character.isAlphabetic(next)) {
+        if (next == '4') {
+          finalPath.addCommands(Commands555.scoreAmp());
+        } else { // speaker
+          finalPath.addCommands(Commands555.scoreSubwoofer());
+        }
       }
+      
     }
 
     setFeedback("Successfully Created Auto Sequence!");
