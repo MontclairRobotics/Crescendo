@@ -67,6 +67,7 @@ public final class Constants {
     public static final double SPEAKER_GOAL_HEIGHT = 81.8; //78.13-82.90
     public static final double SHOOTER_LIMELIGHT_ANGLE_DEGREES = 31.07;
     public static final double INTAKE_LIMELIGHT_ANGLE_DEGREES = 0;
+    public static final double ALIGN_CENTER_OFFSET = 3;
   }
 
   public static class Ports { // TODO: add correct ports

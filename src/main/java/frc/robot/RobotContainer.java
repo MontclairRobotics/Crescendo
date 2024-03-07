@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Auto;
 import frc.robot.subsystems.Climbers;
 import frc.robot.subsystems.Drivetrain;
@@ -249,16 +250,19 @@ public class RobotContainer {
 
   public void setupDriverTab() {
     ShuffleboardTab driverTab = Shuffleboard.getTab("Driver");
-    // driverTab.addBoolean(
-    //     "Good to shoot!",
-    //     () -> {
-    //       return shooter.isAtSpeed() && sprocket.isAtAngle();
-    //     });
-    // driverTab.addBoolean("Note Intaked", intake::hasPickedUp);
+    driverTab.addBoolean(
+        "Good to shoot!",
+        () -> {
+          return sprocket.isAtAngle() && Math.abs(shooterLimelight.getObjectTX()) < VisionConstants.ALIGN_CENTER_OFFSET;
+        });;
 
-    driverTab.addDouble("Time Remaining", Timer::getMatchTime);
+    driverTab.addDouble("Time Remaining", () -> { return (int) Timer.getMatchTime();});
 
     driverTab.addBoolean("Note in Transport", shooter::isNoteInTransport);
+
+    // driverTab.addDouble("Match Time", () -> {
+    //   return Timer.getMatchTime();
+    // });
   }
 
 
