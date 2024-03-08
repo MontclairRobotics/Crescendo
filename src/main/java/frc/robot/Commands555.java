@@ -103,6 +103,38 @@ public class Commands555 {
         });
 
   }
+  public static Command loadNoteAuto() {
+
+    Command driveIntake = Commands.race(Commands555.driveFromSpeedsSet(new ChassisSpeeds(1.5,0,0)), Commands555.intake()).onlyWhile(() -> {return !RobotContainer.shooter.isNoteInTransport();});
+    Command alignSprocket = Commands555.setSprocketAngle(ArmConstants.INTAKE_ANGLE);
+    Command intakeAndTransport = Commands.sequence(alignSprocket, Commands555.waitUntil(() -> {return RobotContainer.sprocket.isAtAngle();}), Commands.parallel(Commands555.intake(), Commands555.transport(ShooterConstants.TRANSPORT_SPEED)));
+    return intakeAndTransport
+        .withName("intake in")
+        .until(() -> {
+          return RobotContainer.shooter.isNoteInTransport();
+        }).withTimeout(0.4)
+        .finallyDo(() -> {
+          RobotContainer.intake.stop();
+          RobotContainer.shooter.stopTransport();
+        }).andThen(driveIntake).finallyDo(() -> {
+          RobotContainer.intake.stop();
+          RobotContainer.shooter.stopTransport();
+        });
+
+
+  }
+
+  public static Command bippityBop() {
+    Command alignSprocket = Commands555.setSprocketAngle(ArmConstants.INTAKE_ANGLE);
+    Command odometryIntake = Commands.sequence(alignSprocket, Commands.parallel(Commands555.intake(), Commands555.transport(ShooterConstants.TRANSPORT_SPEED), Commands555.driveFromSpeeds(new ChassisSpeeds(0.5, 0, 0)))).onlyWhile(() -> {return RobotContainer.shooter.isNoteInTransport();});
+    
+
+    
+
+    return odometryIntake.onlyWhile(() -> {
+      return !RobotContainer.shooter.isNoteInTransport();
+    });
+  }
 
   public static Command intake() {
     return Commands.run(RobotContainer.intake::in);
@@ -540,6 +572,9 @@ public class Commands555 {
 
   public static Command driveFromSpeeds(ChassisSpeeds speeds) {
     return Commands.runOnce(() -> RobotContainer.drivetrain.getSwerveDrive().drive(speeds));
+  }
+  public static Command driveFromSpeedsSet(ChassisSpeeds speeds) {
+    return Commands.run(() -> RobotContainer.drivetrain.getSwerveDrive().drive(speeds));
   }
 
   public static Command waitForTime(double seconds) {

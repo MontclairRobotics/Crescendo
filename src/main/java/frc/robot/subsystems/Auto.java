@@ -360,10 +360,10 @@ public class Auto extends SubsystemBase {
     // setFeedback("boo!");
     if (isValidPath) {
       if (!ignoreSafety && isSafePath) {
-        buildPathSequenceOdometry(autoString);
+        buildPathSequenceWeird(autoString);
         drawPaths();
       } else if (ignoreSafety) {
-        buildPathSequenceOdometry(autoString);
+        buildPathSequenceWeird(autoString);
         drawPaths();
       }
     }
@@ -426,7 +426,7 @@ public class Auto extends SubsystemBase {
       }
 
       if (Array555.indexOf(AutoConstants.NOTES, next) != -1) {
-        segment.addCommands(Commands555.loadNote());
+        segment.addCommands(Commands555.loadNoteAuto());
       } 
 
       
@@ -449,5 +449,65 @@ public class Auto extends SubsystemBase {
     autoCommand = finalPath;
   }
 
+
+  public void buildPathSequenceWeird(String autoString) {
+    SequentialCommandGroup finalPath = new SequentialCommandGroup();
+
+    trajectories.clear();
+
+    if (autoString.length() == 0) {
+      autoCommand = Commands.sequence(Commands555.setAutoPose(autoString), Commands555.scoreSubwoofer());
+      return;
+    }
+
+    finalPath.addCommands(Commands555.setAutoPose(autoString));
+    // finalPath.addCommands(Commands.runOnce(() -> {
+    //   RobotContainer.shooter.shootActually(ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.SPEAKER_EJECT_SPEED);
+    // }));
+
+
+    if (autoString.length() >= 1) {
+      char digit = autoString.charAt(0);
+      if (digit == '4') {
+          finalPath.addCommands(Commands555.scoreAmp());
+        } else {
+          finalPath.addCommands(Commands555.scoreSubwoofer());
+        }
+    }
+
+    for (int i = 0; i < autoString.length()-1; i++) {
+      char current = autoString.charAt(i);
+      char next = autoString.charAt(i+1);
+       try {
+        PathPlannerPath path = PathPlannerPath.fromPathFile("" + current + "-" + next);
+        trajectories.add(
+            path.getTrajectory(
+              new ChassisSpeeds(),
+              path.getPreviewStartingHolonomicPose().getRotation()
+            ));
+        finalPath.addCommands(AutoBuilder.followPath(path));
+        
+        } catch (Exception e) {
+          setFeedback("Path File Not Found");
+          autoCommand = Commands.runOnce(() -> {}); 
+        }
+
+        if (Array555.indexOf(AutoConstants.NOTES, next) != -1) {
+          finalPath.addCommands(Commands555.loadNoteAuto()); 
+        }
+
+        if (autoString.length() >= 1) {
+          char digit = autoString.charAt(0);
+        if (digit == '4') {
+          finalPath.addCommands(Commands555.scoreAmp());
+        } else {
+          finalPath.addCommands(Commands555.scoreSubwoofer());
+        }
+      }
+      autoCommand = finalPath;
+
+    }
+
+  }
   
 }
