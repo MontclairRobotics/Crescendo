@@ -142,6 +142,7 @@ public class Auto extends SubsystemBase {
 
   public void drawPaths() {
     clearField();
+    System.out.println("DRAWING");
     for (int i = 0; i < trajectories.size(); i++) {
       PathPlannerTrajectory pathTraj = trajectories.get(i);
       List<State> states = convertStatesToStates(pathTraj.getStates());
@@ -360,10 +361,10 @@ public class Auto extends SubsystemBase {
     // setFeedback("boo!");
     if (isValidPath) {
       if (!ignoreSafety && isSafePath) {
-        buildPathSequenceOdometry(autoString);
+        buildPathSequenceWeird(autoString);
         drawPaths();
       } else if (ignoreSafety) {
-        buildPathSequenceOdometry(autoString);
+        buildPathSequenceWeird(autoString);
         drawPaths();
       }
     }
@@ -427,7 +428,7 @@ public class Auto extends SubsystemBase {
       }
 
       if (Array555.indexOf(AutoConstants.NOTES, next) != -1) {
-        segment.addCommands(Commands555.loadNoteAuto()); //A version of loadNote that ramps the shooter back up to speaker speed after
+        segment.addCommands(Commands555.loadNote()); //A version of loadNote that ramps the shooter back up to speaker speed after (probably should be loadNoteAuto)
       } 
 
       
@@ -460,12 +461,10 @@ public class Auto extends SubsystemBase {
     trajectories.clear();
 
     // if (autoString.length() == 0) {
-    //   autoCommand = Commands.sequence(Commands555.setAutoPose(autoString), Commands555.scoreSubwoofer());
+      // autoCommand = Commands.sequence(Commands555.setAutoPose(autoString), Commands555.scoreSubwoofer());
+      // autoCommand = Commands555.setAutoPose(aut);
     //   return;
     // }
-    
-    
-    // finalPath.addCommands(Commands555.setAutoPose(autoString));
 
     for (int i = 0; i < autoString.length()-1; i++) {
       char current = autoString.charAt(i);
@@ -477,6 +476,10 @@ public class Auto extends SubsystemBase {
               new ChassisSpeeds(),
               path.getPreviewStartingHolonomicPose().getRotation()
             ));
+        // finalPath.addCommands(Commands.runOnce(() -> {
+        //   RobotContainer.intake.in();
+        //   RobotContainer.sprocket.setSprocketAngle(INTAKE_ANGLE);
+        // }));
         finalPath.addCommands(AutoBuilder.followPath(path));
         
         } catch (Exception e) {
