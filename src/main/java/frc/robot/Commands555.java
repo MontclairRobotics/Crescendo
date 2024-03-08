@@ -580,7 +580,10 @@ public class Commands555 {
   }
 
   public static Command driveFromSpeedsSet(ChassisSpeeds speeds) {
-    return Commands.run(() -> RobotContainer.drivetrain.getSwerveDrive().drive(speeds));
+    // return Commands.run(() -> RobotContainer.drivetrain.getSwerveDrive().drive(speeds));
+    return Commands.run(() -> {
+      RobotContainer.drivetrain.drive(new Translation2d(2, 0), 0);
+    });
   }
 
   public static Command waitForTime(double seconds) {

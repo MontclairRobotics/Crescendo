@@ -451,17 +451,21 @@ public class Auto extends SubsystemBase {
   }
 
 
+
+
+
   public void buildPathSequenceWeird(String autoString) {
-    SequentialCommandGroup finalPath = new SequentialCommandGroup();
+    SequentialCommandGroup finalPath = new SequentialCommandGroup(Commands555.setAutoPose(autoString), Commands555.scoreSubwoofer());
 
     trajectories.clear();
 
-    if (autoString.length() == 0) {
-      autoCommand = Commands.sequence(Commands555.setAutoPose(autoString), Commands555.scoreSubwoofer());
-      return;
-    }
-
-    finalPath.addCommands(Commands555.setAutoPose(autoString));
+    // if (autoString.length() == 0) {
+    //   autoCommand = Commands.sequence(Commands555.setAutoPose(autoString), Commands555.scoreSubwoofer());
+    //   return;
+    // }
+    
+    
+    // finalPath.addCommands(Commands555.setAutoPose(autoString));
 
     for (int i = 0; i < autoString.length()-1; i++) {
       char current = autoString.charAt(i);
@@ -478,11 +482,12 @@ public class Auto extends SubsystemBase {
         } catch (Exception e) {
           setFeedback("Path File Not Found");
           autoCommand = Commands.runOnce(() -> {}); 
+          return;
         }
 
         if (Array555.indexOf(AutoConstants.NOTES, next) != -1) {
           finalPath.addCommands(Commands555.loadNoteAuto()); 
-        }
+        } 
 
         if (next == '4') {
           finalPath.addCommands(Commands555.scoreAmp());
