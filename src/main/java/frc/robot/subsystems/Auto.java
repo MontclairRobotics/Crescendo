@@ -31,6 +31,7 @@ import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
@@ -407,9 +408,9 @@ public class Auto extends SubsystemBase {
     }
 
     
-    ParallelCommandGroup segment = new ParallelCommandGroup();
+    ParallelRaceGroup segment = new ParallelRaceGroup();
     for (int i = 0; i < autoString.length() - 1; i++) {
-
+      
       char current = autoString.charAt(i);
       char next = autoString.charAt(i+1);
       try {
@@ -419,7 +420,8 @@ public class Auto extends SubsystemBase {
               new ChassisSpeeds(),
               path.getPreviewStartingHolonomicPose().getRotation()
             ));
-        segment = new ParallelCommandGroup(AutoBuilder.followPath(path));
+        segment = new ParallelRaceGroup(AutoBuilder.followPath(path));
+        //segment = new Commands.race();
         
       } catch (Exception e) {
         setFeedback("Path File Not Found");
@@ -430,9 +432,14 @@ public class Auto extends SubsystemBase {
       if (Array555.indexOf(AutoConstants.NOTES, next) != -1) {
         segment.addCommands(Commands555.loadNote()); //A version of loadNote that ramps the shooter back up to speaker speed after (probably should be loadNoteAuto)
       } 
+      
 
       
       finalPath.addCommands(segment);
+
+
+      // Will terminate instantly if note has already been intaked :D
+      finalPath.addCommands(Commands555.loadNoteAuto().onlyIf(() -> {return !RobotContainer.shooter.isNoteInTransport();}));
 
       if (!Character.isAlphabetic(next)) {
         if (next == '4') {

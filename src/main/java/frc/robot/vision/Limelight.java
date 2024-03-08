@@ -150,6 +150,11 @@ public class Limelight extends SubsystemBase {
     return (0.001717 * (Math.pow(x, 2))) + (-0.6251 * x) + (83.41);
   }
 
+  public boolean isAligned() {
+    double tx = getObjectTX();
+    return Math.abs(Math.abs(tx) - RobotContainer.drivetrain.getWrappedRotation().getDegrees()) < DriveConstants.ANGLE_DEADBAND;
+  }
+
   
 
 
