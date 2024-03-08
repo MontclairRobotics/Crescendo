@@ -360,10 +360,10 @@ public class Auto extends SubsystemBase {
     // setFeedback("boo!");
     if (isValidPath) {
       if (!ignoreSafety && isSafePath) {
-        buildPathSequenceWeird(autoString);
+        buildPathSequenceOdometry(autoString);
         drawPaths();
       } else if (ignoreSafety) {
-        buildPathSequenceWeird(autoString);
+        buildPathSequenceOdometry(autoString);
         drawPaths();
       }
     }
@@ -461,19 +461,6 @@ public class Auto extends SubsystemBase {
     }
 
     finalPath.addCommands(Commands555.setAutoPose(autoString));
-    // finalPath.addCommands(Commands.runOnce(() -> {
-    //   RobotContainer.shooter.shootActually(ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.SPEAKER_EJECT_SPEED);
-    // }));
-
-
-    if (autoString.length() >= 1) {
-      char digit = autoString.charAt(0);
-      if (digit == '4') {
-          finalPath.addCommands(Commands555.scoreAmp());
-        } else {
-          finalPath.addCommands(Commands555.scoreSubwoofer());
-        }
-    }
 
     for (int i = 0; i < autoString.length()-1; i++) {
       char current = autoString.charAt(i);
@@ -496,18 +483,25 @@ public class Auto extends SubsystemBase {
           finalPath.addCommands(Commands555.loadNoteAuto()); 
         }
 
-        if (autoString.length() >= 1) {
-          char digit = autoString.charAt(0);
-        if (digit == '4') {
+        if (next == '4') {
           finalPath.addCommands(Commands555.scoreAmp());
-        } else {
+        } else if (next == '1' || next == '2' || next == '3') {
           finalPath.addCommands(Commands555.scoreSubwoofer());
         }
-      }
-      autoCommand = finalPath;
-
+        // if (autoString.length() >= 1) {
+        //   char digit = autoString.charAt(0);
+        // if (digit == '4') {
+        //   finalPath.addCommands(Commands555.scoreAmp());
+        // } else {
+        //   finalPath.addCommands(Commands555.scoreSubwoofer());
+        // }
     }
 
+    
+    autoCommand = finalPath;
+
   }
-  
+
 }
+  
+
