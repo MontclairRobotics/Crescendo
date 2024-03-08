@@ -394,6 +394,7 @@ public class Auto extends SubsystemBase {
     finalPath.addCommands(Commands.runOnce(() -> {
       RobotContainer.shooter.shootActually(ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.SPEAKER_EJECT_SPEED);
     }));
+    finalPath.addCommands(Commands555.waitForTime(0.75)); //Wait for shooter to ramp up initially
 
     if (autoString.length() >= 1) {
       char digit = autoString.charAt(0);
@@ -426,7 +427,7 @@ public class Auto extends SubsystemBase {
       }
 
       if (Array555.indexOf(AutoConstants.NOTES, next) != -1) {
-        segment.addCommands(Commands555.loadNoteAuto());
+        segment.addCommands(Commands555.loadNoteAuto()); //A version of loadNote that ramps the shooter back up to speaker speed after
       } 
 
       
@@ -434,7 +435,7 @@ public class Auto extends SubsystemBase {
 
       if (!Character.isAlphabetic(next)) {
         if (next == '4') {
-          finalPath.addCommands(Commands555.scoreAmp());
+          finalPath.addCommands(Commands555.scoreAmpAuto());
         } else { // speaker
           finalPath.addCommands(Commands555.scoreSubwoofer());
         }
