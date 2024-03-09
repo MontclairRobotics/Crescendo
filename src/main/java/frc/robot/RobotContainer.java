@@ -55,7 +55,7 @@ public class RobotContainer {
   public static Intake intake = new Intake();
   public static Shooter shooter = new Shooter();
   public static Sprocket sprocket = new Sprocket();
-  public static Limelight intakeLimelight = new Limelight("limelight-intake", DetectionType.APRIL_TAG);
+  public static Limelight intakeLimelight = new Limelight("limelight-intake", DetectionType.NOTE);
   public static Limelight shooterLimelight = new Limelight("limelight-shooter", DetectionType.APRIL_TAG);
   public static Auto auto = new Auto();
   // public static LED led =
@@ -202,8 +202,8 @@ public class RobotContainer {
     //     .toggleOnTrue(
     //         sprocket.getSysId().dynamic(Direction.kReverse).onlyWhile(sprocket::isSprocketSafe));
 
-    ControllerTools.getDPad(DPad.UP, operatorController).onTrue(Commands555.climbersUp()).onFalse(Commands555.climbersStop());
-    ControllerTools.getDPad(DPad.DOWN, operatorController).onTrue(Commands555.climbersDown()).onFalse(Commands555.climbersStop());
+    ControllerTools.getDPad(DPad.UP, operatorController).onTrue(Commands555.climbersUp());
+    ControllerTools.getDPad(DPad.DOWN, operatorController).onTrue(Commands555.climbersDown());
 
     operatorController.R2().onTrue(Commands555.reverseIntake()).onFalse(Commands555.stopIntake());
     // operatorController.R2().onTrue(Commands555.testPipeSwitch(intakeLimelight, DetectionType.APRIL_TAG));
@@ -216,12 +216,15 @@ public class RobotContainer {
     //   System.out.println(angleSetpoint.get()); 
     //   RobotContainer.sprocket.setPosition(Rotation2d.fromDegrees(angleSetpoint.get()));
     // }));
-    operatorController.square().whileTrue(Commands555.scoreSubwoofer());
+
+    operatorController.cross().whileTrue(Commands555.ferryNote());
     operatorController.triangle().whileTrue(Commands555.scoreAmp());
+    operatorController.square().onTrue(Commands555.lowerRobot());
     
     
 
-    operatorController.circle().and(() -> !isDriverMode).onTrue(Commands555.shoot(ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.TRANSPORT_SPEED, 1));
+    // operatorController.circle().and(() -> !isDriverMode).onTrue(Commands555.shoot(ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.TRANSPORT_SPEED, 1));
+    operatorController.circle().and(() -> !isDriverMode).whileTrue(Commands555.scoreSubwoofer());
     operatorController.circle().and(() -> isDriverMode).whileTrue(Commands555.runTransportManual());
 
     // operatorController.triangle().onTrue(Commands.sequence(

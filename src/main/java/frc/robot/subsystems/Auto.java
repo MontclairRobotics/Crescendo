@@ -362,10 +362,10 @@ public class Auto extends SubsystemBase {
     // setFeedback("boo!");
     if (isValidPath) {
       if (!ignoreSafety && isSafePath) {
-        buildPathSequenceWeird(autoString);
+        buildPathSequenceOdometry(autoString);
         drawPaths();
       } else if (ignoreSafety) {
-        buildPathSequenceWeird(autoString);
+        buildPathSequenceOdometry(autoString);
         drawPaths();
       }
     }
@@ -432,6 +432,10 @@ public class Auto extends SubsystemBase {
       if (Array555.indexOf(AutoConstants.NOTES, next) != -1) {
         segment.addCommands(Commands555.loadNote()); //A version of loadNote that ramps the shooter back up to speaker speed after (probably should be loadNoteAuto)
       } 
+
+      finalPath.addCommands(Commands555.loadNoteAuto().onlyWhile(() -> {
+        return !RobotContainer.shooter.isNoteInTransport();
+      }));
       
 
       
@@ -461,7 +465,7 @@ public class Auto extends SubsystemBase {
 
 
 
-
+  @Deprecated(forRemoval = true)
   public void buildPathSequenceWeird(String autoString) {
     SequentialCommandGroup finalPath = new SequentialCommandGroup(Commands555.setAutoPose(autoString), Commands555.scoreSubwoofer());
 
@@ -483,10 +487,10 @@ public class Auto extends SubsystemBase {
               new ChassisSpeeds(),
               path.getPreviewStartingHolonomicPose().getRotation()
             ));
-        // finalPath.addCommands(Commands.runOnce(() -> {
-        //   RobotContainer.intake.in();
-        //   RobotContainer.sprocket.setSprocketAngle(INTAKE_ANGLE);
-        // }));
+        finalPath.addCommands(Commands.runOnce(() -> {
+          RobotContainer.intake.in();
+          RobotContainer.sprocket.setPosition(Rotation2d.fromDegrees(INTAKE_ANGLE));
+        }));
         finalPath.addCommands(AutoBuilder.followPath(path));
         
         } catch (Exception e) {
@@ -501,8 +505,10 @@ public class Auto extends SubsystemBase {
 
         if (next == '4') {
           finalPath.addCommands(Commands555.scoreAmp());
-        } else if (next == '1' || next == '2' || next == '3') {
+        } else if (next == '2') {
           finalPath.addCommands(Commands555.scoreSubwoofer());
+        } else if (next == '3' || next == '1') {
+          finalPath.addCommands(Commands555.scoreSubwooferAtAngle());
         }
         // if (autoString.length() >= 1) {
         //   char digit = autoString.charAt(0);

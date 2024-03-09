@@ -105,9 +105,14 @@ public class Commands555 {
 
   }
 
+  public static Command setChassiSpeeds(ChassisSpeeds speeds) {
+    return Commands.run(() -> {
+      RobotContainer.drivetrain.setChassisSpeeds(speeds);
+    });
+  }
   public static Command loadNoteAuto() {
 
-    Command driveIntake = Commands.race(Commands555.driveFromSpeedsSet(new ChassisSpeeds(2, 0, 0)),
+    Command driveIntake = Commands.race(Commands555.setChassiSpeeds(new ChassisSpeeds(1, 0, 0)),
         Commands555.intake(), Commands.waitUntil(() -> {
           return RobotContainer.shooter.isNoteInTransport();
         }));
@@ -446,6 +451,12 @@ public class Commands555 {
         });
   }
 
+  public static Command lowerRobot() {
+    return Commands.parallel(
+      setSprocketAngle(ArmConstants.SPROCKET_STAGE_ANGLE),
+      climbersDown()
+    );
+  }
   public static Command shoot(double speed, double transportSpeed) {
     return shoot(speed, speed, transportSpeed, 1);
   }
@@ -602,7 +613,7 @@ public class Commands555 {
     return Commands.sequence(
         setSprocketAngle(ArmConstants.AMP_SCORE_ANGLE),
         waitUntil(RobotContainer.sprocket::isAtAngle),
-        shoot(ShooterConstants.AMP_EJECT_SPEED, ShooterConstants.AMP_EJECT_SPEED, ShooterConstants.TRANSPORT_SPEED, 1));
+        shoot(ShooterConstants.AMP_EJECT_SPEED - 0.025, ShooterConstants.AMP_EJECT_SPEED, ShooterConstants.TRANSPORT_SPEED, 1));
     // setSprocketAngle(ArmConstants.INTAKE_ANGLE));
 
   }
@@ -630,6 +641,21 @@ public class Commands555 {
         Commands.runOnce(() -> System.out.println("Done Shooting!")),
         setSprocketAngle(ArmConstants.INTAKE_ANGLE));
   }
+
+  public static Command scoreSubwooferAtAngle() {
+    return Commands.sequence(
+        Commands.runOnce(() -> System.out.println("Shooting!")),
+        setSprocketAngle(ArmConstants.SPEAKER_SCORE_ANGLE),
+        waitUntil(() -> {
+          return RobotContainer.sprocket.isAtAngle();
+        }),
+        shoot(ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.SPEAKER_EJECT_SPEED,
+            ShooterConstants.TRANSPORT_SPEED, 0),
+        Commands.runOnce(() -> System.out.println("Done Shooting!")),
+        setSprocketAngle(ArmConstants.INTAKE_ANGLE));
+  }
+
+  
 
   public static Command receiveHumanPlayerNote() {
     return Commands.sequence(
@@ -678,12 +704,18 @@ public class Commands555 {
   // ***********************CLIMBER COMMANDS*************************//
   public static Command climbersUp() {
     return Commands.run(
-        () -> RobotContainer.climbers.up());
+        () -> RobotContainer.climbers.up()
+    ).until(() -> RobotContainer.climbers.atTop());
   }
 
   public static Command climbersDown() {
-    return Commands.run(() -> RobotContainer.climbers.down());
+    return Commands.run(() -> RobotContainer.climbers.down()
+    ).until(() -> RobotContainer.climbers.atBottom());
   }
+
+  // public static Command climbersFullDown() {
+  //   return climbersDown().until(() -> RobotContainer.climbers.atBottom && RobotContainer.climbers.getLimits());
+  // }
 
   public static Command climbersStop() {
     return Commands.runOnce(() -> {

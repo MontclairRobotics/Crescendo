@@ -104,7 +104,7 @@ public final class Constants {
     // Climbers
     public static final double CLIMBER_SPEED = 0.5;
     public static final double MAX_HEIGHT = 18; // Inches
-    public static final double ROTATIONS_PER_INCH = 12.0672 * Math.PI; // TODO:
+    public static final double ROTATIONS_PER_INCH = Math.PI; //12.0672 * Math.PI; // TODO:
   }
 
   public static class IntakeConstants {
@@ -138,6 +138,7 @@ public final class Constants {
     public static final double ENCODER_MAX_ANGLE = 75.787;
 
     public static final double SPEAKER_SCORE_ANGLE = 62.7;
+    public static final double SPEAKER_LOWER_SCORE_ANGLE = 58;
     public static final double AMP_SCORE_ANGLE = 62;
 
 
@@ -149,6 +150,7 @@ public final class Constants {
     public static final double SPROCKET_ANGLE_MOVE_SPEED = 0.5;
     public static final double SPROCKET_ANGLE_DEADBAND = 2;
     public static final double SPROCKET_ANGLE_LIMIT_DEADBAND = 2.5;
+    public static final double SPROCKET_STAGE_ANGLE = 40;
 
     // public static final double INTAKE_SCORE_ANGLE = 45;
 
