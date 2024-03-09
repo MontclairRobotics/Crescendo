@@ -102,7 +102,7 @@ public final class Constants {
 
   public static class ClimberConstants {
     // Climbers
-    public static final double CLIMBER_SPEED = 0.5;
+    public static final double CLIMBER_SPEED = 0.3;
     public static final double MAX_HEIGHT = 18; // Inches
     public static final double ROTATIONS_PER_INCH = Math.PI/30; //12.0672 * Math.PI; // TODO:
   }

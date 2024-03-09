@@ -104,6 +104,15 @@ public class RobotContainer {
             },
             sprocket));
 
+    climbers.setDefaultCommand(
+      Commands.run(
+        () -> {
+          climbers.setInputFromController(operatorController);
+        },
+        climbers
+      )
+    );
+
     
     shooterLimelight.setPipelineTo(DetectionType.APRIL_TAG);
     intakeLimelight.setPipelineTo(DetectionType.NOTE);

@@ -5,10 +5,11 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkBase.IdleMode;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import frc.robot.Constants.*;
-import frc.robot.Constants.Ports;
 import frc.robot.util.LimitSwitch;
 
 public class Climbers extends SubsystemBase {
@@ -21,9 +22,15 @@ public class Climbers extends SubsystemBase {
   private final RelativeEncoder leftEncoder;
   
   //public boolean inMotion = false; 
-  public boolean wentUpLast = false;
-  public boolean atBottom = true;
-  public boolean atTop = false;
+  public boolean leftMovingUp = false;
+  public boolean leftAtBottom = false;
+  public boolean leftAtTop = false;
+  private double leftSpeed = 0;
+
+  public boolean rightMovingUp = false;
+  public boolean rightAtBottom = false;
+  public boolean rightAtTop = false;
+  private double rightSpeed = 0;
 
   /** Creates objects for the motors, limits, and encoders Then sets the encoders */
   public Climbers() {
@@ -32,16 +39,16 @@ public class Climbers extends SubsystemBase {
 
     leftMotor.setIdleMode(IdleMode.kBrake);
     rightMotor.setIdleMode(IdleMode.kBrake);
-    leftLimit = new LimitSwitch(Ports.CLIMBER_LEFT_LIMIT_SWITCH_PORT, false);
-    rightLimit = new LimitSwitch(Ports.CLIMBER_RIGHT_LIMIT_SWITCH_PORT, false);
+    leftLimit = new LimitSwitch(Ports.CLIMBER_LEFT_LIMIT_SWITCH_PORT, true);
+    rightLimit = new LimitSwitch(Ports.CLIMBER_RIGHT_LIMIT_SWITCH_PORT, true);
     leftMotor.setInverted(true);
     rightMotor.setInverted(false);
     leftEncoder = leftMotor.getEncoder();
     rightEncoder = rightMotor.getEncoder();
 
-    leftEncoder.setPositionConversionFactor(
-        ClimberConstants.ROTATIONS_PER_INCH); // Converts to inches per rotation
-    rightEncoder.setPositionConversionFactor(ClimberConstants.ROTATIONS_PER_INCH);
+    // leftEncoder.setPositionConversionFactor(
+    //     ClimberConstants.ROTATIONS_PER_INCH); // Converts to inches per rotation
+    // rightEncoder.setPositionConversionFactor(ClimberConstants.ROTATIONS_PER_INCH);
 
     // leftEncoder.setVelocityConversionFactor(1 / ClimberConstants.ROTATIONS_PER_INCH);
     // rightEncoder.setVelocityConversionFactor(1 / ClimberConstants.ROTATIONS_PER_INCH);
@@ -49,38 +56,30 @@ public class Climbers extends SubsystemBase {
     leftEncoder.setPosition(0);
     rightEncoder.setPosition(0);
 
-    Shuffleboard.getTab("Debug").addDouble("Climber Height", () -> getHeight());
-    Shuffleboard.getTab("Debug").addBoolean("At Top", () -> atTop());
-    Shuffleboard.getTab("Debug").addBoolean("At Bottom", () -> atBottom());
+    // Shuffleboard.getTab("Debug").addDouble("Climber Height", () -> getHeight());
+  //   Shuffleboard.getTab("Debug").addBoolean("At Top", () -> atTop());
+  //   Shuffleboard.getTab("Debug").addBoolean("At Bottom", () -> atBottom());
+
+    Shuffleboard.getTab("Debug").addDouble("Left Encoder", () -> leftEncoder.getPosition());
+    Shuffleboard.getTab("Debug").addDouble("Right Encoder", () -> rightEncoder.getPosition());
+    Shuffleboard.getTab("Debug").addBoolean("Left Limit", () -> leftLimit.get());
+    Shuffleboard.getTab("Debug").addBoolean("Right Limit", () -> rightLimit.get());
+
   }
 
-  public boolean atTop() {
-    return getLimits() && getHeight() > 15;
-  }
 
-  public boolean atBottom() {
-    return getLimits() && getHeight() < 5;
-  }
 
   /** Makes the climber go up */
   public void up() {
-    //inMotion = true;
-    // if(!(getLimits() && wentUpLast)) {
-    //   leftMotor.set(ClimberConstants.CLIMBER_SPEED);
-    //   rightMotor.set(ClimberConstants.CLIMBER_SPEED);
-    // } else {
-    //   //inMotion = false;
-    //   wentUpLast = true;
-    //   atTop = true;
-    //   atBottom = false;
-    //   stop();
-    // }
-
-    if (atTop()) {
-      stop();
-    } else {
-      leftMotor.set(-ClimberConstants.CLIMBER_SPEED);
+    if (!(rightLimit.get() && rightEncoder.getPosition() > 7)) {
       rightMotor.set(-ClimberConstants.CLIMBER_SPEED);
+    } else {
+      rightMotor.set(0);
+    }
+    if (!(leftLimit.get() && leftEncoder.getPosition() > 7)) {
+      leftMotor.set(-ClimberConstants.CLIMBER_SPEED);
+    } else {
+      leftMotor.set(0);
     }
   }
 
@@ -89,46 +88,95 @@ public class Climbers extends SubsystemBase {
   }
   /** Climber arm goes down */
   public void down() {
-    
-    //inMotion = true;
-    // if(!(getLimits() && !wentUpLast)) {
-    //   leftMotor.set(-ClimberConstants.CLIMBER_SPEED);
-    //   rightMotor.set(-ClimberConstants.CLIMBER_SPEED);
-    // } else {
-    //   //inMotion = false;
-    //   wentUpLast = false;
-    //   atBottom = true;
-    //   atTop = false;
-    //   stop();
+    if (!(rightLimit.get() && rightEncoder.getPosition() < 7)) {
+      rightMotor.set(ClimberConstants.CLIMBER_SPEED);
+    } else {
+      rightMotor.set(0);
+    } 
+    if (!(leftLimit.get() && leftEncoder.getPosition() < 7)) {
+      leftMotor.set(ClimberConstants.CLIMBER_SPEED);
+    } else {
+      leftMotor.set(0);
+    }
+
+  }
+
+  public void setInputFromController(CommandPS5Controller controller) {
+    double yAxis = -MathUtil.applyDeadband(controller.getRightY(), 0.05);
+
+    leftMotor.set(-yAxis);
+    rightMotor.set(-yAxis);
+
+    // if (yAxis == 0.0) {
+    //   rightSpeed = 0;
+    //   leftSpeed = 0;
     // }
 
-    if (atBottom()) {
-      stop();
-    } else {
-      leftMotor.set(-ClimberConstants.CLIMBER_SPEED);
-      rightMotor.set(-ClimberConstants.CLIMBER_SPEED);
-    }
+
   }
 
   /** Stops The Climbers */
-  public void stop() {
-    leftMotor.set(0);
-    rightMotor.set(0);
-    //inMotion = false;
-  }
+  // public void stop() {
+  //   leftSpeed = 0;
+  //   rightSpeed = 0;
+  //   rightMovingUp = false;
+  //   leftMovingUp = false;
+  //   //inMotion = false;
+  // }
 
   /** gets the limits */
-  public boolean getLimits() {
-    if(rightLimit.get() || leftLimit.get() ) {
-      return true;
-    }
-    return false;
-  }
+  // public boolean getLimits() {
+  //   if(rightLimit.get() || leftLimit.get() ) {
+  //     return true;
+  //   }
+  //   return false;
+  // }
 
 
 
   /** If the arm reaches the bottom limit, it will stop Same for top */
   public void periodic() {
+    // if (rightLimit.get() && !rightMovingUp && !rightAtTop) {
+    //   rightAtBottom = true;
+    // }
+    // else if (leftLimit.get() && !leftMovingUp && !leftAtTop) {
+    //   leftAtBottom = true;
+    // } 
+    // else if (!leftLimit.get()) {
+    //   leftAtBottom = false;
+    //   rightAtBottom= false;
+    // }
+
+    // if (rightLimit.get() && rightMovingUp && !rightAtBottom) { //maybe make rising edge detector instead of this
+    //   rightAtTop = true;
+    // }
+    // else if (leftLimit.get() && leftMovingUp && !leftAtBottom) {
+    //   leftAtTop = true;
+    // }
+    // else if (!rightLimit.get()) {
+    //   leftAtTop = false;
+    //   rightAtTop = false;
+    // }
+
+    // double setRight = 0;
+    // double setLeft = 0;
+
+    // if (!(rightAtBottom && !rightMovingUp)) {
+    //   setRight = rightSpeed;
+    // } 
+    // if (!(rightAtTop && rightMovingUp)) {
+    //   setRight = rightSpeed;
+    // } 
+    // if (!(leftAtBottom && !leftMovingUp)) {
+    //   setLeft = leftSpeed;
+    // } 
+    // if (!(leftAtTop && leftMovingUp)) {
+    //   setLeft = leftSpeed;
+    // } 
+
+    // leftMotor.set(setLeft);
+    // rightMotor.set(setRight);
+
 
   }
 }

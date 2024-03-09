@@ -442,7 +442,7 @@ public class Auto extends SubsystemBase {
       if (Array555.indexOf(AutoConstants.NOTES, next) != -1) {
        finalPath.addCommands(Commands555.loadNoteAuto().onlyWhile(() -> {
         return !RobotContainer.shooter.isNoteInTransport();
-      }));
+      }).withTimeout(2));
       } 
 
 
