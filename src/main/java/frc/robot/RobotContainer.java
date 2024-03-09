@@ -205,7 +205,7 @@ public class RobotContainer {
     ControllerTools.getDPad(DPad.UP, operatorController).onTrue(Commands555.climbersUp());
     ControllerTools.getDPad(DPad.DOWN, operatorController).onTrue(Commands555.climbersDown());
 
-    operatorController.R2().onTrue(Commands555.reverseIntake()).onFalse(Commands555.stopIntake());
+    operatorController.R2().whileTrue(Commands555.reverseIntake());
     // operatorController.R2().onTrue(Commands555.testPipeSwitch(intakeLimelight, DetectionType.APRIL_TAG));
     operatorController.L2().whileTrue(Commands555.loadNote());
 

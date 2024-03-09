@@ -81,8 +81,11 @@ public class Robot extends LoggedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    RobotContainer.shooterLimelight.setDefaultPipeline();
-    RobotContainer.intakeLimelight.setDefaultPipeline();
+
+    RobotContainer.shooter.teleopInit();
+    RobotContainer.intake.teleopInit();
+    // RobotContainer.shooterLimelight.setDefaultPipeline();
+    // RobotContainer.intakeLimelight.setDefaultPipeline();
   }
 
   /** This function is called periodically during operator control. */

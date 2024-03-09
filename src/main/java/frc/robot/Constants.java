@@ -104,7 +104,7 @@ public final class Constants {
     // Climbers
     public static final double CLIMBER_SPEED = 0.5;
     public static final double MAX_HEIGHT = 18; // Inches
-    public static final double ROTATIONS_PER_INCH = Math.PI; //12.0672 * Math.PI; // TODO:
+    public static final double ROTATIONS_PER_INCH = Math.PI/30; //12.0672 * Math.PI; // TODO:
   }
 
   public static class IntakeConstants {

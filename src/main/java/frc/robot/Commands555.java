@@ -105,6 +105,22 @@ public class Commands555 {
 
   }
 
+  public static Command unloadNote() {
+    Command alignSprocket = Commands555.setSprocketAngle(ArmConstants.INTAKE_ANGLE);
+    Command intakeAndTransport = Commands.sequence(alignSprocket,
+        Commands.parallel(Commands555.reverseIntake(), Commands555.transport(-ShooterConstants.TRANSPORT_SPEED)));
+    return intakeAndTransport
+        .withName("intake in")
+        .until(() -> {
+          return RobotContainer.shooter.isNoteInTransport();
+        })
+        .finallyDo(() -> {
+          RobotContainer.intake.stop();
+          RobotContainer.shooter.stopTransport();
+        });
+
+  }
+
   public static Command setChassiSpeeds(ChassisSpeeds speeds) {
     return Commands.run(() -> {
       RobotContainer.drivetrain.setChassisSpeeds(speeds);
@@ -112,7 +128,7 @@ public class Commands555 {
   }
   public static Command loadNoteAuto() {
 
-    Command driveIntake = Commands.race(Commands555.setChassiSpeeds(new ChassisSpeeds(1, 0, 0)),
+    Command driveIntake = Commands.race(Commands555.setChassiSpeeds(new ChassisSpeeds(1.5, 0, 0)),
         Commands555.intake(), Commands.waitUntil(() -> {
           return RobotContainer.shooter.isNoteInTransport();
         }));
@@ -133,7 +149,7 @@ public class Commands555 {
   }
 
   public static Command reverseIntake() {
-    return Commands.runOnce(RobotContainer.intake::out, RobotContainer.intake)
+    return Commands.run(RobotContainer.intake::out)
         .withName("intake out");
   }
 

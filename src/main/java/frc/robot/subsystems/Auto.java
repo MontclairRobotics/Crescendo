@@ -433,13 +433,17 @@ public class Auto extends SubsystemBase {
         segment.addCommands(Commands555.loadNote()); //A version of loadNote that ramps the shooter back up to speaker speed after (probably should be loadNoteAuto)
       } 
 
-      finalPath.addCommands(Commands555.loadNoteAuto().onlyWhile(() -> {
-        return !RobotContainer.shooter.isNoteInTransport();
-      }));
+      
       
 
       
       finalPath.addCommands(segment);
+
+      if (Array555.indexOf(AutoConstants.NOTES, next) != -1) {
+       finalPath.addCommands(Commands555.loadNoteAuto().onlyWhile(() -> {
+        return !RobotContainer.shooter.isNoteInTransport();
+      }));
+      } 
 
 
       // Will terminate instantly if note has already been intaked :D

@@ -320,7 +320,7 @@ public class Shooter extends SubsystemBase {
     }
   }
 
-  private int count = 0;
+  // private int count = 0;
 
   @Override
   public void periodic() {
@@ -328,6 +328,10 @@ public class Shooter extends SubsystemBase {
     
   
     // RobotContainer.operatorController.getHID().setRumble(RumbleType.kLeftRumble, 1);
-    RobotContainer.testController.setRumble(RumbleType.kBothRumble, 1);
+    // RobotContainer.testController.setRumble(RumbleType.kBothRumble, 1);
+  }
+
+  public void teleopInit() {
+    stop();
   }
 }

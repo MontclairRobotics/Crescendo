@@ -57,4 +57,8 @@ public class Intake extends SubsystemBase {
     //   timeSinceNote.stop();
     // }
   }
+
+  public void teleopInit() {
+    stop();
+  }
 }

@@ -40,8 +40,8 @@ public class Climbers extends SubsystemBase {
     rightEncoder = rightMotor.getEncoder();
 
     leftEncoder.setPositionConversionFactor(
-        1 / ClimberConstants.ROTATIONS_PER_INCH); // Converts to inches per rotation
-    rightEncoder.setPositionConversionFactor(1 / ClimberConstants.ROTATIONS_PER_INCH);
+        ClimberConstants.ROTATIONS_PER_INCH); // Converts to inches per rotation
+    rightEncoder.setPositionConversionFactor(ClimberConstants.ROTATIONS_PER_INCH);
 
     // leftEncoder.setVelocityConversionFactor(1 / ClimberConstants.ROTATIONS_PER_INCH);
     // rightEncoder.setVelocityConversionFactor(1 / ClimberConstants.ROTATIONS_PER_INCH);
@@ -50,7 +50,8 @@ public class Climbers extends SubsystemBase {
     rightEncoder.setPosition(0);
 
     Shuffleboard.getTab("Debug").addDouble("Climber Height", () -> getHeight());
-
+    Shuffleboard.getTab("Debug").addBoolean("At Top", () -> atTop());
+    Shuffleboard.getTab("Debug").addBoolean("At Bottom", () -> atBottom());
   }
 
   public boolean atTop() {
@@ -78,13 +79,13 @@ public class Climbers extends SubsystemBase {
     if (atTop()) {
       stop();
     } else {
-      leftMotor.set(ClimberConstants.CLIMBER_SPEED);
-      rightMotor.set(ClimberConstants.CLIMBER_SPEED);
+      leftMotor.set(-ClimberConstants.CLIMBER_SPEED);
+      rightMotor.set(-ClimberConstants.CLIMBER_SPEED);
     }
   }
 
   public double getHeight() {
-    return leftEncoder.getPosition() + rightEncoder.getPosition();
+    return (leftEncoder.getPosition() + rightEncoder.getPosition())/2;
   }
   /** Climber arm goes down */
   public void down() {
