@@ -63,6 +63,7 @@ public class Sprocket extends SubsystemBase {
     leftMotor.setInverted(LEFT_INVERT.get());
     rightMotor.setInverted(RIGHT_INVERT.get());
     Shuffleboard.getTab("Debug").addBoolean("Using PID", () -> usingPID);
+    Shuffleboard.getTab("Debug").addDouble("Sprocket Encoder", () -> getEncoderPosition());
     angleKD.whenUpdate(
         (k) -> {
           pidController.setD(k);
@@ -78,9 +79,6 @@ public class Sprocket extends SubsystemBase {
 
     Shuffleboard.getTab("Debug").addDouble("Limelight Distance", () -> {
       return RobotContainer.shooterLimelight.getDistanceToSpeaker();
-    });
-    Shuffleboard.getTab("Debug").addDouble("Current Distance", () -> {
-      return getEncoderPosition();
     });
 
     // TODO check conversion factors
@@ -112,6 +110,10 @@ public class Sprocket extends SubsystemBase {
     leftMotor.setIdleMode(IdleMode.kBrake);
     rightMotor.setIdleMode(IdleMode.kBrake);
 
+        Shuffleboard.getTab("Debug").addDouble("Current Distance", () -> {
+      return getEncoderPosition();
+    });
+
     
   }
 
@@ -141,6 +143,7 @@ public class Sprocket extends SubsystemBase {
   }
 
   public boolean isSprocketSafe() {
+    // return true;
     boolean goingUp = false;
 
     if (usingPID) {
@@ -167,7 +170,7 @@ public class Sprocket extends SubsystemBase {
   }
 
   public double getEncoderPosition() {
-    return -absEncoder.getDistance() + 100.0;
+    return ((-absEncoder.getDistance()) * ((double) 14/64)) + 91;
   }
 
   public boolean isAtAngle() {
