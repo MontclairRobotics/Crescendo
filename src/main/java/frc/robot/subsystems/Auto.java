@@ -382,7 +382,6 @@ public class Auto extends SubsystemBase {
 
   public void buildPathSequenceOdometry(String autoString) {
 
-    
     SequentialCommandGroup finalPath = new SequentialCommandGroup();
     
     trajectories.clear();
@@ -393,11 +392,8 @@ public class Auto extends SubsystemBase {
     }
 
     finalPath.addCommands(Commands555.setAutoPose(autoString));
-    finalPath.addCommands(Commands.runOnce(() -> {
-      RobotContainer.shooter.shootActually(ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.SPEAKER_EJECT_SPEED);
-    }));
-    finalPath.addCommands(Commands555.waitForTime(0.75)); //Wait for shooter to ramp up initially
-
+    
+    // Shoot preloaded note 
     if (autoString.length() >= 1) {
       char digit = autoString.charAt(0);
       if (digit == '4') {
@@ -407,126 +403,59 @@ public class Auto extends SubsystemBase {
         }
     }
 
-    
     ParallelRaceGroup segment = new ParallelRaceGroup();
     for (int i = 0; i < autoString.length() - 1; i++) {
       
       char current = autoString.charAt(i);
       char next = autoString.charAt(i+1);
       try {
+        // Load path
         PathPlannerPath path = PathPlannerPath.fromPathFile("" + current + "-" + next);
+
         trajectories.add(
             path.getTrajectory(
               new ChassisSpeeds(),
               path.getPreviewStartingHolonomicPose().getRotation()
             ));
         segment = new ParallelRaceGroup(AutoBuilder.followPath(path));
-        //segment = new Commands.race();
         
       } catch (Exception e) {
         setFeedback("Path File Not Found");
         autoCommand = Commands.runOnce(() -> {});
         
       }
+      boolean isGoingToNote = Array555.indexOf(AutoConstants.NOTES, next) != -1;
+      boolean isFromNote = Array555.indexOf(AutoConstants.NOTES, current) != -1;
 
-      if (Array555.indexOf(AutoConstants.NOTES, next) != -1) {
+      // If we're trying to intake, not score
+      if (isGoingToNote && !isFromNote) {
         segment.addCommands(Commands555.loadNote()); //A version of loadNote that ramps the shooter back up to speaker speed after (probably should be loadNoteAuto)
       } 
-
-      
-      
-
       
       finalPath.addCommands(segment);
 
-      if (Array555.indexOf(AutoConstants.NOTES, next) != -1) {
-       finalPath.addCommands(Commands555.loadNoteAuto().onlyWhile(() -> {
-        return !RobotContainer.shooter.isNoteInTransport();
-      }).withTimeout(2));
-      } 
+      // If we're trying to score
+      if (isFromNote && isGoingToNote) {
+        finalPath.addCommands(Commands555.scoreModeAuto());
+      }
 
+      // Only rely on vision and driving forward manually if it's a close note.
+      if ((next == 'A' || next == 'B' || next == 'C')) {
+        finalPath.addCommands(Commands555.loadNoteAuto().onlyIf(() -> {return !RobotContainer.shooter.isNoteInTransport();}).withTimeout(2));
+      }
 
-      // Will terminate instantly if note has already been intaked :D
-      finalPath.addCommands(Commands555.loadNoteAuto().onlyIf(() -> {return !RobotContainer.shooter.isNoteInTransport();}));
-
-      if (!Character.isAlphabetic(next)) {
-        if (next == '4') {
-          finalPath.addCommands(Commands555.scoreAmpAuto());
-        } else { // speaker
-          finalPath.addCommands(Commands555.scoreSubwoofer());
-        }
+      if (next == '4') { // Amp
+        finalPath.addCommands(Commands555.scoreAmpAuto());
+      } else if (next == '1' || next == '2' || next == '3') { // Up against subwoofer
+        finalPath.addCommands(Commands555.scoreSubwoofer());
       }
       
     }
-    finalPath.addCommands(Commands.runOnce(() -> {
-      RobotContainer.shooter.stop();
-    }));
-
+  
     setFeedback("Successfully Created Auto Sequence!");
     autoCommand = finalPath;
   }
 
-
-
-
-  @Deprecated(forRemoval = true)
-  public void buildPathSequenceWeird(String autoString) {
-    SequentialCommandGroup finalPath = new SequentialCommandGroup(Commands555.setAutoPose(autoString), Commands555.scoreSubwoofer());
-
-    trajectories.clear();
-
-    // if (autoString.length() == 0) {
-      // autoCommand = Commands.sequence(Commands555.setAutoPose(autoString), Commands555.scoreSubwoofer());
-      // autoCommand = Commands555.setAutoPose(aut);
-    //   return;
-    // }
-
-    for (int i = 0; i < autoString.length()-1; i++) {
-      char current = autoString.charAt(i);
-      char next = autoString.charAt(i+1);
-       try {
-        PathPlannerPath path = PathPlannerPath.fromPathFile("" + current + "-" + next);
-        trajectories.add(
-            path.getTrajectory(
-              new ChassisSpeeds(),
-              path.getPreviewStartingHolonomicPose().getRotation()
-            ));
-        finalPath.addCommands(Commands.runOnce(() -> {
-          RobotContainer.intake.in();
-          RobotContainer.sprocket.setPosition(Rotation2d.fromDegrees(INTAKE_ANGLE));
-        }));
-        finalPath.addCommands(AutoBuilder.followPath(path));
-        
-        } catch (Exception e) {
-          setFeedback("Path File Not Found");
-          autoCommand = Commands.runOnce(() -> {}); 
-          return;
-        }
-
-        if (Array555.indexOf(AutoConstants.NOTES, next) != -1) {
-          finalPath.addCommands(Commands555.loadNoteAuto()); 
-        } 
-
-        if (next == '4') {
-          finalPath.addCommands(Commands555.scoreAmp());
-        } else if (next == '2') {
-          finalPath.addCommands(Commands555.scoreSubwoofer());
-        } else if (next == '3' || next == '1') {
-          finalPath.addCommands(Commands555.scoreSubwooferAtAngle());
-        }
-        // if (autoString.length() >= 1) {
-        //   char digit = autoString.charAt(0);
-        // if (digit == '4') {
-        //   finalPath.addCommands(Commands555.scoreAmp());
-        // } else {
-        //   finalPath.addCommands(Commands555.scoreSubwoofer());
-        // }
-    }
-
-    
-    autoCommand = finalPath;
-
-  }
 
 }
   

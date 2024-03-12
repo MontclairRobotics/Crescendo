@@ -331,6 +331,19 @@ public class Commands555 {
         });
   }
 
+  // Used during auto for scoring speaker(usually from one of the note locations)
+  public static Command scoreModeAuto() {
+    Command alignAndAngle = Commands.parallel(alignToLimelightTarget(RobotContainer.shooterLimelight, DetectionType.APRIL_TAG), setSprocketAngle(RobotContainer.shooterLimelight::bestFit));
+    return Commands.sequence(alignAndAngle, Commands.waitUntil(() -> {
+      return RobotContainer.shooterLimelight.isAligned() && RobotContainer.sprocket.isAtAngle();
+    }), Commands555.shoot(ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.TRANSPORT_SPEED, 0.8)).finallyDo(() -> {
+      RobotContainer.shooter.stop();
+      RobotContainer.shooter.stopTransport();
+    });
+
+
+  }
+
   public static Command runTransportManual() {
     return Commands.run(() -> {
       RobotContainer.shooter.transportStart(ShooterConstants.TRANSPORT_SPEED);
@@ -653,7 +666,7 @@ public class Commands555 {
           return RobotContainer.sprocket.isAtAngle();
         }),
         shoot(ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.SPEAKER_EJECT_SPEED,
-            ShooterConstants.TRANSPORT_SPEED, 0),
+            ShooterConstants.TRANSPORT_SPEED, 0.25),
         Commands.runOnce(() -> System.out.println("Done Shooting!")),
         setSprocketAngle(ArmConstants.INTAKE_ANGLE));
   }
