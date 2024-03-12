@@ -392,8 +392,11 @@ public class Auto extends SubsystemBase {
     }
 
     finalPath.addCommands(Commands555.setAutoPose(autoString));
-    
-    // Shoot preloaded note 
+    finalPath.addCommands(Commands.runOnce(() -> {
+      RobotContainer.shooter.shootVelocity(ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.SPEAKER_EJECT_SPEED);
+    }));
+    finalPath.addCommands(Commands555.waitForTime(0.75)); //Wait for shooter to ramp up initially
+
     if (autoString.length() >= 1) {
       char digit = autoString.charAt(0);
       if (digit == '4') {
