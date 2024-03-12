@@ -133,7 +133,7 @@ public class Commands555 {
           return RobotContainer.shooter.isNoteInTransport();
         }));
     return Commands.sequence(
-        Commands.parallel(Commands555.alignToLimelightTarget(RobotContainer.intakeLimelight, DetectionType.NOTE).onlyWhile(() -> RobotContainer.intakeLimelight.isAligned()),
+        Commands.parallel(Commands555.alignToLimelightTarget(RobotContainer.intakeLimelight, DetectionType.NOTE),
             Commands555.setSprocketAngle(ArmConstants.INTAKE_ANGLE)),
         Commands.waitUntil(RobotContainer.sprocket::isAtAngle),
         Commands555.transport(ShooterConstants.TRANSPORT_SPEED),
