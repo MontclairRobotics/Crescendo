@@ -4,6 +4,7 @@ import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 
@@ -135,13 +136,24 @@ public class Limelight extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // if (getPipelineType() == DetectionType.APRIL_TAG && hasValidTarget()) {
-    //   double[] targetArr = LimelightHelpers.getBotPose(cameraName);
-    //   RobotContainer.drivetrain.addVisionMeasurement(
-    //     new Pose2d(targetArr[0], targetArr[1], Rotation2d.fromDegrees(targetArr[5])),
-    //     targetArr[6]
-    //   );
-    // }
+
+    if (getPipelineType() == DetectionType.APRIL_TAG && hasValidTarget()) { //TODO test this TEST THIS
+      LimelightHelpers.PoseEstimate targetPose = LimelightHelpers.getBotPoseEstimate_wpiBlue(cameraName);
+      if (targetPose.tagCount >= 2) {
+        RobotContainer.drivetrain.addVisionMeasurement(
+          targetPose.pose,
+          targetPose.timestampSeconds
+        );
+      }
+    }
+
+    if (DriverStation.isDisabled()) {
+      if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red) {
+        LimelightHelpers.setPriorityTagID(cameraName, 4);
+      } else {
+        LimelightHelpers.setPriorityTagID(cameraName, 2);
+      }
+    }
 
   }
 

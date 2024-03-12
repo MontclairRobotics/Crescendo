@@ -499,16 +499,17 @@ public class Commands555 {
   public static Command setAutoPose(String autoString) {
     return Commands.runOnce(() -> {
       Pose2d startPose = new Pose2d();
-      // if (RobotContainer.shooterLimelight.hasValidTarget() &&
-      // RobotContainer.shooterLimelight.getPipelineType() == DetectionType.APRIL_TAG)
-      // {
-      // startPose = RobotContainer.shooterLimelight.getBotPose();
-      // RobotContainer.field.setRobotPose(startPose);
-      // } else if (RobotContainer.intakeLimelight.hasValidTarget() &&
-      // RobotContainer.intakeLimelight.getPipelineType() == DetectionType.APRIL_TAG)
-      // {
-      // startPose = RobotContainer.intakeLimelight.getBotPose();
-      // } else {
+      if (RobotContainer.shooterLimelight.hasValidTarget() &&
+      RobotContainer.shooterLimelight.getPipelineType() == DetectionType.APRIL_TAG)
+      {
+      startPose = RobotContainer.shooterLimelight.getBotPose();
+      RobotContainer.field.setRobotPose(startPose);
+      } else if (RobotContainer.intakeLimelight.hasValidTarget() &&
+      RobotContainer.intakeLimelight.getPipelineType() == DetectionType.APRIL_TAG)
+      {
+      startPose = RobotContainer.intakeLimelight.getBotPose();
+      }
+      else {
       if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red) {
         switch (autoString.charAt(0)) {
           case '1':
@@ -539,8 +540,8 @@ public class Commands555 {
             startPose = AutoConstants.POSE_4;
             break;
         }
-        // }
       }
+    }
       RobotContainer.drivetrain.getSwerveDrive().resetOdometry(startPose);
     });
   }
