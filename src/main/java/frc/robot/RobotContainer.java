@@ -168,7 +168,7 @@ public class RobotContainer {
         .square()
         .onTrue(Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(90), false));
 
-    driverController.R2().whileTrue(Commands555.scoreMode());
+    driverController.R2().and(() -> shooterLimelight.hasValidTarget()).whileTrue(Commands555.scoreMode());
     driverController.L1().onTrue(Commands555.alignToLimelightTarget(shooterLimelight, DetectionType.APRIL_TAG));
     driverController.R1().onTrue(Commands555.alignToLimelightTarget(intakeLimelight, DetectionType.NOTE));
 
