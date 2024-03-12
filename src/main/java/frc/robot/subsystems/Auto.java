@@ -410,6 +410,9 @@ public class Auto extends SubsystemBase {
       char next = autoString.charAt(i+1);
       try {
         // Load path
+        if (!(next == current)) {
+          
+        } 
         PathPlannerPath path = PathPlannerPath.fromPathFile("" + current + "-" + next);
 
         trajectories.add(
@@ -425,17 +428,19 @@ public class Auto extends SubsystemBase {
         
       }
       boolean isGoingToNote = Array555.indexOf(AutoConstants.NOTES, next) != -1;
+      boolean isFromCloseNote = current == 'A' || current == 'B' || current == 'C';
+      
       boolean isFromNote = Array555.indexOf(AutoConstants.NOTES, current) != -1;
 
       // If we're trying to intake, not score
-      if (isGoingToNote && !isFromNote) {
+      if (isGoingToNote && (!isFromNote || isFromCloseNote)) {
         segment.addCommands(Commands555.loadNote()); //A version of loadNote that ramps the shooter back up to speaker speed after (probably should be loadNoteAuto)
       } 
       
       finalPath.addCommands(segment);
 
       // If we're trying to score
-      if (isFromNote && isGoingToNote) {
+      if (isFromNote && isGoingToNote && !isFromCloseNote) {
         finalPath.addCommands(Commands555.scoreModeAuto());
       }
 
