@@ -170,8 +170,8 @@ public final class Constants {
 
   public static class ShooterConstants {
     // Shooter
-    public static final double SPEAKER_EJECT_SPEED = 0.95; //4000
-    public static final double AMP_EJECT_SPEED = 0.2; //1000
+    public static final double SPEAKER_EJECT_SPEED = 4000; //0.95;
+    public static final double AMP_EJECT_SPEED = 1000; //0.2
 
     public static Tunable<Double> kp = Tunable.of(0.0005, "shooter.kp");
     public static Tunable<Double> ki = Tunable.of(0, "shooter.ki");
@@ -186,7 +186,11 @@ public final class Constants {
     
     public static final boolean BEAM_BRAKE_INVERT = true;
     
-    public static final double TRANSPORT_FERRY_SPEED = 0.3;
+    // public static final double TRANSPORT_FERRY_SPEED = 0.3;
+
+    public static final double TRANSPORT_FERRY_SPEED = TRANSPORT_SPEED;
+    
+    public static final double FERRY_SHOOT_SPEED = 4000;
     // From SysId
     // public static final double TOP_SHOOTER_FF_KS = 0.20823;
     // public static final double TOP_SHOOTER_FF_KV = 0.0021625;

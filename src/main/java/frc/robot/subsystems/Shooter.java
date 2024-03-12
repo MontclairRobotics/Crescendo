@@ -160,20 +160,17 @@ public class Shooter extends SubsystemBase {
     isTransporting = true;
   }
 
-  // public boolean isAtSpeed() {
-  //   double currentTopSpeed = topMotor.get();
-  //   double currentBottomSpeed = bottomMotor.get();
-  //   if (targetTopSpeed - currentTopSpeed > .15) {
-  //     return false;
-  //   }
-  //   if (targetBottomSpeed - currentBottomSpeed > .15) {
-  //     return false;
-  //   }
-
-  //   return true;
-
-    
-  // }
+  public boolean isAtSpeed() {
+    double currentTopSpeed = topEncoder.getVelocity();
+    double currentBottomSpeed = bottomEncoder.getVelocity();
+    if (Math.abs(targetTopSpeed - currentTopSpeed) > ShooterConstants.VELOCITY_DEADBAND) {
+      return false;
+    }
+    if (Math.abs(targetBottomSpeed - currentBottomSpeed) > ShooterConstants.VELOCITY_DEADBAND) {
+      return false;
+    }
+    return true;
+  }
 
   /** Stops the shooter */
   public void stopShooter() {

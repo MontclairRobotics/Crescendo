@@ -159,7 +159,7 @@ public class Commands555 {
   }
 
   public static Command ferryNote() {
-    return Commands555.shoot(30, 30, 0.3, 0.2);
+    return Commands555.shoot(ShooterConstants.FERRY_SHOOT_SPEED, ShooterConstants.FERRY_SHOOT_SPEED, ShooterConstants.TRANSPORT_FERRY_SPEED);
   }
   // /**
   // * Robot relative or field relative depending on isFieldRelative. Input angle
@@ -322,7 +322,7 @@ public class Commands555 {
         setSprocketAngle(RobotContainer.shooterLimelight::bestFit),
         Commands.runOnce(() -> {
           RobotContainer.isDriverMode = true;
-          RobotContainer.shooter.shootActually(ShooterConstants.SPEAKER_EJECT_SPEED,
+          RobotContainer.shooter.shootVelocity(ShooterConstants.SPEAKER_EJECT_SPEED,
               ShooterConstants.SPEAKER_EJECT_SPEED);
           // RobotContainer.shooter.transportStart(ShooterConstants.TRANSPORT_SPEED);
         })).finallyDo(() -> {
@@ -336,7 +336,7 @@ public class Commands555 {
     Command alignAndAngle = Commands.parallel(alignToLimelightTarget(RobotContainer.shooterLimelight, DetectionType.APRIL_TAG), setSprocketAngle(RobotContainer.shooterLimelight::bestFit));
     return Commands.sequence(alignAndAngle, Commands.waitUntil(() -> {
       return RobotContainer.shooterLimelight.isAligned() && RobotContainer.sprocket.isAtAngle();
-    }), Commands555.shoot(ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.TRANSPORT_SPEED, 0.8)).finallyDo(() -> {
+    }), Commands555.shoot(ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.TRANSPORT_SPEED)).finallyDo(() -> {
       RobotContainer.shooter.stop();
       RobotContainer.shooter.stopTransport();
     });
@@ -461,19 +461,19 @@ public class Commands555 {
    * @return Command that waits for shooter to reach setpoint RPM, then starts
    *         transport with given speed
    */
-  public static Command shoot(double topShootSpeed, double bottomShootSpeed, double transportSpeed, double rampUpTime) {
+  public static Command shoot(double topShootSpeed, double bottomShootSpeed, double transportSpeed) {
 
     return Commands.sequence(
         Commands.runOnce(() -> {
-          RobotContainer.shooter.shootActually(topShootSpeed, bottomShootSpeed);
+          RobotContainer.shooter.shootVelocity(topShootSpeed, bottomShootSpeed);
         }, RobotContainer.shooter),
-        Commands555.waitForTime(rampUpTime),
+        Commands555.waitUntil(RobotContainer.shooter::isShooting),
         Commands555.transport(transportSpeed),
         log("Transported"),
-        Commands555.waitForTime(0.5))
+        Commands555.waitForTime(0.3))
         .finallyDo(() -> {
           RobotContainer.shooter.stopTransport();
-          if (rampUpTime != 0) {
+          if (!DriverStation.isAutonomous()) {
             System.out.println("Stopping shooter!");
             RobotContainer.shooter.stopShooter();
           }
@@ -487,7 +487,7 @@ public class Commands555 {
     );
   }
   public static Command shoot(double speed, double transportSpeed) {
-    return shoot(speed, speed, transportSpeed, 1);
+    return shoot(speed, speed, transportSpeed);
   }
 
   public static Command log(String msg) {
@@ -642,7 +642,7 @@ public class Commands555 {
     return Commands.sequence(
         setSprocketAngle(ArmConstants.AMP_SCORE_ANGLE),
         waitUntil(RobotContainer.sprocket::isAtAngle),
-        shoot(ShooterConstants.AMP_EJECT_SPEED - 0.025, ShooterConstants.AMP_EJECT_SPEED, ShooterConstants.TRANSPORT_SPEED, 1));
+        shoot(ShooterConstants.AMP_EJECT_SPEED - 12.5, ShooterConstants.AMP_EJECT_SPEED, ShooterConstants.TRANSPORT_SPEED));
     // setSprocketAngle(ArmConstants.INTAKE_ANGLE));
 
   }
@@ -652,12 +652,12 @@ public class Commands555 {
       scoreAmp(),
       
       Commands.runOnce(() -> {
-        RobotContainer.shooter.shootActually(ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.SPEAKER_EJECT_SPEED);
+        RobotContainer.shooter.shootVelocity(ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.SPEAKER_EJECT_SPEED);
       })
     );
   }
 
-  // ONLY USE IN AUTO
+  
   public static Command scoreSubwoofer() {
     return Commands.sequence(
         Commands.runOnce(() -> System.out.println("Shooting!")),
@@ -666,7 +666,7 @@ public class Commands555 {
           return RobotContainer.sprocket.isAtAngle();
         }),
         shoot(ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.SPEAKER_EJECT_SPEED,
-            ShooterConstants.TRANSPORT_SPEED, 0.25),
+            ShooterConstants.TRANSPORT_SPEED),
         Commands.runOnce(() -> System.out.println("Done Shooting!")),
         setSprocketAngle(ArmConstants.INTAKE_ANGLE));
   }
@@ -679,7 +679,7 @@ public class Commands555 {
           return RobotContainer.sprocket.isAtAngle();
         }),
         shoot(ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.SPEAKER_EJECT_SPEED,
-            ShooterConstants.TRANSPORT_SPEED, 0),
+            ShooterConstants.TRANSPORT_SPEED),
         Commands.runOnce(() -> System.out.println("Done Shooting!")),
         setSprocketAngle(ArmConstants.INTAKE_ANGLE));
   }
