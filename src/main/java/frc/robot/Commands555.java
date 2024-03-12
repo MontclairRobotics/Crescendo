@@ -322,7 +322,7 @@ public class Commands555 {
         setSprocketAngle(RobotContainer.shooterLimelight::bestFit),
         Commands.runOnce(() -> {
           RobotContainer.isDriverMode = true;
-          RobotContainer.shooter.shootActually(ShooterConstants.SPEAKER_EJECT_SPEED,
+          RobotContainer.shooter.shootVelocity(ShooterConstants.SPEAKER_EJECT_SPEED,
               ShooterConstants.SPEAKER_EJECT_SPEED);
           // RobotContainer.shooter.transportStart(ShooterConstants.TRANSPORT_SPEED);
         })).finallyDo(() -> {
@@ -652,7 +652,7 @@ public class Commands555 {
       scoreAmp(),
       
       Commands.runOnce(() -> {
-        RobotContainer.shooter.shootActually(ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.SPEAKER_EJECT_SPEED);
+        RobotContainer.shooter.shootVelocity(ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.SPEAKER_EJECT_SPEED);
       })
     );
   }
