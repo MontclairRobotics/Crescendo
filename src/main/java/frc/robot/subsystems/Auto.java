@@ -441,15 +441,16 @@ public class Auto extends SubsystemBase {
       
       finalPath.addCommands(segment);
 
-      // If we're trying to score
-      if (isFromNote && isGoingToNote && !isFromCloseNote) {
-        finalPath.addCommands(Commands555.scoreModeAuto());
-      }
-
       // Only rely on vision and driving forward manually if it's a close note.
       if ((next == 'A' || next == 'B' || next == 'C')) {
         finalPath.addCommands(Commands555.loadNoteAuto().onlyWhile(() -> {return !RobotContainer.shooter.isNoteInTransport();}).withTimeout(2));
       }
+
+      // If we're trying to score
+      if ((isFromNote && isGoingToNote && !isFromCloseNote) || (current == next)) {
+        finalPath.addCommands(Commands555.scoreModeAuto());
+      }
+
 
       if (next == '4') { // Amp
         finalPath.addCommands(Commands555.scoreAmpAuto());
