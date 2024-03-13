@@ -338,10 +338,7 @@ public class Commands555 {
       Commands.waitUntil(() -> {
         return RobotContainer.shooterLimelight.isAligned() && RobotContainer.sprocket.isAtAngle() && RobotContainer.shooter.isAtSpeed();
       }), 
-      Commands555.shoot(ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.TRANSPORT_SPEED)).finallyDo(() -> {
-        RobotContainer.shooter.stop();
-        RobotContainer.shooter.stopTransport();
-    });
+      Commands555.shoot(ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.TRANSPORT_SPEED));
 
 
   }

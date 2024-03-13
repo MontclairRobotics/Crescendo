@@ -397,13 +397,10 @@ public class Auto extends SubsystemBase {
     }));
     finalPath.addCommands(Commands555.waitForTime(0.75)); //Wait for shooter to ramp up initially
 
-    if (autoString.length() >= 1) {
-      char digit = autoString.charAt(0);
-      if (digit == '4') {
-          finalPath.addCommands(Commands555.scoreAmp());
-        } else {
-          finalPath.addCommands(Commands555.scoreSubwoofer());
-        }
+    if (autoString.charAt(0) == '4') {
+      finalPath.addCommands(Commands555.scoreAmp());
+    } else {
+      finalPath.addCommands(Commands555.scoreSubwoofer());
     }
 
     ParallelRaceGroup segment = new ParallelRaceGroup();
