@@ -235,7 +235,7 @@ public class RobotContainer {
     // operatorController.circle().and(() -> !isDriverMode).onTrue(Commands555.shoot(ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.TRANSPORT_SPEED, 1));
     operatorController.circle().and(() -> !isDriverMode).whileTrue(Commands555.scoreSubwoofer());
     operatorController.circle().and(() -> isDriverMode).whileTrue(Commands555.runTransportManual());
-
+    // operatorController.R1().onTrue(Commands.runOnce(RobotContainer.shooter::toggleShooter)); //TODO 
     // operatorController.triangle().onTrue(Commands.sequence(
     //   Commands555.setSprocketAngle(RobotContainer.shooterLimelight.getAngleForSpeaker()),
     //   Commands555.waitUntil(() -> {

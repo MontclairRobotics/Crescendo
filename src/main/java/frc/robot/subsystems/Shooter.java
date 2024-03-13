@@ -226,8 +226,7 @@ public class Shooter extends SubsystemBase {
 
   /** Stops the motors */
   public void stop() {
-    topMotor.set(0);
-    bottomMotor.set(0);
+    stopShooter();
   }
 
   /** reverse shooter, in case shooter jams, etc. */
@@ -239,6 +238,18 @@ public class Shooter extends SubsystemBase {
 
     return breakBeam.get();
   }
+
+  public void toggleShooter() {
+    if (isShooting) {
+      stopShooter();
+    } else {
+      shootVelocity(ShooterConstants.SPEAKER_EJECT_SPEED);
+    }
+  }
+
+
+
+  
 
   public Command shooterSysId(String type, String motors, SysIdRoutine.Direction direction) {
     // Mutable holder for unit-safe voltage values, persisted to avoid reallocation.

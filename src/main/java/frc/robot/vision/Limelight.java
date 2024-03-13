@@ -106,6 +106,11 @@ public class Limelight extends SubsystemBase {
   }
 
 
+  public void setPriorityTagID(int id) {
+    LimelightHelpers.setPriorityTagID(cameraName, id);
+  }
+  
+
   public double getDistanceToSpeaker() {
 
     double distance =

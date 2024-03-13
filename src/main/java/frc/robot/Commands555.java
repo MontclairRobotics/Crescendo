@@ -594,12 +594,12 @@ public class Commands555 {
         .withName("shooter reverse");
   }
 
-  public static Command shootVelocity(double velocity) {
-    return Commands.runOnce(
-        () -> {
-          RobotContainer.shooter.shootVelocity(velocity);
-        });
-  }
+  // public static Command shootVelocity(double velocity) {
+  //   return Commands.runOnce(
+  //       () -> {
+  //         RobotContainer.shooter.shootVelocity(velocity);
+  //       });
+  // }
 
   public static Command waitUntil(BooleanSupplier condition) {
     return new Command() {
@@ -674,7 +674,7 @@ public class Commands555 {
     // setSprocketAngle(ArmConstants.INTAKE_ANGLE));
 
   }
-
+  
   public static Command scoreAmpAuto() {
     return Commands.sequence(
       scoreAmp(),
