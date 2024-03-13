@@ -412,7 +412,6 @@ public class Auto extends SubsystemBase {
         // Load path
         if (!(next == current)) {
           PathPlannerPath path = PathPlannerPath.fromPathFile("" + current + "-" + next);
-
           trajectories.add(
               path.getTrajectory(
                 new ChassisSpeeds(),
@@ -447,7 +446,7 @@ public class Auto extends SubsystemBase {
       }
 
       // If we're trying to score
-      if ((isFromNote && isGoingToNote && !isFromCloseNote) || (current == next)) {
+      if ((isFromNote && isGoingToNote && !isFromCloseNote) || (current == next)) { //TODO I fixed this did I screw up?
         finalPath.addCommands(Commands555.scoreModeAuto());
       }
 

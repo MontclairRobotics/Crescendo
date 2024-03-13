@@ -90,7 +90,7 @@ public class Limelight extends SubsystemBase {
   }
 
   public Pose2d getBotPose() {
-    return LimelightHelpers.getBotPose2d(cameraName);
+    return LimelightHelpers.getBotPose2d_wpiBlue(cameraName);
   }
 
   public DetectionType getPipelineType() {
@@ -98,6 +98,11 @@ public class Limelight extends SubsystemBase {
       return DetectionType.DRIVER;
     }
     return DetectionType.getType((int) getPipeline());
+  }
+
+  public Pose2d getTargetPoseRobotSpace() { //TODO did I screw this up?
+    double[] doubleArr =  LimelightHelpers.getTargetPose_RobotSpace(cameraName);
+    return new Pose2d(doubleArr[0], doubleArr[1], Rotation2d.fromDegrees(doubleArr[5]));
   }
 
 

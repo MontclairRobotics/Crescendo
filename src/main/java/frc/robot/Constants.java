@@ -19,6 +19,7 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.util.Tunable;
@@ -171,7 +172,8 @@ public final class Constants {
   public static class ShooterConstants {
     // Shooter
     public static final double SPEAKER_EJECT_SPEED = 4000; //0.95;
-    public static final double AMP_EJECT_SPEED = 1000; //0.2
+    public static final double AMP_EJECT_SPEED_TOP = 1000; //0.2
+    public static final double AMP_EJECT_SPEED_BOTTOM = AMP_EJECT_SPEED_TOP * 0.9;
 
     public static Tunable<Double> kp = Tunable.of(0.0005, "shooter.kp");
     public static Tunable<Double> ki = Tunable.of(0, "shooter.ki");
@@ -270,6 +272,7 @@ public final class Constants {
     public static final double INTAKING_TIMEOUT = 3; // in seconds
     public static final double INTAKING_MOVE_SPEED = 0.3; // in M/s.
  
+    public static final Translation2d TRANSLATION_FROM_AMP = new Translation2d();
 
 
     /*

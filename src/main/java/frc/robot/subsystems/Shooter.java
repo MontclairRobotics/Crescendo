@@ -220,8 +220,8 @@ public class Shooter extends SubsystemBase {
 
   /** Shoots (used for amp) */
   public void shootAmp() {
-    topMotor.set(ShooterConstants.AMP_EJECT_SPEED);
-    bottomMotor.set(ShooterConstants.AMP_EJECT_SPEED);
+    topMotor.set(ShooterConstants.AMP_EJECT_SPEED_TOP);
+    bottomMotor.set(ShooterConstants.AMP_EJECT_SPEED_BOTTOM);
   }
 
   /** Stops the motors */

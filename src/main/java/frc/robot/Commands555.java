@@ -46,10 +46,10 @@ public class Commands555 {
     Translation2d targetTranslation2d = currentRobotPosition
         .getTranslation()
         .plus(targetTranslation.rotateBy(currentOdometryHeading));
-    Pose2d targetPose = new Pose2d(targetTranslation2d.getX(), targetTranslation2d.getY(), theta);
+    Pose2d botPose = new Pose2d(targetTranslation2d.getX(), targetTranslation2d.getY(), theta);
 
     return AutoBuilder.pathfindToPose(
-        targetPose,
+        botPose,
         AutoConstants.PATH_CONSTRAINTS,
         AutoConstants.GOAL_END_VELOCITY,
         AutoConstants.ROTATION_DELAY_DISTANCE);
@@ -67,13 +67,13 @@ public class Commands555 {
   }
 
   /**
-   * Drive to a field-relative point given a targetPose
+   * Drive to a field-relative point given a botPose
    *
-   * @param targetPose field-relative pose2d to drive the robot to.
+   * @param botPose field-relative pose2d to drive the robot to.
    */
-  public static Command driveToFieldRelativePoint(Pose2d targetPose) {
+  public static Command driveToFieldRelativePoint(Pose2d botPose) {
     return AutoBuilder.pathfindToPose(
-        targetPose,
+        botPose,
         AutoConstants.PATH_CONSTRAINTS,
         AutoConstants.GOAL_END_VELOCITY,
         AutoConstants.ROTATION_DELAY_DISTANCE);
@@ -331,6 +331,34 @@ public class Commands555 {
         });
   }
 
+  public static Command alignToAmpAndShoot() {
+    Pose2d botPose = RobotContainer.shooterLimelight.getBotPose();
+
+    Translation2d targetTranslation = botPose.getTranslation();
+    targetTranslation.plus(RobotContainer.shooterLimelight.getTargetPoseRobotSpace().getTranslation());
+
+    Rotation2d rot = RobotContainer.drivetrain.getWrappedRotation().plus(RobotContainer.shooterLimelight.getTargetPoseRobotSpace().getRotation());
+
+    targetTranslation.plus(AutoConstants.TRANSLATION_FROM_AMP);
+
+
+    return Commands.sequence(
+      Commands.parallel(
+        AutoBuilder.pathfindToPose(new Pose2d(targetTranslation, rot), AutoConstants.PATH_CONSTRAINTS, 0),
+        setSprocketAngle(ArmConstants.AMP_SCORE_ANGLE),
+        spinUpShooter(ShooterConstants.AMP_EJECT_SPEED_TOP, ShooterConstants.AMP_EJECT_SPEED_BOTTOM)
+      ),
+      shoot(ShooterConstants.AMP_EJECT_SPEED_TOP, ShooterConstants.AMP_EJECT_SPEED_BOTTOM, ShooterConstants.TRANSPORT_SPEED)
+    );
+  }
+
+  public static Command spinUpShooter(double topSpeed, double bottomSpeed) {
+    return Commands.runOnce(() -> {
+      RobotContainer.shooter.shootVelocity(topSpeed, bottomSpeed);
+    });
+  }
+
+ 
   // Used during auto for scoring speaker(usually from one of the note locations)
   public static Command scoreModeAuto() {
     Command alignAndAngle = Commands.parallel(alignToLimelightTarget(RobotContainer.shooterLimelight, DetectionType.APRIL_TAG), setSprocketAngle(RobotContainer.shooterLimelight::bestFit));
@@ -385,10 +413,10 @@ public class Commands555 {
   // "targetpose_robotspace");
   // Pose2d aprilTagPose = new Pose2d(new Translation2d(aprilTagPoseArray[0],
   // aprilTagPoseArray[1]), new Rotation2d(aprilTagPoseArray[5]));
-  // Pose2d targetPose =
+  // Pose2d botPose =
   // aprilTagPose.relativeTo(DriveConstants.EDGE_OF_DRIVEBASE); //TODO does
   // this work the way I think it does
-  // return driveToFieldRelativePoint(targetPose);
+  // return driveToFieldRelativePoint(botPose);
 
   // }
 
@@ -642,7 +670,7 @@ public class Commands555 {
     return Commands.sequence(
         setSprocketAngle(ArmConstants.AMP_SCORE_ANGLE),
         waitUntil(RobotContainer.sprocket::isAtAngle),
-        shoot(ShooterConstants.AMP_EJECT_SPEED - 12.5, ShooterConstants.AMP_EJECT_SPEED, ShooterConstants.TRANSPORT_SPEED));
+        shoot(ShooterConstants.AMP_EJECT_SPEED_TOP, ShooterConstants.AMP_EJECT_SPEED_BOTTOM, ShooterConstants.TRANSPORT_SPEED));
     // setSprocketAngle(ArmConstants.INTAKE_ANGLE));
 
   }
