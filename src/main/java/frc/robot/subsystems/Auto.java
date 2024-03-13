@@ -395,7 +395,7 @@ public class Auto extends SubsystemBase {
     finalPath.addCommands(Commands.runOnce(() -> {
       RobotContainer.shooter.shootVelocity(ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.SPEAKER_EJECT_SPEED);
     }));
-    finalPath.addCommands(Commands555.waitForTime(0.75)); //Wait for shooter to ramp up initially
+    finalPath.addCommands(Commands555.waitUntil(RobotContainer.shooter::isAtSpeed)); //Wait for shooter to ramp up initially
 
     if (autoString.charAt(0) == '4') {
       finalPath.addCommands(Commands555.scoreAmp());
@@ -411,16 +411,18 @@ public class Auto extends SubsystemBase {
       try {
         // Load path
         if (!(next == current)) {
-          
-        } 
-        PathPlannerPath path = PathPlannerPath.fromPathFile("" + current + "-" + next);
+          PathPlannerPath path = PathPlannerPath.fromPathFile("" + current + "-" + next);
 
-        trajectories.add(
-            path.getTrajectory(
-              new ChassisSpeeds(),
-              path.getPreviewStartingHolonomicPose().getRotation()
-            ));
-        segment = new ParallelRaceGroup(AutoBuilder.followPath(path));
+          trajectories.add(
+              path.getTrajectory(
+                new ChassisSpeeds(),
+                path.getPreviewStartingHolonomicPose().getRotation()
+              ));
+          segment = new ParallelRaceGroup(AutoBuilder.followPath(path));
+        } else {
+          setFeedback("Scoring Mode "); // TODO: Better feedback, or none. :D
+        }
+
         
       } catch (Exception e) {
         setFeedback("Path File Not Found");
