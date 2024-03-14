@@ -68,21 +68,10 @@ public class RobotContainer {
 
   public static final Field2d field = new Field2d();
 
-  private Tunable<Double> topShooterSpeakerSpeed = Tunable.of(4000, "shooter/top-speaker-speed");
-  private Tunable<Double> bottomShooterSpeakerSpeed =
-      Tunable.of(4500, "shooter/bottom-speaker-speed"); // 4500 was most consistent in testing
-  private Tunable<Double> transportSpeakerSpeed = Tunable.of(1000, "shooter/transport-speed");
+  
 
   public static boolean isDriverMode = false;
 
- 
-  private Tunable<Double> angleSetpoint = Tunable.of(52, "Angle Setpoint");
-  //public static Tunable<Double> speakerAngle = Tunable.of(50, "speaker Setpoint");
-  
-
-  private Tunable<Double> topShooterAmpSpeed = Tunable.of(1000, "shooter/top-amp-speed");
-  private Tunable<Double> bottomShooterAmpSpeed = Tunable.of(1000, "shooter/bottom-amp-speed"); // 4500 was most consistent in testing
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
     auto.setupPathPlanner();
@@ -113,35 +102,9 @@ public class RobotContainer {
       )
     );
 
-    
     shooterLimelight.setPipelineTo(DetectionType.APRIL_TAG);
     intakeLimelight.setPipelineTo(DetectionType.NOTE);
 
-    topShooterSpeakerSpeed.whenUpdate(
-        (speed) -> {
-          if (shooter.isShooting()) {
-            shooter.shootVelocity(speed, bottomShooterSpeakerSpeed.get());
-          }
-        });
-    bottomShooterSpeakerSpeed.whenUpdate(
-        (speed) -> {
-          if (shooter.isShooting()) {
-            shooter.shootVelocity(topShooterSpeakerSpeed.get(), speed);
-          }
-        });
-    transportSpeakerSpeed.whenUpdate(
-        (speed) -> {
-          if (shooter.isTransporting()) {
-            shooter.transportVelocity(speed);
-          }
-        });
-
-
-    // for(int port = 5800; port <= 5805; port++) {
-    //   PortForwarder.add(port, "limelight.local", port);
-    // }
-
-    
     configureDriverBindings();
     configureOperatorBindings();
   }
@@ -183,34 +146,9 @@ public class RobotContainer {
     driverController.PS().onTrue(Commands555.lockDrive());
     
 
-    
-    
-
-    
-    
   }
   private void configureOperatorBindings() {
-    // Shuffleboard.getTab("Debug").addBoolean("At speed", RobotContainer.shooter::isAtSpeed);
-    // ControllerTools.getDPad(DPad.UP, operatorController)
-    //     .toggleOnTrue(
-    //         sprocket
-    //             .getSysId()
-    //             .quasistatic(Direction.kForward)
-    //             .onlyWhile(sprocket::isSprocketSafe));
-    // ControllerTools.getDPad(DPad.DOWN, operatorController)
-    //     .toggleOnTrue(
-    //         sprocket
-    //             .getSysId()
-    //             .quasistatic(Direction.kReverse)
-    //             .onlyWhile(sprocket::isSprocketSafe));
-
-    // ControllerTools.getDPad(DPad.RIGHT, operatorController)
-    //     .toggleOnTrue(
-    //         sprocket.getSysId().dynamic(Direction.kForward).onlyWhile(sprocket::isSprocketSafe));
-    // ControllerTools.getDPad(DPad.LEFT, operatorController)
-    //     .toggleOnTrue(
-    //         sprocket.getSysId().dynamic(Direction.kReverse).onlyWhile(sprocket::isSprocketSafe));
-
+  
     ControllerTools.getDPad(DPad.UP, operatorController).onTrue(Commands555.climbersUp());
     ControllerTools.getDPad(DPad.DOWN, operatorController).onTrue(Commands555.climbersDown());
 

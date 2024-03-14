@@ -15,12 +15,12 @@ public class Intake extends SubsystemBase {
       new CANSparkMax(Ports.INTAKE_BOTTOM_MOTOR, MotorType.kBrushless);
   
   
-  private Timer timeSinceNote;
+ 
 
   public Intake() {
     topMotor.setInverted(true);
     bottomMotor.setInverted(true);
-    timeSinceNote = new Timer();
+   
   }
 
   /** Accelerates motors to intake something */
