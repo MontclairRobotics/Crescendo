@@ -72,7 +72,7 @@ public class Shooter extends SubsystemBase {
           Constants.ShooterConstants.TRANSPORT_FF_KV,
           Constants.ShooterConstants.TRANSPORT_FF_KA);
 
- 
+
 
   private boolean isShooting = false;
   private boolean isTransporting = false;
@@ -133,8 +133,7 @@ public class Shooter extends SubsystemBase {
 
   /** Runs top and bottom shooter motors at different velocties */
   public void shootVelocity(double topVelocity, double bottomVelocity) {
-    topVelocitySetpoint = -topVelocity;
-    bottomVelocitySetpoint = bottomVelocity;
+    
     System.out.println("shootVelocity: " + topVelocity + " " + bottomVelocity);
 
     double topFeedForward = topMotorFeedforward.calculate(topVelocity);
