@@ -55,7 +55,7 @@ public final class Constants {
     public static final Pose2d EDGE_OF_DRIVEBASE =
         new Pose2d(0, DRIVE_BASE_RADIUS + BUMPER_WIDTH, new Rotation2d());
     // TODO: correct angle deadband
-    public static final double ANGLE_DEADBAND = 3;
+    public static final double ANGLE_DEADBAND = 0.8;
   }
 
   public static class VisionConstants {
@@ -133,8 +133,8 @@ public final class Constants {
 
     
     public static final double SPROCKET_ROTATIONS_PER_DEGREE = 1.26984126984;
-    public static final double ENCODER_MIN_ANGLE = 32;
-    public static final double ENCODER_MAX_ANGLE = 75.787;
+    public static final double ENCODER_MIN_ANGLE = 26;
+    public static final double ENCODER_MAX_ANGLE = 58;
 
     public static final double SPEAKER_SCORE_ANGLE = 62.7;
     public static final double SPEAKER_LOWER_SCORE_ANGLE = 58;
@@ -148,7 +148,7 @@ public final class Constants {
     // TODO: Validate values
     public static final double SPROCKET_ANGLE_MOVE_SPEED = 0.5;
     public static final double SPROCKET_ANGLE_DEADBAND = 2;
-    public static final double SPROCKET_ANGLE_LIMIT_DEADBAND = 2.5;
+    public static final double SPROCKET_ANGLE_LIMIT_DEADBAND = 4.5;
     public static final double SPROCKET_STAGE_ANGLE = 40;
 
     // public static final double INTAKE_SCORE_ANGLE = 45;

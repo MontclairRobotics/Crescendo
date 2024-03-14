@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Auto;
@@ -156,15 +157,15 @@ public class RobotContainer {
     // operatorController.R2().onTrue(Commands555.testPipeSwitch(intakeLimelight, DetectionType.APRIL_TAG));
     operatorController.L2().whileTrue(Commands555.loadNote());
 
-
+    
       
     // operatorController.square().onTrue(Commands555.setSprocketAngle(shooterLimelight.bestFit()));
-    // operatorController.cross().onTrue(Commands.runOnce(() -> {     
-    //   System.out.println(angleSetpoint.get()); 
-    //   RobotContainer.sprocket.setPosition(Rotation2d.fromDegrees(angleSetpoint.get()));
-    // }));
+    operatorController.cross().onTrue(Commands.runOnce(() -> {     
+      System.out.println(RobotContainer.sprocket.angleSetpoint.get()); 
+      RobotContainer.sprocket.setPosition(Rotation2d.fromDegrees(RobotContainer.sprocket.angleSetpoint.get()));
+    }));
 
-    operatorController.cross().whileTrue(Commands555.ferryNote());
+    // operatorController.cross().whileTrue(Commands555.ferryNote());
     operatorController.triangle().whileTrue(Commands555.scoreAmp());
     operatorController.square().onTrue(Commands555.lowerRobot());
     

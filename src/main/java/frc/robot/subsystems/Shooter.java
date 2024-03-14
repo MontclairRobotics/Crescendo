@@ -93,7 +93,7 @@ public class Shooter extends SubsystemBase {
 
     topMotor.setInverted(false);
     bottomMotor.setInverted(true);
-    transportMotor.setInverted(true);
+    transportMotor.setInverted(false);
     
 
     topController.setP(Constants.ShooterConstants.TOP_SHOOTER_PID_KP, 1);

@@ -90,9 +90,8 @@ public class Commands555 {
    * @return A
    */
   public static Command loadNote() {
-    Command alignSprocket = Commands555.setSprocketAngle(ArmConstants.INTAKE_ANGLE);
-    Command intakeAndTransport = Commands.sequence(alignSprocket,
-        Commands.parallel(Commands555.intake(), Commands555.transport(ShooterConstants.TRANSPORT_SPEED)));
+    //Command alignSprocket = Commands555.setSprocketAngle(ArmConstants.INTAKE_ANGLE);
+    Command intakeAndTransport = Commands.sequence(Commands.parallel(Commands555.intake(), Commands555.transport(ShooterConstants.TRANSPORT_SPEED)));
     return intakeAndTransport
         .withName("intake in")
         .until(() -> {
@@ -714,6 +713,7 @@ public class Commands555 {
 
   
 
+  /** TODO ANGLE IS WRONG */
   public static Command receiveHumanPlayerNote() {
     return Commands.sequence(
         alignToLimelightTarget(RobotContainer.shooterLimelight, DetectionType.APRIL_TAG),

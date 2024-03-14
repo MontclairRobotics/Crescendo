@@ -31,6 +31,8 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Mechanism;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.*;
 import frc.robot.util.BreakBeam;
+import frc.robot.util.Tunable;
+
 import java.awt.geom.Point2D;
 
 import javax.sound.sampled.Port;
@@ -43,6 +45,8 @@ public class Sprocket extends SubsystemBase {
       new CANSparkMax(Ports.RIGHT_ANGLE_MOTOR, MotorType.kBrushless);
   private InterpolatingDoubleTreeMap angleMap;
   private InterpolatingDoubleTreeMap speedMap;
+
+  public Tunable<Double> angleSetpoint = Tunable.of(45, "arm.target");
 
   private double targetSpeed;
   private boolean usingPID;
@@ -170,7 +174,7 @@ public class Sprocket extends SubsystemBase {
   }
 
   public double getEncoderPosition() {
-    return ((-absEncoder.getDistance()) * ((double) 14/64)) + 91;
+    return ((-absEncoder.getDistance()) * ((double) 14/64)) + 76;
   }
 
   public boolean isAtAngle() {
