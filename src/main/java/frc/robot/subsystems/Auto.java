@@ -276,6 +276,7 @@ public class Auto extends SubsystemBase {
     return wpiStates;
   }
 
+  @Deprecated
   private void buildPathSequence(String autoString) {
 
 

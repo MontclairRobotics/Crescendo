@@ -171,6 +171,7 @@ public class Shooter extends SubsystemBase {
     }
     return true;
   }
+ 
 
   /** Stops the shooter */
   public void stopShooter() {

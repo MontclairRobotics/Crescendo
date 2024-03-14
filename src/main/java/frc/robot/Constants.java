@@ -24,9 +24,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.util.Tunable;
 import java.awt.geom.Point2D;
-import java.util.Arrays;
-import java.util.Set;
-import java.util.stream.Collectors;
+
 
 public final class Constants {
   public static class OperatorConstants {
@@ -39,7 +37,7 @@ public final class Constants {
     public static Tunable<Double> kd = Tunable.of(0, "heading.kd");
     public static Tunable<Double> ki = Tunable.of(0.01, "heading.ki");
 
-    public static final double BUMPER_WIDTH = Units.inchesToMeters(3); // TOOD get real width
+    public static final double BUMPER_WIDTH = Units.inchesToMeters(3); // TODO get real width
 
     public static final boolean IS_OPEN_LOOP = true;
 
