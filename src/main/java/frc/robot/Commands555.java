@@ -94,9 +94,9 @@ public class Commands555 {
     Command intakeAndTransport = Commands.sequence(Commands.parallel(Commands555.intake(), Commands555.transport(ShooterConstants.TRANSPORT_SPEED)));
     return intakeAndTransport
         .withName("intake in")
-        .until(() -> {
-          return RobotContainer.shooter.isNoteInTransport();
-        })
+        // .until(() -> {
+        //   return RobotContainer.shooter.isNoteInTransport();
+        // })
         .finallyDo(() -> {
           RobotContainer.intake.stop();
           RobotContainer.shooter.stopTransport();
@@ -109,7 +109,7 @@ public class Commands555 {
     Command intakeAndTransport = Commands.sequence(alignSprocket,
         Commands.parallel(Commands555.reverseIntake(), Commands555.transport(-ShooterConstants.TRANSPORT_SPEED)));
     return intakeAndTransport
-        .withName("intake in")
+        .withName("intake out")
         .until(() -> {
           return RobotContainer.shooter.isNoteInTransport();
         })
