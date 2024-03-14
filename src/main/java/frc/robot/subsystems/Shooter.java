@@ -72,8 +72,7 @@ public class Shooter extends SubsystemBase {
           Constants.ShooterConstants.TRANSPORT_FF_KV,
           Constants.ShooterConstants.TRANSPORT_FF_KA);
 
-  private double topVelocitySetpoint;
-  private double bottomVelocitySetpoint;
+ 
 
   private boolean isShooting = false;
   private boolean isTransporting = false;
