@@ -493,10 +493,10 @@ public class Commands555 {
         Commands.runOnce(() -> {
           RobotContainer.shooter.shootVelocity(topShootSpeed, bottomShootSpeed);
         }, RobotContainer.shooter),
-        Commands555.waitUntil(RobotContainer.shooter::isShooting),
+        Commands555.waitUntil(RobotContainer.shooter::isAtSpeed),
         Commands555.transport(transportSpeed),
         log("Transported"),
-        Commands555.waitForTime(0.3))
+        Commands555.waitForTime(0.75))
         .finallyDo(() -> {
           RobotContainer.shooter.stopTransport();
           if (!DriverStation.isAutonomous()) {

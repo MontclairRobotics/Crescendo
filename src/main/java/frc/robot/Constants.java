@@ -60,11 +60,11 @@ public final class Constants {
 
   public static class VisionConstants {
     public static final double TARGET_DEBOUNCE_TIME = 0.2;
-    public static final double SHOOTER_LIMELIGHT_HEIGHT = 10.375;
+    public static final double SHOOTER_LIMELIGHT_HEIGHT = 7.5; //10.375;
     public static final double INTAKE_LIMELIGHT_HEIGHT = 10.227995;
-    public static final double SPEAKER_APRILTAG_HEIGHT = 57.875;
+    public static final double SPEAKER_APRILTAG_HEIGHT = 57.125; //57.875;
     public static final double SPEAKER_GOAL_HEIGHT = 81.8; //78.13-82.90
-    public static final double SHOOTER_LIMELIGHT_ANGLE_DEGREES = 31.07;
+    public static final double SHOOTER_LIMELIGHT_ANGLE_DEGREES = 26.74; //31.07;
     public static final double INTAKE_LIMELIGHT_ANGLE_DEGREES = 0;
     public static final double ALIGN_CENTER_OFFSET = 3;
   }
@@ -134,9 +134,9 @@ public final class Constants {
     
     public static final double SPROCKET_ROTATIONS_PER_DEGREE = 1.26984126984;
     public static final double ENCODER_MIN_ANGLE = 26;
-    public static final double ENCODER_MAX_ANGLE = 58;
+    public static final double ENCODER_MAX_ANGLE = 63;
 
-    public static final double SPEAKER_SCORE_ANGLE = 62.7;
+    public static final double SPEAKER_SCORE_ANGLE = 50;
     public static final double SPEAKER_LOWER_SCORE_ANGLE = 58;
     public static final double AMP_SCORE_ANGLE = 62;
 

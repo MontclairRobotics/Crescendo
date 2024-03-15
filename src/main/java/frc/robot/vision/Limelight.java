@@ -161,7 +161,7 @@ public class Limelight extends SubsystemBase {
       if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red) {
         LimelightHelpers.setPriorityTagID(cameraName, 4);
       } else {
-        LimelightHelpers.setPriorityTagID(cameraName, 2);
+        LimelightHelpers.setPriorityTagID(cameraName, 8);
       }
     }
 

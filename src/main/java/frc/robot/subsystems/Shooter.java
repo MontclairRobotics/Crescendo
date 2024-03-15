@@ -92,7 +92,7 @@ public class Shooter extends SubsystemBase {
     // transportMotor.restoreFactoryDefaults();
 
     topMotor.setInverted(false);
-    bottomMotor.setInverted(true);
+    bottomMotor.setInverted(false);
     transportMotor.setInverted(false);
     
 
@@ -133,6 +133,8 @@ public class Shooter extends SubsystemBase {
 
   /** Runs top and bottom shooter motors at different velocties */
   public void shootVelocity(double topVelocity, double bottomVelocity) {
+    targetTopSpeed = topVelocity;
+    targetBottomSpeed = bottomVelocity;
     
     System.out.println("shootVelocity: " + topVelocity + " " + bottomVelocity);
 
