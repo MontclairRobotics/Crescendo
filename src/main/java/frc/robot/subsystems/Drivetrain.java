@@ -59,7 +59,7 @@ public class Drivetrain extends SubsystemBase {
     });
   }
 
-  /** It drives a certain distance with a certain rotation */
+  /** It drives with certain linear velocities with a certain rotational velocity */
   public void drive(Translation2d translation, double rotation) {
 
     swerveDrive.drive(translation, rotation, this.isFieldRelative, DriveConstants.IS_OPEN_LOOP);
@@ -90,7 +90,7 @@ public class Drivetrain extends SubsystemBase {
     this.isFieldRelative = relative;
   }
 
-  /** Returns if the paramter */
+  
   public boolean getIsFieldRelative(boolean relative) {
     return this.isFieldRelative;
   }
