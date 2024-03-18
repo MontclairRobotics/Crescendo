@@ -9,6 +9,7 @@ import static edu.wpi.first.units.Units.Volts;
 import static frc.robot.Constants.ArmConstants.SPROCKET_BEAM_INVERT;
 
 import com.revrobotics.CANSparkBase.ControlType;
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -93,7 +94,7 @@ public class Shooter extends SubsystemBase {
 
     topMotor.setInverted(false);
     bottomMotor.setInverted(false);
-    transportMotor.setInverted(false);
+    transportMotor.setInverted(true);
     
 
     topController.setP(Constants.ShooterConstants.TOP_SHOOTER_PID_KP, 1);
@@ -114,6 +115,8 @@ public class Shooter extends SubsystemBase {
     Shuffleboard.getTab("Debug").addBoolean("Transport Beam Break", () -> {
       return isNoteInTransport();
     });
+
+    transportMotor.setIdleMode(IdleMode.kBrake);
   } 
 
   /** Is shooting running? */

@@ -123,15 +123,15 @@ public class Limelight extends SubsystemBase {
   }
 
 
-  public double getAngleForSpeaker() {
-    double distance = getDistanceToSpeaker() + 14.5 - 6.0; // in the middle of speaker, not the edge.
-    double targetHeight = VisionConstants.SPEAKER_GOAL_HEIGHT - 4.5;
+  // public double getAngleForSpeaker() {
+  //   double distance = getDistanceToSpeaker() + 14.5 - 6.0; // in the middle of speaker, not the edge.
+  //   double targetHeight = VisionConstants.SPEAKER_GOAL_HEIGHT - 4.5;
 
-    double angle = Math.atan((targetHeight / distance));
+  //   double angle = Math.atan((targetHeight / distance));
 
-    return angle * (180.0 / Math.PI);
+  //   return angle * (180.0 / Math.PI);
 
-  }
+  // }
 
   
 
@@ -169,7 +169,12 @@ public class Limelight extends SubsystemBase {
 
   public double bestFit() {
     double x = getDistanceToSpeaker();
-    return (0.001717 * (Math.pow(x, 2))) + (-0.6251 * x) + (83.41);
+    // return (0.001717 * (Math.pow(x, 2))) + (-0.6251 * x) + (83.41);
+    return (78.3*Math.exp(-0.0177*x)) + 25.04;
+  }
+
+  public double getSpeedForSpeaker() {
+    return 6.25*(getDistanceToSpeaker()-30) + 3000;
   }
 
   public boolean isAligned() {

@@ -153,7 +153,7 @@ public class RobotContainer {
     ControllerTools.getDPad(DPad.UP, operatorController).onTrue(Commands555.climbersUp());
     ControllerTools.getDPad(DPad.DOWN, operatorController).onTrue(Commands555.climbersDown());
 
-    operatorController.R2().whileTrue(Commands555.reverseIntake());
+    operatorController.R2().whileTrue(Commands555.unloadNote());
     // operatorController.R2().onTrue(Commands555.testPipeSwitch(intakeLimelight, DetectionType.APRIL_TAG));
     operatorController.L2().whileTrue(Commands555.loadNote());
 
@@ -166,7 +166,7 @@ public class RobotContainer {
     }));
 
     // operatorController.cross().whileTrue(Commands555.ferryNote());
-    operatorController.triangle().whileTrue(Commands555.scoreAmp());
+    // operatorController.triangle().whileTrue(Commands555.scoreAmp());
     operatorController.square().onTrue(Commands555.lowerRobot());
     
     
@@ -175,13 +175,14 @@ public class RobotContainer {
     operatorController.circle().and(() -> !isDriverMode).whileTrue(Commands555.scoreSubwoofer());
     operatorController.circle().and(() -> isDriverMode).whileTrue(Commands555.runTransportManual());
     // operatorController.R1().onTrue(Commands.runOnce(RobotContainer.shooter::toggleShooter)); //TODO 
-    // operatorController.triangle().onTrue(Commands.sequence(
-    //   Commands555.setSprocketAngle(RobotContainer.shooterLimelight.getAngleForSpeaker()),
-    //   Commands555.waitUntil(() -> {
-    //     return sprocket.isAtAngle();
-    //   }),
-    //   Commands555.shoot(.9, .9, .9)
-    // ));
+    operatorController.triangle().onTrue(Commands.sequence(
+      // Commands555.setSprocketAngle(RobotContainer.sprocket.angleSetpoint.get()),
+      // Commands555.waitUntil(() -> {
+      //   return sprocket.isAtAngle();
+      // }),
+      Commands555.shoot(ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.SPEAKER_EJECT_SPEED,
+            ShooterConstants.TRANSPORT_SPEED)
+    ));
 
 
 

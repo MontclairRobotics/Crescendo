@@ -84,7 +84,7 @@ public final class Constants {
     public static final int LEFT_ANGLE_MOTOR = 30;
     public static final int RIGHT_ANGLE_MOTOR = 31;
 
-    public static final int TRANSPORT_BEAM_BREAK = 7;
+    public static final int TRANSPORT_BEAM_BREAK = 9;
 
     // Climber ports
     public static final int CLIMBER_LEFT_MOTOR = 48;
@@ -108,7 +108,7 @@ public final class Constants {
 
   public static class IntakeConstants {
     // Intake
-    public static final double INTAKE_SPEED = 0.5;
+    public static final double INTAKE_SPEED = 1;
     public static final boolean INTAKE_BEAM_INVERT = true;
   }
 
@@ -136,7 +136,7 @@ public final class Constants {
     public static final double ENCODER_MIN_ANGLE = 26;
     public static final double ENCODER_MAX_ANGLE = 63;
 
-    public static final double SPEAKER_SCORE_ANGLE = 50;
+    public static final double SPEAKER_SCORE_ANGLE = 58;
     public static final double SPEAKER_LOWER_SCORE_ANGLE = 58;
     public static final double AMP_SCORE_ANGLE = 62;
 
@@ -148,7 +148,7 @@ public final class Constants {
     // TODO: Validate values
     public static final double SPROCKET_ANGLE_MOVE_SPEED = 0.5;
     public static final double SPROCKET_ANGLE_DEADBAND = 2;
-    public static final double SPROCKET_ANGLE_LIMIT_DEADBAND = 4.5;
+    public static final double SPROCKET_ANGLE_LIMIT_DEADBAND = 2;
     public static final double SPROCKET_STAGE_ANGLE = 40;
 
     // public static final double INTAKE_SCORE_ANGLE = 45;
@@ -180,9 +180,9 @@ public final class Constants {
 
     public static final double MAX_RPM = 5700;
 
-    public static final int VELOCITY_DEADBAND = 300;
+    public static final int VELOCITY_DEADBAND = 100;
 
-    public static final double TRANSPORT_SPEED = 0.6;
+    public static final double TRANSPORT_SPEED = 0.7;
     
     public static final boolean BEAM_BRAKE_INVERT = true;
     
