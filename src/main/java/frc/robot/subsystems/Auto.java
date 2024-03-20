@@ -410,6 +410,11 @@ public class Auto extends SubsystemBase {
       segment = new ParallelRaceGroup();
       char current = autoString.charAt(i);
       char next = autoString.charAt(i+1);
+
+      if (current == 'A' && next == 'A') {
+        next = '5';
+      }
+
       try {
         // Load path
         if (!(next == current)) {
@@ -448,7 +453,7 @@ public class Auto extends SubsystemBase {
       }
 
       // If we're trying to score
-      if ((isFromNote && isGoingToNote && !isFromCloseNote) || (current == next)) { //TODO I fixed this did I screw up?
+      if ((isFromNote && isGoingToNote && !isFromCloseNote) || (current == next) || (next == '5')) { //TODO I fixed this did I screw up?
         Rotation2d angle = new Rotation2d();
         if (next == 'A') {
           angle = Rotation2d.fromDegrees(-30);

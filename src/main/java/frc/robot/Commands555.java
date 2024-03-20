@@ -140,7 +140,9 @@ public class Commands555 {
             Commands555.setSprocketAngle(ArmConstants.INTAKE_ANGLE)),
         Commands.waitUntil(() -> {return RobotContainer.sprocket.isAtAngle() && RobotContainer.intakeLimelight.isAligned();}),
         Commands555.transport(ShooterConstants.TRANSPORT_SPEED),
-        driveIntake).finallyDo(() -> {
+        log("Drive Intaking"),
+        driveIntake)
+        .finallyDo(() -> {
           RobotContainer.intake.stop();
           RobotContainer.shooter.stopTransport();
         });
