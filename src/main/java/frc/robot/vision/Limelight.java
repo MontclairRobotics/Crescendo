@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
-
+import frc.robot.Constants.ShooterConstants;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -174,7 +174,7 @@ public class Limelight extends SubsystemBase {
   }
 
   public double getSpeedForSpeaker() {
-    return 6.25*(getDistanceToSpeaker()-30) + 3000;
+    return ShooterConstants.SPEAKER_EJECT_SPEED - 20 * Math.abs(90-RobotContainer.drivetrain.getWrappedRotation().getDegrees());
   }
 
   public boolean isAligned() {
@@ -182,8 +182,11 @@ public class Limelight extends SubsystemBase {
     return Math.abs(Math.abs(tx) - RobotContainer.drivetrain.getWrappedRotation().getDegrees()) < DriveConstants.ANGLE_DEADBAND;
   }
 
-  
+  public boolean isAlignedAuto() {
+    return Math.abs(getObjectTX()) < DriveConstants.ANGLE_DEADBAND;
+  }
 
+  
 
 }
 

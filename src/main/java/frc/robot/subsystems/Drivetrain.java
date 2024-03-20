@@ -6,7 +6,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
@@ -140,6 +142,11 @@ public class Drivetrain extends SubsystemBase {
     double xSpeed = -MathUtil.applyDeadband(controller.getLeftX(), 0.05) * DriveConstants.MAX_SPEED;
     double ySpeed = -MathUtil.applyDeadband(controller.getLeftY(), 0.05) * DriveConstants.MAX_SPEED;
 
+    // if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red) {
+    //   thetaSpeed *= -1;
+    //   xSpeed *= -1;
+    //   ySpeed *= -1;
+    // }
     Translation2d targetTranslation = new Translation2d(ySpeed, xSpeed);
     Logger.recordOutput("Drivetrain/Controller-Translation", targetTranslation);
     Logger.recordOutput("Drivetrain/Controller-Theta", thetaSpeed);

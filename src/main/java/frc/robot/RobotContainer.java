@@ -59,6 +59,7 @@ public class RobotContainer {
   public static Limelight intakeLimelight = new Limelight("limelight-intake", DetectionType.NOTE);
   public static Limelight shooterLimelight = new Limelight("limelight-shooter", DetectionType.APRIL_TAG);
   public static Auto auto = new Auto();
+
   // public static LED led =
   //     new LED(
   //         new ConditionalAnimation(getTeleopDefaultAnim())
@@ -74,6 +75,11 @@ public class RobotContainer {
   public static boolean isDriverMode = false;
 
   public RobotContainer() {
+    Shuffleboard.getTab("Debug").addDouble("Speed!", shooterLimelight::getSpeedForSpeaker);
+    Shuffleboard.getTab("Debug").addBoolean("Is aligned", RobotContainer.shooterLimelight::isAlignedAuto);
+    Shuffleboard.getTab("Debug").addBoolean("Is at angle", RobotContainer.sprocket::isAtAngle);
+    Shuffleboard.getTab("Debug").addBoolean("Is at speed", RobotContainer.shooter::isAtSpeed);
+    
 
     auto.setupPathPlanner();
     auto.setupAutoTab();

@@ -4,6 +4,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.PathPlannerTrajectory;
 import com.pathplanner.lib.path.PathPoint;
+import com.pathplanner.lib.util.GeometryUtil;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 
@@ -359,7 +360,7 @@ public class Auto extends SubsystemBase {
       isSafePath = isStayingInLane(autoString); // :)
     }
     
-    boolean isValidPath = isValidPathSequence(autoString);
+    boolean isValidPath = true;//isValidPathSequence(autoString);
     // setFeedback("boo!");
     if (isValidPath) {
       if (!ignoreSafety && isSafePath) {
@@ -404,9 +405,9 @@ public class Auto extends SubsystemBase {
       finalPath.addCommands(Commands555.scoreSubwoofer());
     }
 
-    ParallelRaceGroup segment = new ParallelRaceGroup();
+     ParallelRaceGroup segment = new ParallelRaceGroup();
     for (int i = 0; i < autoString.length() - 1; i++) {
-      
+      segment = new ParallelRaceGroup();
       char current = autoString.charAt(i);
       char next = autoString.charAt(i+1);
       try {
@@ -448,6 +449,24 @@ public class Auto extends SubsystemBase {
 
       // If we're trying to score
       if ((isFromNote && isGoingToNote && !isFromCloseNote) || (current == next)) { //TODO I fixed this did I screw up?
+        Rotation2d angle = new Rotation2d();
+        if (next == 'A') {
+          angle = Rotation2d.fromDegrees(-30);
+        }
+        else if (next == 'B') {
+          angle = Rotation2d.fromDegrees(0);
+        }
+        else if (next == 'C') {
+          angle = Rotation2d.fromDegrees(30);
+        }
+        else if (next == '5') {
+          angle = Rotation2d.fromDegrees(-30);
+        }
+
+        if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red) {
+          angle = GeometryUtil.flipFieldRotation(angle);
+        }
+        finalPath.addCommands(Commands555.goToAngleFieldRelative(angle, false));
         finalPath.addCommands(Commands555.scoreModeAuto());
       }
 
@@ -456,6 +475,7 @@ public class Auto extends SubsystemBase {
         finalPath.addCommands(Commands555.scoreAmpAuto());
       } else if (next == '1' || next == '2' || next == '3') { // Up against subwoofer
         finalPath.addCommands(Commands555.scoreSubwoofer());
+        System.out.println("dfskjl");
       }
       
     }

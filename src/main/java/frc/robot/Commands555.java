@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.AutoConstants;
@@ -57,8 +58,17 @@ public class Commands555 {
 
   // Zero gyro
   public static Command zeroGyro() {
-    return Commands.runOnce(RobotContainer.drivetrain.getSwerveDrive()::zeroGyro);
+    return Commands.runOnce(() -> {
+      if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red) {
+        RobotContainer.drivetrain.getSwerveDrive().zeroGyro();
+        // RobotContainer.drivetrain.getSwerveDrive().resetOdometry(new Pose2d(RobotContainer.drivetrain.getSwerveDrive().getPose().getTranslation(), Rotation2d.fromDegrees(180)));
+      } else {
+        RobotContainer.drivetrain.getSwerveDrive().zeroGyro();
+      }
+    });
   }
+
+
 
   public static Command lockDrive() {
     return Commands.runOnce(() -> {
@@ -315,14 +325,36 @@ public class Commands555 {
                 })); // TODO should we lock drive?
   }
 
+  //ONLY USE IN AUTO JANK AF
+  public static Command alignToLimelightTargetWithStop(Limelight camera, DetectionType targetType) {
+
+    // Rotation2d targetAngle = Rotation2d.fromDegrees(-camera.getObjectTX());
+    
+    return Commands.sequence(
+        waitForPipe(camera, targetType),
+        ifHasTarget(
+            alignToAngleRobotRelativeContinuous(
+                () -> {
+                  Rotation2d targetAngle = Rotation2d.fromDegrees(-camera.getObjectTX());
+                  return targetAngle;
+                },
+                false),
+            camera)
+            .until(RobotContainer.shooterLimelight::isAlignedAuto)
+            .finallyDo(
+                () -> {
+                  RobotContainer.drivetrain.setChassisSpeeds(new ChassisSpeeds(0, 0, 0));
+                  camera.setDefaultPipeline();
+                })); // TODO should we lock drive?
+  }
+
   public static Command scoreMode() {
     return Commands.parallel(
         alignToLimelightTarget(RobotContainer.shooterLimelight, DetectionType.APRIL_TAG),
         setSprocketAngle(RobotContainer.shooterLimelight::bestFit),
         Commands.runOnce(() -> {
           RobotContainer.isDriverMode = true;
-          RobotContainer.shooter.shootVelocity(RobotContainer.shooterLimelight.getSpeedForSpeaker(),
-              RobotContainer.shooterLimelight.getSpeedForSpeaker());
+          RobotContainer.shooter.shootVelocity(ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.SPEAKER_EJECT_SPEED);
           // RobotContainer.shooter.transportStart(ShooterConstants.TRANSPORT_SPEED);
         })).finallyDo(() -> {
           RobotContainer.shooter.stop();
@@ -360,11 +392,14 @@ public class Commands555 {
  
   // Used during auto for scoring speaker(usually from one of the note locations)
   public static Command scoreModeAuto() {
-    Command alignAndAngle = Commands.parallel(alignToLimelightTarget(RobotContainer.shooterLimelight, DetectionType.APRIL_TAG), setSprocketAngle(RobotContainer.shooterLimelight::bestFit));
-    return Commands.sequence(alignAndAngle, 
+    Command alignAndAngle = Commands.parallel(alignToLimelightTargetWithStop(RobotContainer.shooterLimelight, DetectionType.APRIL_TAG), setSprocketAngle(RobotContainer.shooterLimelight.bestFit()));
+    return Commands.sequence(
+      alignAndAngle, 
+      log("Scoring mode auto suckers!"),
       Commands.waitUntil(() -> {
-        return RobotContainer.shooterLimelight.isAligned() && RobotContainer.sprocket.isAtAngle() && RobotContainer.shooter.isAtSpeed();
+        return (RobotContainer.shooterLimelight.isAlignedAuto() && RobotContainer.sprocket.isAtAngle()) && RobotContainer.shooter.isAtSpeed();
       }), 
+      log("Shooting Auto!"),
       Commands555.shoot(ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.TRANSPORT_SPEED));
 
 
@@ -490,10 +525,12 @@ public class Commands555 {
   public static Command shoot(double topShootSpeed, double bottomShootSpeed, double transportSpeed) {
 
     return Commands.sequence(
+      log("Starting shoot command!"),
         Commands.runOnce(() -> {
           RobotContainer.shooter.shootVelocity(topShootSpeed, bottomShootSpeed);
         }, RobotContainer.shooter),
         Commands555.waitUntil(RobotContainer.shooter::isAtSpeed),
+        log("In shoot command, at speed!"),
         Commands555.transport(transportSpeed),
         log("Transported"),
         Commands555.waitForTime(0.75))
@@ -525,17 +562,17 @@ public class Commands555 {
   public static Command setAutoPose(String autoString) {
     return Commands.runOnce(() -> {
       Pose2d startPose = new Pose2d();
-      if (RobotContainer.shooterLimelight.hasValidTarget() &&
-      RobotContainer.shooterLimelight.getPipelineType() == DetectionType.APRIL_TAG)
-      {
-      startPose = RobotContainer.shooterLimelight.getBotPose();
-      RobotContainer.field.setRobotPose(startPose);
-      } else if (RobotContainer.intakeLimelight.hasValidTarget() &&
-      RobotContainer.intakeLimelight.getPipelineType() == DetectionType.APRIL_TAG)
-      {
-      startPose = RobotContainer.intakeLimelight.getBotPose();
-      }
-      else {
+      // if (RobotContainer.shooterLimelight.hasValidTarget() &&
+      // RobotContainer.shooterLimelight.getPipelineType() == DetectionType.APRIL_TAG)
+      // {
+      // startPose = RobotContainer.shooterLimelight.getBotPose();
+      // RobotContainer.field.setRobotPose(startPose);
+      // } else if (RobotContainer.intakeLimelight.hasValidTarget() &&
+      // RobotContainer.intakeLimelight.getPipelineType() == DetectionType.APRIL_TAG)
+      // {
+      // startPose = RobotContainer.intakeLimelight.getBotPose();
+      // }
+      // else {
       if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red) {
         switch (autoString.charAt(0)) {
           case '1':
@@ -567,7 +604,7 @@ public class Commands555 {
             break;
         }
       }
-    }
+    // }
       RobotContainer.drivetrain.getSwerveDrive().resetOdometry(startPose);
     });
   }
@@ -687,14 +724,14 @@ public class Commands555 {
   
   public static Command scoreSubwoofer() {
     return Commands.sequence(
-        Commands.runOnce(() -> System.out.println("Shooting!")),
+        Commands.runOnce(() -> System.out.println("Scoring subwoofer!")),
         setSprocketAngle(ArmConstants.SPEAKER_SCORE_ANGLE),
         waitUntil(() -> {
           return RobotContainer.sprocket.isAtAngle();
         }),
         shoot(ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.SPEAKER_EJECT_SPEED,
             ShooterConstants.TRANSPORT_SPEED),
-        Commands.runOnce(() -> System.out.println("Done Shooting!")),
+        Commands.runOnce(() -> System.out.println("Done Shooting subwoofer!")),
         setSprocketAngle(ArmConstants.INTAKE_ANGLE));
   }
 
