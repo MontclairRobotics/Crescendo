@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
+import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.DriveConstants;
 import java.io.File;
@@ -59,6 +60,24 @@ public class Drivetrain extends SubsystemBase {
     Shuffleboard.getTab("Debug").addDouble("Gyroscope Angle", () -> {
       return getSwerveDrive().getOdometryHeading().getDegrees();
     });
+
+    Shuffleboard.getTab("Debug").addDouble("Wrapped Angle", () -> RobotContainer.drivetrain.getWrappedRotation().getDegrees());
+  }
+
+  public static boolean angleDeadband(Rotation2d angle1, Rotation2d angle2, Rotation2d deadband) {
+    double degrees1 = wrapRotation(angle1).getDegrees();
+    double degrees2 = wrapRotation(angle2).getDegrees();
+    double deadbandDeg = wrapRotation(deadband).getDegrees();
+
+    return Math.abs(degrees1 - degrees2) < deadbandDeg || Math.abs(degrees1 - degrees2) > 360 - deadbandDeg;
+  }
+
+  public static Rotation2d wrapRotation(Rotation2d rot) {
+    double degrees = rot.getDegrees() % 360;
+    if (degrees < 0) {
+      degrees += 360;
+    }
+    return Rotation2d.fromDegrees(degrees);
   }
 
   /** It drives with certain linear velocities with a certain rotational velocity */

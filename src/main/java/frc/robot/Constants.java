@@ -55,7 +55,7 @@ public final class Constants {
     public static final Pose2d EDGE_OF_DRIVEBASE =
         new Pose2d(0, DRIVE_BASE_RADIUS + BUMPER_WIDTH, new Rotation2d());
     // TODO: correct angle deadband
-    public static final double ANGLE_DEADBAND = 3;
+    public static final double ANGLE_DEADBAND = 5;
   }
 
   public static class VisionConstants {
@@ -249,8 +249,8 @@ public final class Constants {
         
 
 
-    public static final PIDConstants ANGULAR_PID_CONSTANTS = new PIDConstants(3.0, 0.0, 0.0);
-    public static final PIDConstants TRANSLATION_PID_CONSTANTS = new PIDConstants(3.0, 0.0, 0.0);
+    public static final PIDConstants ANGULAR_PID_CONSTANTS = new PIDConstants(5.0, 0.0, 0.0);
+    public static final PIDConstants TRANSLATION_PID_CONSTANTS = new PIDConstants(5.0, 0.0, 0.0);
 
     public static final HolonomicPathFollowerConfig PATH_FOLLOWER_CONFIG =
         new HolonomicPathFollowerConfig(

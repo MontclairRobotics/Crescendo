@@ -466,7 +466,8 @@ public class Auto extends SubsystemBase {
         if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red) {
           angle = GeometryUtil.flipFieldRotation(angle);
         }
-        finalPath.addCommands(Commands555.goToAngleFieldRelative(angle, false));
+        finalPath.addCommands(Commands555.goToAngleFieldRelative(Drivetrain.wrapRotation(angle), false));
+        finalPath.addCommands(Commands555.log("DONE ALIGNING TO FIELD ANGLE"));
         finalPath.addCommands(Commands555.scoreModeAuto());
       }
 

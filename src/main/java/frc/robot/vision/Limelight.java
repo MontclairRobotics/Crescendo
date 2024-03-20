@@ -16,6 +16,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 
 import frc.robot.Constants.VisionConstants;
+import frc.robot.subsystems.Drivetrain;
+
 import org.littletonrobotics.junction.AutoLogOutput;
 
 public class Limelight extends SubsystemBase {
@@ -147,15 +149,15 @@ public class Limelight extends SubsystemBase {
   @Override
   public void periodic() {
 
-    if (getPipelineType() == DetectionType.APRIL_TAG && hasValidTarget()) { //TODO test this TEST THIS
-      LimelightHelpers.PoseEstimate targetPose = LimelightHelpers.getBotPoseEstimate_wpiBlue(cameraName);
-      if (targetPose.tagCount >= 2) {
-        RobotContainer.drivetrain.addVisionMeasurement(
-          targetPose.pose,
-          targetPose.timestampSeconds
-        );
-      }
-    }
+    // if (getPipelineType() == DetectionType.APRIL_TAG && hasValidTarget()) { //TODO test this TEST THIS
+    //   LimelightHelpers.PoseEstimate targetPose = LimelightHelpers.getBotPoseEstimate_wpiBlue(cameraName);
+    //   if (targetPose.tagCount >= 2) {
+    //     RobotContainer.drivetrain.addVisionMeasurement(
+    //       targetPose.pose,
+    //       targetPose.timestampSeconds
+    //     );
+    //   }
+    // }
 
     if (DriverStation.isDisabled()) {
       if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red) {
@@ -179,11 +181,11 @@ public class Limelight extends SubsystemBase {
 
   public boolean isAligned() {
     double tx = getObjectTX();
-    return Math.abs(Math.abs(tx) - RobotContainer.drivetrain.getWrappedRotation().getDegrees()) < DriveConstants.ANGLE_DEADBAND;
+    return Drivetrain.angleDeadband(Rotation2d.fromDegrees(tx), RobotContainer.drivetrain.getWrappedRotation(), Drivetrain.wrapRotation(Rotation2d.fromDegrees(DriveConstants.ANGLE_DEADBAND)));
   }
 
   public boolean isAlignedAuto() {
-    return Math.abs(getObjectTX()) < DriveConstants.ANGLE_DEADBAND;
+    return Math.abs(getObjectTX()) < DriveConstants.ANGLE_DEADBAND || Math.abs(getObjectTX()) < 360-DriveConstants.ANGLE_DEADBAND;
   }
 
   

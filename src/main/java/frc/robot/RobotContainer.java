@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Auto;
@@ -212,7 +213,7 @@ public class RobotContainer {
         "Good to shoot!",
         () -> {
           return sprocket.isAtAngle() && Math.abs(shooterLimelight.getObjectTX()) < VisionConstants.ALIGN_CENTER_OFFSET;
-        });;
+        });
 
     driverTab.addDouble("Time Remaining", () -> { return (int) Timer.getMatchTime();});
 

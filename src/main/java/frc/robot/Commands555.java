@@ -6,26 +6,20 @@ import java.util.function.Supplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 
-import animation2.CelebrationAnimation;
-import animation2.FlashAnimation;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ShooterConstants;
-
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.vision.DetectionType;
 import frc.robot.vision.Limelight;
@@ -212,9 +206,14 @@ public class Commands555 {
         RobotContainer.drivetrain)
         .until(
             () -> {
-              return Math.abs(
-                  RobotContainer.drivetrain.getWrappedRotation().getDegrees()
-                      - rot.get().getDegrees()) < DriveConstants.ANGLE_DEADBAND;
+              boolean isAligned = Drivetrain.angleDeadband(
+                  RobotContainer.drivetrain.getWrappedRotation(),
+                      rot.get(), Rotation2d.fromDegrees(DriveConstants.ANGLE_DEADBAND));
+              System.out.println(rot.get().getDegrees());
+              System.out.println(isAligned);
+              System.out.println(RobotContainer.drivetrain.getWrappedRotation().getDegrees());
+
+              return isAligned;
             });
   }
 
@@ -281,7 +280,7 @@ public class Commands555 {
   public static Command goToAngleFieldRelative(Rotation2d angle, boolean lockDrive) {
     return alignToAngleFieldRelative(
         () -> {
-          return angle;
+          return Drivetrain.wrapRotation(angle);
         },
         lockDrive);
   }
