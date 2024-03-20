@@ -173,7 +173,7 @@ public class RobotContainer {
     }));
 
     // operatorController.cross().whileTrue(Commands555.ferryNote());
-    // operatorController.triangle().whileTrue(Commands555.scoreAmp());
+    operatorController.triangle().whileTrue(Commands555.scoreAmp());
     operatorController.square().onTrue(Commands555.lowerRobot());
     
     
@@ -182,14 +182,7 @@ public class RobotContainer {
     operatorController.circle().and(() -> !isDriverMode).whileTrue(Commands555.scoreSubwoofer());
     operatorController.circle().and(() -> isDriverMode).whileTrue(Commands555.runTransportManual());
     // operatorController.R1().onTrue(Commands.runOnce(RobotContainer.shooter::toggleShooter)); //TODO 
-    operatorController.triangle().onTrue(Commands.sequence(
-      // Commands555.setSprocketAngle(RobotContainer.sprocket.angleSetpoint.get()),
-      // Commands555.waitUntil(() -> {
-      //   return sprocket.isAtAngle();
-      // }),
-      Commands555.shoot(ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.SPEAKER_EJECT_SPEED,
-            ShooterConstants.TRANSPORT_SPEED)
-    ));
+   
 
 
 
