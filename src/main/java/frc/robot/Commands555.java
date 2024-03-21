@@ -400,7 +400,7 @@ public class Commands555 {
       log("Scoring mode auto suckers!"),
       Commands.waitUntil(() -> {
         return (RobotContainer.shooterLimelight.isAlignedAuto() && RobotContainer.sprocket.isAtAngle()) && RobotContainer.shooter.isAtSpeed();
-      }), 
+      }).withTimeout(0.5), 
       log("Shooting Auto!"),
       Commands555.shoot(ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.TRANSPORT_SPEED));
 
