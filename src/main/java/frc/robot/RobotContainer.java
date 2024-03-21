@@ -173,7 +173,7 @@ public class RobotContainer {
     }));
 
     // operatorController.cross().whileTrue(Commands555.ferryNote());
-    operatorController.triangle().whileTrue(Commands555.scoreAmp());
+    operatorController.triangle().onTrue(Commands555.scoreAmp());
     operatorController.square().onTrue(Commands555.lowerRobot());
     
     
