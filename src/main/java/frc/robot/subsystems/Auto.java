@@ -412,7 +412,7 @@ public class Auto extends SubsystemBase {
       char next = autoString.charAt(i+1);
 
       if (current == 'A' && next == 'A') {
-        next = '5';
+        setFeedback("Duck you Fylan");
       }
 
       try {
@@ -471,7 +471,9 @@ public class Auto extends SubsystemBase {
         if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red) {
           angle = GeometryUtil.flipFieldRotation(angle);
         }
-        finalPath.addCommands(Commands555.goToAngleFieldRelative(Drivetrain.wrapRotation(angle), false));
+        if (next != '5') {
+          finalPath.addCommands(Commands555.goToAngleFieldRelative(Drivetrain.wrapRotation(angle), false));
+        }
         finalPath.addCommands(Commands555.log("DONE ALIGNING TO FIELD ANGLE"));
         finalPath.addCommands(Commands555.scoreModeAuto());
       }

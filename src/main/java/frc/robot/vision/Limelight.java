@@ -150,7 +150,7 @@ public class Limelight extends SubsystemBase {
   public void periodic() {
 
     // if (getPipelineType() == DetectionType.APRIL_TAG && hasValidTarget()) { //TODO test this TEST THIS
-    //   LimelightHelpers.PoseEstimate targetPose = LimelightHelpers.getBotPoseEstimate_wpiBlue(cameraName);
+    //   LimelightHelpers.PoseEstimate targetPose = getAdjustedPose();
     //   if (targetPose.tagCount >= 2) {
     //     RobotContainer.drivetrain.addVisionMeasurement(
     //       targetPose.pose,
@@ -179,13 +179,20 @@ public class Limelight extends SubsystemBase {
     return ShooterConstants.SPEAKER_EJECT_SPEED - 20 * Math.abs(90-RobotContainer.drivetrain.getWrappedRotation().getDegrees());
   }
 
+  public LimelightHelpers.PoseEstimate getAdjustedPose() {
+    if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red && DriverStation.isTeleop()) {
+      return LimelightHelpers.getBotPoseEstimate_wpiRed(cameraName);
+    }
+    return LimelightHelpers.getBotPoseEstimate_wpiBlue(cameraName);
+  }
+
   public boolean isAligned() {
     double tx = getObjectTX();
     return Drivetrain.angleDeadband(Rotation2d.fromDegrees(tx), RobotContainer.drivetrain.getWrappedRotation(), Drivetrain.wrapRotation(Rotation2d.fromDegrees(DriveConstants.ANGLE_DEADBAND)));
   }
 
   public boolean isAlignedAuto() {
-    return Math.abs(getObjectTX()) < DriveConstants.ANGLE_DEADBAND || Math.abs(getObjectTX()) < 360-DriveConstants.ANGLE_DEADBAND;
+    return Math.abs(getObjectTX()) < DriveConstants.ANGLE_DEADBAND;
   }
 
   

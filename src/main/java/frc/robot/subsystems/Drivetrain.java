@@ -16,16 +16,24 @@ import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.DriveConstants;
 import java.io.File;
+import java.util.ArrayList;
+
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 import swervelib.SwerveDrive;
+import swervelib.SwerveModule;
 import swervelib.parser.SwerveParser;
 import swervelib.telemetry.SwerveDriveTelemetry;
 import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
+import com.ctre.phoenix6.Orchestra;
+import com.ctre.phoenix6.hardware.TalonFX;
+
 public class Drivetrain extends SubsystemBase {
 
   private final SwerveDrive swerveDrive;
+
+  Orchestra orchestra;
 
   @AutoLogOutput private boolean isFieldRelative;
 
@@ -37,6 +45,8 @@ public class Drivetrain extends SubsystemBase {
 
     SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
 
+
+    // })
     try {
       swerveDrive = new SwerveParser(directory).createSwerveDrive(DriveConstants.MAX_SPEED);
     } catch (Exception e) {
@@ -52,6 +62,19 @@ public class Drivetrain extends SubsystemBase {
         (targetPose) -> {
           Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose);
         });
+    SwerveModule[] modules = swerveDrive.getModules();
+    ArrayList<TalonFX> motors = new ArrayList<TalonFX>();
+    motors.add((TalonFX) modules[0].getDriveMotor().getMotor());
+    motors.add((TalonFX) modules[1].getDriveMotor().getMotor());
+    motors.add((TalonFX) modules[2].getDriveMotor().getMotor());
+    motors.add((TalonFX) modules[3].getDriveMotor().getMotor());
+    orchestra = new Orchestra();
+    orchestra.addInstrument(motors.get(0));
+    orchestra.addInstrument(motors.get(1));
+    orchestra.addInstrument(motors.get(2));
+    orchestra.addInstrument(motors.get(3));
+    orchestra.loadMusic("nationGood.chrp");
+
 
     DriveConstants.kp.whenUpdate(getSwerveDrive().getSwerveController().thetaController::setP);
     DriveConstants.kd.whenUpdate(getSwerveDrive().getSwerveController().thetaController::setD);
@@ -80,6 +103,15 @@ public class Drivetrain extends SubsystemBase {
     return Rotation2d.fromDegrees(degrees);
   }
 
+  public void playMusic() {
+    System.out.println("MUUUUSIC");
+    orchestra.play();
+  }
+
+  public void stopMusic() {
+    orchestra.stop();
+  }
+
   /** It drives with certain linear velocities with a certain rotational velocity */
   public void drive(Translation2d translation, double rotation) {
 
@@ -99,7 +131,7 @@ public class Drivetrain extends SubsystemBase {
     Logger.recordOutput("Drivetrain/Gyro-Rotation", getSwerveDrive().getGyroRotation3d());
     Logger.recordOutput("Drivetrain/Pose", getSwerveDrive().getPose());
 
-    // RobotContainer.field.setRobotPose(RobotContainer.shooterLimelight.getBotPose_wpiRed());
+    RobotContainer.field.setRobotPose(swerveDrive.getPose());
   }
 
   public void addVisionMeasurement(Pose2d pose, double time) {

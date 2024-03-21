@@ -104,6 +104,8 @@ public class Robot extends LoggedRobot {
   public void testInit() {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
+    System.out.println("hi");
+    RobotContainer.drivetrain.playMusic();
   }
 
   @Override
@@ -120,10 +122,10 @@ public class Robot extends LoggedRobot {
   @Override
   public void autonomousExit() {
     //TODO test thouroghly
-    // if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red) {
-    //   Rotation2d rot = Rotation2d.fromDegrees(180).minus(RobotContainer.drivetrain.getSwerveDrive().getOdometryHeading());
-    //   Pose2d pose = new Pose2d(RobotContainer.drivetrain.getSwerveDrive().getPose().getTranslation(), rot);
-    //   RobotContainer.drivetrain.getSwerveDrive().resetOdometry(pose);
-    // }
+    if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red) {
+      Rotation2d rot = Rotation2d.fromDegrees(180).minus(RobotContainer.drivetrain.getSwerveDrive().getOdometryHeading());
+      Pose2d pose = new Pose2d(RobotContainer.drivetrain.getSwerveDrive().getPose().getTranslation(), rot);
+      RobotContainer.drivetrain.getSwerveDrive().resetOdometry(pose);
+    }
   }
 }

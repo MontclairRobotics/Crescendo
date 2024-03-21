@@ -83,6 +83,30 @@ public class Climbers extends SubsystemBase {
     }
   }
 
+  public void leftUp() {
+    leftMotor.set(ClimberConstants.CLIMBER_SPEED);
+  }
+
+  public void leftDown() {
+    leftMotor.set(-ClimberConstants.CLIMBER_SPEED);
+  }
+
+  public void leftStop() {
+    leftMotor.stopMotor();
+  }
+
+  public void rightUp() {
+    rightMotor.set(ClimberConstants.CLIMBER_SPEED);
+  }
+
+  public void rightDown() {
+    rightMotor.set(-ClimberConstants.CLIMBER_SPEED);
+  }
+
+  public void rightStop() {
+    rightMotor.stopMotor();
+  }
+
   public double getHeight() {
     return (leftEncoder.getPosition() + rightEncoder.getPosition())/2;
   }

@@ -49,6 +49,8 @@ public class RobotContainer {
 
   public static CommandPS5Controller driverController = new CommandPS5Controller(0);
   public static CommandPS5Controller operatorController = new CommandPS5Controller(1);
+  public static CommandPS5Controller debugController = new CommandPS5Controller(2);
+
   public static XboxController testController = new XboxController(2);
   public static Drivetrain drivetrain =
       new Drivetrain(new File(Filesystem.getDeployDirectory(), "swerve/"));
@@ -76,6 +78,7 @@ public class RobotContainer {
   public static boolean isDriverMode = false;
 
   public RobotContainer() {
+    DriverStation.silenceJoystickConnectionWarning(true);
     Shuffleboard.getTab("Debug").addDouble("Speed!", shooterLimelight::getSpeedForSpeaker);
     Shuffleboard.getTab("Debug").addBoolean("Is aligned", RobotContainer.shooterLimelight::isAlignedAuto);
     Shuffleboard.getTab("Debug").addBoolean("Is at angle", RobotContainer.sprocket::isAtAngle);
@@ -115,6 +118,15 @@ public class RobotContainer {
 
     configureDriverBindings();
     configureOperatorBindings();
+    configureDebugBindings();
+  }
+
+  private void configureDebugBindings() {
+    ControllerTools.getDPad(DPad.UP, debugController).whileTrue(Commands555.leftClimberUp());
+    ControllerTools.getDPad(DPad.DOWN, debugController).whileTrue(Commands555.leftClimberDown());
+
+    ControllerTools.getDPad(DPad.LEFT, debugController).whileTrue(Commands555.rightClimberUp());
+    ControllerTools.getDPad(DPad.RIGHT, debugController).whileTrue(Commands555.rightClimberDown());
   }
 
   private void configureDriverBindings() {
@@ -167,12 +179,12 @@ public class RobotContainer {
     
       
     // operatorController.square().onTrue(Commands555.setSprocketAngle(shooterLimelight.bestFit()));
-    operatorController.cross().onTrue(Commands.runOnce(() -> {     
-      System.out.println(RobotContainer.sprocket.angleSetpoint.get()); 
-      RobotContainer.sprocket.setPosition(Rotation2d.fromDegrees(RobotContainer.sprocket.angleSetpoint.get()));
-    }));
+    // operatorController.cross().onTrue(Commands.runOnce(() -> {     
+    //   System.out.println(RobotContainer.sprocket.angleSetpoint.get()); 
+    //   RobotContainer.sprocket.setPosition(Rotation2d.fromDegrees(RobotContainer.sprocket.angleSetpoint.get()));
+    // }));
 
-    // operatorController.cross().whileTrue(Commands555.ferryNote());
+    operatorController.cross().whileTrue(Commands555.ferryNote());
     operatorController.triangle().onTrue(Commands555.scoreAmp());
     operatorController.square().onTrue(Commands555.lowerRobot());
     
@@ -183,7 +195,7 @@ public class RobotContainer {
     operatorController.circle().and(() -> isDriverMode).whileTrue(Commands555.runTransportManual());
     // operatorController.R1().onTrue(Commands.runOnce(RobotContainer.shooter::toggleShooter)); //TODO 
    
-
+    ControllerTools.getDPad(DPad.LEFT, operatorController).onTrue(Commands.runOnce(drivetrain::playMusic).ignoringDisable(true));
 
 
     // operatorController.L1().onTrue(Commands555.celebrate());
@@ -224,8 +236,14 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // PathPlannerPath path = PathPlannerPath.fromPathFile("test");
-    // return AutoBuilder.followPath(path);
+    // PathPlannerPath path = PathPlannerPath.fromPathFile("A-5");
+    
+    // return Commands.sequence(
+    //   Commands.runOnce(() -> {
+    //     RobotContainer.drivetrain.getSwerveDrive().resetOdometry(path.getPreviewStartingHolonomicPose());
+    //   }),
+    //   AutoBuilder.followPath(path)
+    // );
     return auto.getAutoCommand();
   }
 }

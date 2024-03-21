@@ -136,7 +136,7 @@ public class Commands555 {
           return RobotContainer.shooter.isNoteInTransport();
         }));
     return Commands.sequence(
-        Commands.parallel(Commands555.alignToLimelightTarget(RobotContainer.intakeLimelight, DetectionType.NOTE),
+        Commands.parallel(Commands555.alignToLimelightTargetWithStop(RobotContainer.intakeLimelight, DetectionType.NOTE),
             Commands555.setSprocketAngle(ArmConstants.INTAKE_ANGLE)),
         Commands.waitUntil(() -> {return RobotContainer.sprocket.isAtAngle() && RobotContainer.intakeLimelight.isAligned();}),
         Commands555.transport(ShooterConstants.TRANSPORT_SPEED),
@@ -364,14 +364,14 @@ public class Commands555 {
   }
 
   public static Command alignToAmpAndShoot() {
-    Pose2d botPose = RobotContainer.shooterLimelight.getBotPose();
+    Pose2d botPose = RobotContainer.shooterLimelight.getAdjustedPose().pose;
 
     Translation2d targetTranslation = botPose.getTranslation();
-    targetTranslation.plus(RobotContainer.shooterLimelight.getTargetPoseRobotSpace().getTranslation());
+    targetTranslation = targetTranslation.plus(RobotContainer.shooterLimelight.getTargetPoseRobotSpace().getTranslation()).minus(new Translation2d(DriveConstants.BUMPER_WIDTH, 0));
 
     Rotation2d rot = RobotContainer.drivetrain.getWrappedRotation().plus(RobotContainer.shooterLimelight.getTargetPoseRobotSpace().getRotation());
 
-    targetTranslation.plus(AutoConstants.TRANSLATION_FROM_AMP);
+    // targetTranslation.plus(AutoConstants.TRANSLATION_FROM_AMP);
 
 
     return Commands.sequence(
@@ -393,9 +393,10 @@ public class Commands555 {
  
   // Used during auto for scoring speaker(usually from one of the note locations)
   public static Command scoreModeAuto() {
-    Command alignAndAngle = Commands.parallel(alignToLimelightTargetWithStop(RobotContainer.shooterLimelight, DetectionType.APRIL_TAG), setSprocketAngle(RobotContainer.shooterLimelight.bestFit()));
+    Command alignAndAngle = Commands.race(alignToLimelightTargetWithStop(RobotContainer.shooterLimelight, DetectionType.APRIL_TAG), setSprocketAngle(RobotContainer.shooterLimelight::bestFit));
     return Commands.sequence(
       alignAndAngle, 
+      setSprocketAngleWithStop(RobotContainer.shooterLimelight::bestFit),
       log("Scoring mode auto suckers!"),
       Commands.waitUntil(() -> {
         return (RobotContainer.shooterLimelight.isAlignedAuto() && RobotContainer.sprocket.isAtAngle()) && RobotContainer.shooter.isAtSpeed();
@@ -510,6 +511,13 @@ public class Commands555 {
         RobotContainer.sprocket);
   }
 
+  public static Command setSprocketAngleWithStop(DoubleSupplier angle) {
+    // System.out.println(angle);
+    return Commands.run(
+        () -> RobotContainer.sprocket.setPosition(Rotation2d.fromDegrees(angle.getAsDouble())),
+        RobotContainer.sprocket).until(RobotContainer.sprocket::isAtAngle);
+  }
+
   /*
    * - - - - - - - - - -
    * Shooter Commands
@@ -550,6 +558,31 @@ public class Commands555 {
       climbersDown()
     );
   }
+
+  public static Command leftClimberUp() {
+    return Commands.run(() -> {
+      RobotContainer.climbers.leftUp();
+    }).finallyDo(RobotContainer.climbers::leftStop);
+  }
+
+  public static Command leftClimberDown() {
+    return Commands.run(() -> {
+      RobotContainer.climbers.leftDown();
+    }).finallyDo(RobotContainer.climbers::leftStop);
+  }
+
+  public static Command rightClimberUp() {
+    return Commands.run(() -> {
+      RobotContainer.climbers.rightUp();
+    }).finallyDo(RobotContainer.climbers::rightStop);
+  }
+
+  public static Command rightClimberDown() {
+    return Commands.run(() -> {
+      RobotContainer.climbers.rightDown();
+    }).finallyDo(RobotContainer.climbers::rightStop);
+  }
+
   public static Command shoot(double speed, double transportSpeed) {
     return shoot(speed, speed, transportSpeed);
   }
