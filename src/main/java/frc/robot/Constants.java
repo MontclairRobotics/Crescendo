@@ -250,7 +250,7 @@ public final class Constants {
 
 
     public static final PIDConstants ANGULAR_PID_CONSTANTS = new PIDConstants(5.0, 0.0, 0.0);
-    public static final PIDConstants TRANSLATION_PID_CONSTANTS = new PIDConstants(5.0, 0.0, 0.0);
+    public static final PIDConstants TRANSLATION_PID_CONSTANTS = new PIDConstants(5, 0.0, 0);
 
     public static final HolonomicPathFollowerConfig PATH_FOLLOWER_CONFIG =
         new HolonomicPathFollowerConfig(

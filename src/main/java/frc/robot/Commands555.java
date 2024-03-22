@@ -15,7 +15,10 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
@@ -136,9 +139,12 @@ public class Commands555 {
           return RobotContainer.shooter.isNoteInTransport();
         }));
     return Commands.sequence(
+        log("CHASING NOOOOOOOOTEEEE"),
         Commands.parallel(Commands555.alignToLimelightTargetWithStop(RobotContainer.intakeLimelight, DetectionType.NOTE),
             Commands555.setSprocketAngle(ArmConstants.INTAKE_ANGLE)),
-        Commands.waitUntil(() -> {return RobotContainer.sprocket.isAtAngle() && RobotContainer.intakeLimelight.isAligned();}),
+            log("Done aligning"),
+        Commands.waitUntil(() -> {return RobotContainer.sprocket.isAtAngle() && RobotContainer.intakeLimelight.isAlignedAuto();}),
+        log("Done waiting, hhunting down note"),
         Commands555.transport(ShooterConstants.TRANSPORT_SPEED),
         log("Drive Intaking"),
         driveIntake)
@@ -274,6 +280,17 @@ public class Commands555 {
         lockDrive);
   }
 
+  public static Command getShooterSysIdCommand(String motors) {
+      return new WaitCommand(5)
+        .andThen(RobotContainer.shooter.shooterSysId("quasistatic", motors, SysIdRoutine.Direction.kForward))
+        .andThen(new WaitCommand(5))
+        .andThen(RobotContainer.shooter.shooterSysId("quasistatic", motors, SysIdRoutine.Direction.kReverse))
+        .andThen(new WaitCommand(5))
+        .andThen(RobotContainer.shooter.shooterSysId("dynamic", motors, SysIdRoutine.Direction.kForward))
+        .andThen(new WaitCommand(5))
+        .andThen(RobotContainer.shooter.shooterSysId("dynamic", motors, SysIdRoutine.Direction.kReverse));
+    }
+
   /**
    * @param angle     the target angle in field space
    * @param lockDrive should translational motion be locked
@@ -365,8 +382,9 @@ public class Commands555 {
 
   public static Command alignToAmpAndShoot() {
     Pose2d botPose = RobotContainer.shooterLimelight.getAdjustedPose().pose;
+    Pose2d drivePose = RobotContainer.drivetrain.getSwerveDrive().getPose();
 
-    Translation2d targetTranslation = botPose.getTranslation();
+    Translation2d targetTranslation = drivePose.getTranslation();
     targetTranslation = targetTranslation.plus(RobotContainer.shooterLimelight.getTargetPoseRobotSpace().getTranslation()).minus(new Translation2d(DriveConstants.BUMPER_WIDTH, 0));
 
     Rotation2d rot = RobotContainer.drivetrain.getWrappedRotation().plus(RobotContainer.shooterLimelight.getTargetPoseRobotSpace().getRotation());
@@ -388,6 +406,20 @@ public class Commands555 {
     return Commands.runOnce(() -> {
       RobotContainer.shooter.shootVelocity(topSpeed, bottomSpeed);
     });
+  }
+
+  public static Command sysIdDrive() {
+    SysIdRoutine routine = RobotContainer.drivetrain.getSysIdDrive();
+    return Commands.sequence(
+      routine.dynamic(Direction.kForward),
+      waitForTime(5),
+      routine.dynamic(Direction.kReverse),
+      waitForTime(5),
+      routine.quasistatic(Direction.kForward),
+      waitForTime(5),
+      routine.quasistatic(Direction.kReverse),
+      waitForTime(5)
+    );
   }
 
  

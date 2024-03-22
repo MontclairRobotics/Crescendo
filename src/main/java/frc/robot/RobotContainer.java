@@ -165,7 +165,7 @@ public class RobotContainer {
                 .ignoringDisable(true));
     driverController.PS().onTrue(Commands555.lockDrive());
 
-    ControllerTools.getDPad(DPad.LEFT, driverController).whileTrue(Commands555.alignToAmpAndShoot());
+    ControllerTools.getDPad(DPad.LEFT, driverController).onTrue(RobotContainer.drivetrain.getSysIdCommand());
     
 
   }

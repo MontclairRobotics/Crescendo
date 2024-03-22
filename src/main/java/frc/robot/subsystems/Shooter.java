@@ -251,8 +251,6 @@ public class Shooter extends SubsystemBase {
     }
   }
 
-
-
   
 
   public Command shooterSysId(String type, String motors, SysIdRoutine.Direction direction) {
