@@ -449,7 +449,7 @@ public class Auto extends SubsystemBase {
       finalPath.addCommands(segment);
 
       // Only rely on vision and driving forward manually if it's a close note.
-      if ((next == 'A' || next == 'B' || next == 'C')) {
+      if (isGoingToNote) {
         finalPath.addCommands(Commands555.loadNoteAuto().onlyWhile(() -> {return !RobotContainer.shooter.isNoteInTransport();}).withTimeout(2));
       }
 

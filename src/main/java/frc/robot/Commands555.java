@@ -1,10 +1,14 @@
 package frc.robot;
 
+import java.util.List;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.GoalEndState;
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.util.GeometryUtil;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -134,7 +138,7 @@ public class Commands555 {
   }
   public static Command loadNoteAuto() {
 
-    Command driveIntake = Commands.race(Commands555.setChassiSpeeds(new ChassisSpeeds(1.5, 0, 0)),
+    Command driveIntake = Commands.race(Commands555.alignToLimelightTargetWithDrive(RobotContainer.intakeLimelight, DetectionType.NOTE, new Translation2d(1.5, 0)),
         Commands555.intake(), Commands.waitUntil(() -> {
           return RobotContainer.shooter.isNoteInTransport();
         }));
@@ -142,7 +146,7 @@ public class Commands555 {
         log("CHASING NOOOOOOOOTEEEE"),
         Commands.parallel(Commands555.alignToLimelightTargetWithStop(RobotContainer.intakeLimelight, DetectionType.NOTE),
             Commands555.setSprocketAngle(ArmConstants.INTAKE_ANGLE)),
-            log("Done aligning"),
+        log("Done aligning"),
         Commands.waitUntil(() -> {return RobotContainer.sprocket.isAtAngle() && RobotContainer.intakeLimelight.isAlignedAuto();}),
         log("Done waiting, hhunting down note"),
         Commands555.transport(ShooterConstants.TRANSPORT_SPEED),
@@ -151,8 +155,13 @@ public class Commands555 {
         .finallyDo(() -> {
           RobotContainer.intake.stop();
           RobotContainer.shooter.stopTransport();
+          System.out.println("Load Note Auto Canceled!");
         });
 
+  }
+
+  public static Command driveOneMeter() {
+    return Commands.run(RobotContainer.drivetrain::driveOneMeter);
   }
 
   public static Command intake() {
@@ -169,8 +178,13 @@ public class Commands555 {
         .withName("intake stop");
   }
 
-  public static Command ferryNote() {
-    return Commands555.shoot(ShooterConstants.FERRY_SHOOT_SPEED, ShooterConstants.FERRY_SHOOT_SPEED, ShooterConstants.TRANSPORT_FERRY_SPEED);
+  public static Command ferryNote(double angle) {
+    return
+    Commands.sequence(
+      setSprocketAngle(angle),
+      waitUntil(RobotContainer.sprocket::isAtAngle),
+      Commands555.shoot(ShooterConstants.FERRY_SHOOT_SPEED, ShooterConstants.FERRY_SHOOT_SPEED, ShooterConstants.TRANSPORT_FERRY_SPEED)
+    );
   }
   // /**
   // * Robot relative or field relative depending on isFieldRelative. Input angle
@@ -251,6 +265,22 @@ public class Commands555 {
         RobotContainer.drivetrain);
   }
 
+    public static Command alignContinuousFieldRelativeWithDrive(Supplier<Rotation2d> rot, Translation2d speeds) {
+    Drivetrain drive = RobotContainer.drivetrain;
+    return Commands.run(
+        () -> {
+          double thetaSpeed = drive
+              .getSwerveDrive()
+              .getSwerveController()
+              .headingCalculate(
+                  drive.getWrappedRotation().getRadians(), rot.get().getRadians());
+
+          RobotContainer.drivetrain.getSwerveDrive().drive(new Translation2d(speeds.getX(), speeds.getY()), thetaSpeed, false, true, new Translation2d() );
+          // RobotContainer.drivetrain.drive(targetTranslation, thetaSpeed);
+        },
+        RobotContainer.drivetrain);
+  }
+
   /***
    *
    * @param rot       a robot relative Rotation2d supplier for the target angle
@@ -278,6 +308,15 @@ public class Commands555 {
               (RobotContainer.drivetrain.getWrappedRotation().getDegrees() + rot.get().getDegrees()) % 360);
         },
         lockDrive);
+  }
+
+  public static Command alignToAngleRobotRelativeContinuousWithDrive(Supplier<Rotation2d> rot, Translation2d speeds) {
+    return alignContinuousFieldRelativeWithDrive(
+        () -> {
+          return Rotation2d.fromDegrees(
+              (RobotContainer.drivetrain.getWrappedRotation().getDegrees() + rot.get().getDegrees()) % 360);
+        },
+        speeds);
   }
 
   public static Command getShooterSysIdCommand(String motors) {
@@ -343,6 +382,26 @@ public class Commands555 {
                 })); // TODO should we lock drive?
   }
 
+  public static Command alignToLimelightTargetWithDrive(Limelight camera, DetectionType targetType, Translation2d speeds) {
+
+    // Rotation2d targetAngle = Rotation2d.fromDegrees(-camera.getObjectTX());
+    return Commands.sequence(
+        waitForPipe(camera, targetType),
+        ifHasTarget(
+            alignToAngleRobotRelativeContinuousWithDrive(
+                () -> {
+                  Rotation2d targetAngle = Rotation2d.fromDegrees(-camera.getObjectTX());
+                  return targetAngle;
+                },
+                speeds),
+            camera)
+            .finallyDo(
+                () -> {
+                  RobotContainer.drivetrain.setChassisSpeeds(new ChassisSpeeds(0, 0, 0));
+                  camera.setDefaultPipeline();
+                })); // TODO should we lock drive?
+  }
+
   //ONLY USE IN AUTO JANK AF
   public static Command alignToLimelightTargetWithStop(Limelight camera, DetectionType targetType) {
 
@@ -350,6 +409,7 @@ public class Commands555 {
     
     return Commands.sequence(
         waitForPipe(camera, targetType),
+        log("Got pipe in alignToLimelightTargetWithStop"),
         ifHasTarget(
             alignToAngleRobotRelativeContinuous(
                 () -> {
@@ -358,7 +418,7 @@ public class Commands555 {
                 },
                 false),
             camera)
-            .until(RobotContainer.shooterLimelight::isAlignedAuto)
+            .until(camera::isAlignedAuto)
             .finallyDo(
                 () -> {
                   RobotContainer.drivetrain.setChassisSpeeds(new ChassisSpeeds(0, 0, 0));
@@ -385,16 +445,22 @@ public class Commands555 {
     Pose2d drivePose = RobotContainer.drivetrain.getSwerveDrive().getPose();
 
     Translation2d targetTranslation = drivePose.getTranslation();
-    targetTranslation = targetTranslation.plus(RobotContainer.shooterLimelight.getTargetPoseRobotSpace().getTranslation()).minus(new Translation2d(DriveConstants.BUMPER_WIDTH, 0));
+    targetTranslation = targetTranslation.plus(RobotContainer.shooterLimelight.getTargetPoseRobotSpace().getTranslation()).minus(new Translation2d(DriveConstants.BUMPER_WIDTH + DriveConstants.DRIVE_BASE_RADIUS, 0));
 
-    Rotation2d rot = RobotContainer.drivetrain.getWrappedRotation().plus(RobotContainer.shooterLimelight.getTargetPoseRobotSpace().getRotation());
+    Rotation2d rot = Drivetrain.flipAngle(Rotation2d.fromDegrees(270));
 
     // targetTranslation.plus(AutoConstants.TRANSLATION_FROM_AMP);
 
+    List<Translation2d> points = PathPlannerPath.bezierFromPoses(
+      drivePose,
+      new Pose2d(targetTranslation, rot)
+    );
+
+    PathPlannerPath path = new PathPlannerPath(points, AutoConstants.PATH_CONSTRAINTS, new GoalEndState(0, rot));
 
     return Commands.sequence(
       Commands.parallel(
-        AutoBuilder.pathfindToPose(new Pose2d(targetTranslation, rot), AutoConstants.PATH_CONSTRAINTS, 0),
+        AutoBuilder.followPath(path),
         setSprocketAngle(ArmConstants.AMP_SCORE_ANGLE),
         spinUpShooter(ShooterConstants.AMP_EJECT_SPEED_TOP, ShooterConstants.AMP_EJECT_SPEED_BOTTOM)
       ),
@@ -574,7 +640,7 @@ public class Commands555 {
         log("In shoot command, at speed!"),
         Commands555.transport(transportSpeed),
         log("Transported"),
-        Commands555.waitForTime(0.75))
+        Commands555.waitForTime(0.25)) //TODO should be 0.75 maybe and ferry note
         .finallyDo(() -> {
           RobotContainer.shooter.stopTransport();
           if (!DriverStation.isAutonomous()) {

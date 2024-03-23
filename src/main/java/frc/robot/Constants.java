@@ -190,7 +190,7 @@ public final class Constants {
 
     public static final double TRANSPORT_FERRY_SPEED = TRANSPORT_SPEED;
     
-    public static final double FERRY_SHOOT_SPEED = 4000;
+    public static final double FERRY_SHOOT_SPEED = 3000;
     // From SysId
     // public static final double TOP_SHOOTER_FF_KS = 0.20823;
     // public static final double TOP_SHOOTER_FF_KV = 0.0021625;

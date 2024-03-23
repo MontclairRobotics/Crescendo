@@ -1,13 +1,17 @@
 package frc.robot.subsystems;
 
+import com.pathplanner.lib.util.GeometryUtil;
 import com.pathplanner.lib.util.PathPlannerLogging;
 import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+
 import static edu.wpi.first.units.Units.*;
 import edu.wpi.first.units.Angle;
 import edu.wpi.first.units.Distance;
@@ -98,7 +102,20 @@ public class Drivetrain extends SubsystemBase {
       return getSwerveDrive().getOdometryHeading().getDegrees();
     });
 
+    
     Shuffleboard.getTab("Debug").addDouble("Wrapped Angle", () -> RobotContainer.drivetrain.getWrappedRotation().getDegrees());
+    Shuffleboard.getTab("Debug").addDouble("Front Left Velocity", () -> {
+      return motors.get(0).getVelocity().getValueAsDouble();
+    });
+    Shuffleboard.getTab("Debug").addDouble("Front Right Velocity", () -> {
+      return motors.get(1).getVelocity().getValueAsDouble();
+    });
+    Shuffleboard.getTab("Debug").addDouble("Back Left Velocity", () -> {
+      return motors.get(2).getVelocity().getValueAsDouble();
+    });
+    Shuffleboard.getTab("Debug").addDouble("Back Right Velocity", () -> {
+      return motors.get(3).getVelocity().getValueAsDouble();
+    });
   }
 
   public static boolean angleDeadband(Rotation2d angle1, Rotation2d angle2, Rotation2d deadband) {
@@ -107,6 +124,13 @@ public class Drivetrain extends SubsystemBase {
     double deadbandDeg = wrapRotation(deadband).getDegrees();
 
     return Math.abs(degrees1 - degrees2) < deadbandDeg || Math.abs(degrees1 - degrees2) > 360 - deadbandDeg;
+  }
+
+  public static Rotation2d flipAngle(Rotation2d angle) {
+    if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red) {
+      return GeometryUtil.flipFieldRotation(angle);
+    }
+    return angle;
   }
 
   public static Rotation2d wrapRotation(Rotation2d rot) {
@@ -271,9 +295,29 @@ public class Drivetrain extends SubsystemBase {
 
     public Command getSysIdCommand() {
       SysIdRoutine routine = SwerveDriveTest.setDriveSysIdRoutine(new Config(), this, swerveDrive, 12);
-      return SwerveDriveTest.generateSysIdCommand(routine, 5, 3, 2);
+      return SwerveDriveTest.generateSysIdCommand(routine, 5, 2, 2);
     }
 
+    public void driveOneMeter() {
+      TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(4, 3);
+
+      ProfiledPIDController snapController = new ProfiledPIDController(5, 0, 0, kThetaControllerConstraints);
+	    ProfiledPIDController xController = new ProfiledPIDController(5, 0, 0, kThetaControllerConstraints);
+	    ProfiledPIDController yController = new ProfiledPIDController(5, 0, 0, kThetaControllerConstraints);
+
+      xController.setGoal(new TrapezoidProfile.State(1, 0));
+		  yController.setGoal(new TrapezoidProfile.State(1, 0));
+		  snapController.setGoal(new TrapezoidProfile.State(Math.toRadians(0), 0.0));
+
+        // getPose() should return the robot's position on the field in meters, probably from odometry
+        // getYaw180 just returns the reading from the gyro
+		  double xAdjustment = xController.calculate(swerveDrive.getPose().getY());
+		  double yAdjustment = -yController.calculate(swerveDrive.getPose().getX());
+      double angleAdjustment = snapController.calculate(Math.toRadians(0));
+
+      swerveDrive.drive(new Translation2d(xAdjustment, yAdjustment), angleAdjustment, true, true, new Translation2d());
+
+    }
     
     public SysIdRoutine getSysIdDrive() {
         MutableMeasure<Voltage> appliedVoltage = MutableMeasure.mutable(Volts.of(0));

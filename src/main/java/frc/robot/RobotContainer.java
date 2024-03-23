@@ -127,6 +127,8 @@ public class RobotContainer {
 
     ControllerTools.getDPad(DPad.LEFT, debugController).whileTrue(Commands555.rightClimberUp());
     ControllerTools.getDPad(DPad.RIGHT, debugController).whileTrue(Commands555.rightClimberDown());
+
+    debugController.cross().whileTrue(Commands555.driveOneMeter());
   }
 
   private void configureDriverBindings() {
@@ -152,8 +154,8 @@ public class RobotContainer {
         .onTrue(Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(90), false));
 
     driverController.R2().and(() -> shooterLimelight.hasValidTarget()).whileTrue(Commands555.scoreMode());
-    driverController.L1().onTrue(Commands555.alignToLimelightTarget(shooterLimelight, DetectionType.APRIL_TAG));
-    driverController.R1().onTrue(Commands555.alignToLimelightTarget(intakeLimelight, DetectionType.NOTE));
+    driverController.L1().whileTrue(Commands555.alignToLimelightTarget(shooterLimelight, DetectionType.APRIL_TAG));
+    driverController.R1().whileTrue(Commands555.alignToLimelightTarget(intakeLimelight, DetectionType.NOTE));
 
     driverController
         .touchpad()
@@ -165,14 +167,18 @@ public class RobotContainer {
                 .ignoringDisable(true));
     driverController.PS().onTrue(Commands555.lockDrive());
 
-    ControllerTools.getDPad(DPad.LEFT, driverController).onTrue(RobotContainer.drivetrain.getSysIdCommand());
-    
+    // ControllerTools.getDPad(DPad.LEFT, driverController).onTrue(Commands555.loadNoteAuto());
 
+    ControllerTools.getDPad(DPad.LEFT, driverController).onTrue(Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(60), false));
+    ControllerTools.getDPad(DPad.RIGHT, driverController).onTrue(Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(300), false));
+    ControllerTools.getDPad(DPad.UP, driverController).onTrue(Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(180), false));
+    ControllerTools.getDPad(DPad.DOWN, driverController).onTrue(RobotContainer.drivetrain.getSysIdCommand());
+                    
   }
   private void configureOperatorBindings() {
   
-    ControllerTools.getDPad(DPad.UP, operatorController).onTrue(Commands555.climbersUp());
-    ControllerTools.getDPad(DPad.DOWN, operatorController).onTrue(Commands555.climbersDown());
+    // ControllerTools.getDPad(DPad.UP, operatorController).onTrue(Commands555.climbersUp());
+    // ControllerTools.getDPad(DPad.DOWN, operatorController).onTrue(Commands555.climbersDown());
 
     operatorController.R2().whileTrue(Commands555.unloadNote());
     // operatorController.R2().onTrue(Commands555.testPipeSwitch(intakeLimelight, DetectionType.APRIL_TAG));
@@ -186,9 +192,9 @@ public class RobotContainer {
     //   RobotContainer.sprocket.setPosition(Rotation2d.fromDegrees(RobotContainer.sprocket.angleSetpoint.get()));
     // }));
 
-    operatorController.cross().whileTrue(Commands555.ferryNote());
+    operatorController.cross().whileTrue(Commands555.ferryNote(42));
     operatorController.triangle().onTrue(Commands555.scoreAmp());
-    operatorController.square().onTrue(Commands555.lowerRobot());
+    operatorController.square().onTrue(Commands555.ferryNote(32));
     
     
 
