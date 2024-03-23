@@ -50,7 +50,9 @@ import com.ctre.phoenix6.hardware.TalonFX;
 public class Drivetrain extends SubsystemBase {
 
   private final SwerveDrive swerveDrive;
+  Timer timer = new Timer();
 
+  SwerveModule[] modules;
   Orchestra orchestra;
 
   @AutoLogOutput private boolean isFieldRelative;
@@ -63,7 +65,7 @@ public class Drivetrain extends SubsystemBase {
 
     SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
 
-
+    timer.start();
     // })
     try {
       swerveDrive = new SwerveParser(directory).createSwerveDrive(DriveConstants.MAX_SPEED);
@@ -80,7 +82,7 @@ public class Drivetrain extends SubsystemBase {
         (targetPose) -> {
           Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose);
         });
-    SwerveModule[] modules = swerveDrive.getModules();
+    modules = swerveDrive.getModules();
     ArrayList<TalonFX> motors = new ArrayList<TalonFX>();
     motors.add((TalonFX) modules[0].getDriveMotor().getMotor());
     motors.add((TalonFX) modules[1].getDriveMotor().getMotor());
@@ -165,9 +167,18 @@ public class Drivetrain extends SubsystemBase {
   /** logs data: module positions, gyro rotation, and pose */
   @Override
   public void periodic() {
-    Logger.recordOutput("Drivetrain/Module-Positions", getSwerveDrive().getModulePositions());
-    Logger.recordOutput("Drivetrain/Gyro-Rotation", getSwerveDrive().getGyroRotation3d());
-    Logger.recordOutput("Drivetrain/Pose", getSwerveDrive().getPose());
+    // Logger.recordOutput("Drivetrain/Module-Positions", getSwerveDrive().getModulePositions());
+    // Logger.recordOutput("Drivetrain/Gyro-Rotation", getSwerveDrive().getGyroRotation3d());
+    // Logger.recordOutput("Drivetrain/Pose", getSwerveDrive().getPose());
+    
+    if (timer.get() >= 0.4) {
+      System.out.println("FL " + modules[0].getDriveMotor().getVelocity());
+      System.out.println("FR " + modules[1].getDriveMotor().getVelocity());
+      System.out.println("BL " + modules[2].getDriveMotor().getVelocity());
+      System.out.println("FR " + modules[3].getDriveMotor().getVelocity());
+      timer.reset();
+      timer.start();
+    } 
 
     RobotContainer.field.setRobotPose(swerveDrive.getPose());
   }

@@ -424,7 +424,7 @@ public class Auto extends SubsystemBase {
                 new ChassisSpeeds(),
                 path.getPreviewStartingHolonomicPose().getRotation()
               ));
-          Command cmd = Commands.sequence(AutoBuilder.followPath(path), Commands555.waitForTime(0.5));
+          Command cmd = Commands.sequence(AutoBuilder.followPath(path), Commands555.waitForTime(0.2));
           segment = new ParallelRaceGroup(cmd);
         } else {
           setFeedback("Scoring Mode "); // TODO: Better feedback, or none. :D
