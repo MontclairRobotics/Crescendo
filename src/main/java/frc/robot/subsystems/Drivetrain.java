@@ -96,9 +96,10 @@ public class Drivetrain extends SubsystemBase {
     orchestra.loadMusic("nationGood.chrp");
 
 
-    DriveConstants.kp.whenUpdate(getSwerveDrive().getSwerveController().thetaController::setP);
-    DriveConstants.kd.whenUpdate(getSwerveDrive().getSwerveController().thetaController::setD);
-    DriveConstants.ki.whenUpdate(getSwerveDrive().getSwerveController().thetaController::setI);
+    getSwerveDrive().getSwerveController().thetaController.setTolerance(DriveConstants.ANGLE_DEADBAND * ((Math.PI ) / 180 ));
+    // DriveConstants.kp.whenUpdate(getSwerveDrive().getSwerveController().thetaController::setP);
+    // DriveConstants.kd.whenUpdate(getSwerveDrive().getSwerveController().thetaController::setD);
+    // DriveConstants.ki.whenUpdate(getSwerveDrive().getSwerveController().thetaController::setI);
 
     Shuffleboard.getTab("Debug").addDouble("Gyroscope Angle", () -> {
       return getSwerveDrive().getOdometryHeading().getDegrees();

@@ -184,6 +184,12 @@ public class RobotContainer {
     // operatorController.R2().onTrue(Commands555.testPipeSwitch(intakeLimelight, DetectionType.APRIL_TAG));
     operatorController.L2().whileTrue(Commands555.loadNote());
 
+    ControllerTools.getDPad(DPad.UP, debugController).whileTrue(Commands555.leftClimberUp());
+    ControllerTools.getDPad(DPad.DOWN, debugController).whileTrue(Commands555.leftClimberDown());
+
+    ControllerTools.getDPad(DPad.LEFT, debugController).whileTrue(Commands555.rightClimberUp());
+    ControllerTools.getDPad(DPad.RIGHT, debugController).whileTrue(Commands555.rightClimberDown());
+
     
       
     // operatorController.square().onTrue(Commands555.setSprocketAngle(shooterLimelight.bestFit()));
@@ -203,7 +209,7 @@ public class RobotContainer {
     operatorController.circle().and(() -> isDriverMode).whileTrue(Commands555.runTransportManual());
     // operatorController.R1().onTrue(Commands.runOnce(RobotContainer.shooter::toggleShooter)); //TODO 
    
-    ControllerTools.getDPad(DPad.LEFT, operatorController).onTrue(Commands.runOnce(drivetrain::playMusic).ignoringDisable(true));
+    // ControllerTools.getDPad(DPad.LEFT, operatorController).onTrue(Commands.runOnce(drivetrain::playMusic).ignoringDisable(true));
 
 
     // operatorController.L1().onTrue(Commands555.celebrate());

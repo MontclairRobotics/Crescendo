@@ -476,7 +476,7 @@ public class Auto extends SubsystemBase {
           finalPath.addCommands(Commands555.goToAngleFieldRelative(Drivetrain.wrapRotation(angle), false));
         }
         finalPath.addCommands(Commands555.log("DONE ALIGNING TO FIELD ANGLE"));
-        finalPath.addCommands(Commands555.scoreModeAuto());
+        finalPath.addCommands(Commands555.scoreModeAuto().withTimeout(2));
       }
 
 
