@@ -640,7 +640,7 @@ public class Commands555 {
         log("In shoot command, at speed!"),
         Commands555.transport(transportSpeed),
         log("Transported"),
-        Commands555.waitForTime(0.25)) //TODO should be 0.75 maybe and ferry note
+        Commands555.waitForTime(0.3)) //TODO should be 0.75 maybe and ferry note
         .finallyDo(() -> {
           RobotContainer.shooter.stopTransport();
           if (!DriverStation.isAutonomous()) {

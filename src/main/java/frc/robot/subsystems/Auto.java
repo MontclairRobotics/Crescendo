@@ -450,7 +450,7 @@ public class Auto extends SubsystemBase {
 
       // Only rely on vision and driving forward manually if it's a close note.
       if (isGoingToNote) {
-        finalPath.addCommands(Commands555.loadNoteAuto().onlyWhile(() -> {return !RobotContainer.shooter.isNoteInTransport();}).withTimeout(2));
+        finalPath.addCommands(Commands555.loadNoteAuto().onlyWhile(() -> {return !RobotContainer.shooter.isNoteInTransport();}).withTimeout(1));
       }
 
       // If we're trying to score
@@ -473,10 +473,10 @@ public class Auto extends SubsystemBase {
           angle = GeometryUtil.flipFieldRotation(angle);
         }
         if (next != '5') {
-          finalPath.addCommands(Commands555.goToAngleFieldRelative(Drivetrain.wrapRotation(angle), false));
+          finalPath.addCommands(Commands555.goToAngleFieldRelative(Drivetrain.wrapRotation(angle), false).withTimeout(0.9));
         }
         finalPath.addCommands(Commands555.log("DONE ALIGNING TO FIELD ANGLE"));
-        finalPath.addCommands(Commands555.scoreModeAuto().withTimeout(2));
+        finalPath.addCommands(Commands555.scoreModeAuto().withTimeout(0.9));
       }
 
 

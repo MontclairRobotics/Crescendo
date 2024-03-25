@@ -172,7 +172,7 @@ public class RobotContainer {
     ControllerTools.getDPad(DPad.LEFT, driverController).onTrue(Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(60), false));
     ControllerTools.getDPad(DPad.RIGHT, driverController).onTrue(Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(300), false));
     ControllerTools.getDPad(DPad.UP, driverController).onTrue(Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(180), false));
-    ControllerTools.getDPad(DPad.DOWN, driverController).onTrue(RobotContainer.drivetrain.getSysIdCommand());
+    // ControllerTools.getDPad(DPad.DOWN, driverController).whileTrue(Commands555.scoreModeAuto());
                     
   }
   private void configureOperatorBindings() {
