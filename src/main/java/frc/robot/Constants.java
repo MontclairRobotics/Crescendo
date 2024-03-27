@@ -37,9 +37,12 @@ public final class Constants {
     public static Tunable<Double> kd = Tunable.of(0, "heading.kd");
     public static Tunable<Double> ki = Tunable.of(0.01, "heading.ki");
 
+    public static final double DRIVE_KS = 0.12;
+    public static final double DRIVE_KV = 2.8;
+    public static final double DRIVE_KA = 0.17;
     public static final double BUMPER_WIDTH = Units.inchesToMeters(3); // TODO get real width
 
-    public static final boolean IS_OPEN_LOOP = true;
+    public static final boolean IS_OPEN_LOOP = false;
 
     public static final double MAX_VOLTAGE_V = 12.0;
     public static final double MAX_SPEED = Units.feetToMeters(13);
