@@ -40,7 +40,9 @@ import frc.robot.Commands555;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.command.AutoPoseEstimateToNote;
 import frc.robot.util.Array555;
 import frc.robot.vision.DetectionType;
 
@@ -94,7 +96,7 @@ public class Auto extends SubsystemBase {
         RobotContainer.drivetrain.getSwerveDrive()
             ::getRobotVelocity, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
         (ChassisSpeeds x) -> {
-          RobotContainer.drivetrain.getSwerveDrive().drive(new ChassisSpeeds(x.vxMetersPerSecond, x.vyMetersPerSecond, x.omegaRadiansPerSecond), true, new Translation2d());
+          RobotContainer.drivetrain.getSwerveDrive().drive(new ChassisSpeeds(x.vxMetersPerSecond, x.vyMetersPerSecond, x.omegaRadiansPerSecond), DriveConstants.IS_OPEN_LOOP, new Translation2d());
         }, // Method that will drive the robot given ROBOT RELATIVE, // Method that will drive the robot given ROBOT RELATIVE
         // ChassisSpeeds
         Constants.AutoConstants.PATH_FOLLOWER_CONFIG,
@@ -424,7 +426,18 @@ public class Auto extends SubsystemBase {
                 new ChassisSpeeds(),
                 path.getPreviewStartingHolonomicPose().getRotation()
               ));
-          Command cmd = Commands.sequence(AutoBuilder.followPath(path), Commands555.waitForTime(0.2));
+          Command pathCommand;
+          // If we are heading towards a far note, then run the AutoPoseEstimateToNote in parallel
+          if ((next == 'D') || (next == 'E') || (next == 'F') || (next == 'G') || (next == 'H')) {
+            pathCommand = Commands.parallel(
+              AutoBuilder.followPath(path),
+              new AutoPoseEstimateToNote(RobotContainer.drivetrain.getSwerveDrive().kinematics, next)
+            );
+          } else {
+            pathCommand = AutoBuilder.followPath(path);
+          }
+          Command cmd = Commands.sequence(pathCommand, Commands555.waitForTime(0.5).until(RobotContainer.shooter::isNoteInTransport));
+          // Command cmd = Commands.sequence(AutoBuilder.followPath(path), Commands555.waitForTime(0.2));
           segment = new ParallelRaceGroup(cmd);
         } else {
           setFeedback("Scoring Mode "); // TODO: Better feedback, or none. :D

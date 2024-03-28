@@ -19,6 +19,7 @@ import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Drivetrain;
 
 import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.Logger;
 
 public class Limelight extends SubsystemBase {
   private double lastTx = 0;
@@ -159,6 +160,9 @@ public class Limelight extends SubsystemBase {
       }
     }
 
+    Logger.recordOutput(cameraName + "/TX", getObjectTX()); 
+    Logger.recordOutput(cameraName + "/TY", getObjectTY()); 
+    Logger.recordOutput(cameraName + "/HasTarget", hasValidTarget());
     // if (DriverStation.isDisabled()) {
       if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red) {
         LimelightHelpers.setPriorityTagID(cameraName, 4); //4
