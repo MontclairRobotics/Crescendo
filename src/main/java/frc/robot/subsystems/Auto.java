@@ -463,10 +463,10 @@ public class Auto extends SubsystemBase {
           angle = Rotation2d.fromDegrees(0);
         }
         else if (next == 'C') {
-          angle = Rotation2d.fromDegrees(30);
+          angle = Rotation2d.fromDegrees(26.57);
         }
         else if (next == '5') {
-          angle = Rotation2d.fromDegrees(-30);
+          angle = Rotation2d.fromDegrees(-26.57);
         }
 
         if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red) {
