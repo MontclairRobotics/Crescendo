@@ -436,7 +436,7 @@ public class Auto extends SubsystemBase {
           } else {
             pathCommand = AutoBuilder.followPath(path);
           }
-          Command cmd = Commands.sequence(pathCommand, Commands555.waitForTime(0.5).until(RobotContainer.shooter::isNoteInTransport));
+          Command cmd = Commands.sequence(pathCommand, Commands555.waitForTime(0.2).until(RobotContainer.shooter::isNoteInTransport));
           // Command cmd = Commands.sequence(AutoBuilder.followPath(path), Commands555.waitForTime(0.2));
           segment = new ParallelRaceGroup(cmd);
         } else {
