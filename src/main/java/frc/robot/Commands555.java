@@ -136,7 +136,7 @@ public class Commands555 {
       RobotContainer.drivetrain.setChassisSpeeds(speeds);
     });
   }
-  public static Command loadNoteAuto() {
+  public static Command loadNoteAutoOld() {
 
     Command driveIntake = Commands.race(Commands555.alignToLimelightTargetWithDrive(RobotContainer.intakeLimelight, DetectionType.NOTE, new Translation2d(1.5, 0)),
         Commands555.intake(), Commands.waitUntil(() -> {
@@ -158,6 +158,26 @@ public class Commands555 {
           System.out.println("Load Note Auto Canceled!");
         });
 
+  }
+
+  public static Command loadNoteAuto() {
+    return Commands.sequence(
+      log("Loading Note Auto!"),
+      Commands.parallel(
+        alignToLimelightTargetWithStop(RobotContainer.intakeLimelight, DetectionType.NOTE),
+        Commands555.setSprocketAngleWithStop(() -> ArmConstants.INTAKE_ANGLE)
+      ),
+      log("Done Aligning, beginning intake"),
+      Commands555.transport(ShooterConstants.TRANSPORT_SPEED),
+      Commands.parallel(
+        Commands555.intake(),
+        Commands555.alignToLimelightTargetWithDrive(RobotContainer.intakeLimelight, DetectionType.NOTE, new Translation2d(1.5, 0))
+      ).until(RobotContainer.shooter::isNoteInTransport).withTimeout(2)
+    ).finallyDo(() -> {
+      RobotContainer.intake.stop();
+      RobotContainer.shooter.stopTransport();
+      System.out.println("Load Note Auto Canceled!");
+    });
   }
 
   public static Command driveOneMeter() {
@@ -490,7 +510,7 @@ public class Commands555 {
 
  
   // Used during auto for scoring speaker(usually from one of the note locations)
-  public static Command scoreModeAuto() {
+  public static Command scoreModeAutoOld() {
     Command alignAndAngle = Commands.race(alignToLimelightTargetWithStop(RobotContainer.shooterLimelight, DetectionType.APRIL_TAG), setSprocketAngle(RobotContainer.shooterLimelight::bestFit));
     return Commands.sequence(
       alignAndAngle, 
@@ -503,6 +523,18 @@ public class Commands555 {
       Commands555.shoot(ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.TRANSPORT_SPEED));
 
 
+  }
+
+  public static Command scoreModeAuto() {
+    return Commands.sequence(
+      log("Aligning for scoring mode auto!"),
+      Commands.parallel(
+        alignToLimelightTargetWithStop(RobotContainer.shooterLimelight, DetectionType.APRIL_TAG),
+        setSprocketAngleWithStop(RobotContainer.shooterLimelight::bestFit)
+      ).withTimeout(0.7),
+      log("Aligned for scoring mode auto!"),
+      shoot(ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.TRANSPORT_SPEED)
+    );
   }
 
   public static Command runTransportManual() {
