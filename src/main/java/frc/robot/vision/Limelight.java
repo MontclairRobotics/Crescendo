@@ -19,6 +19,7 @@ import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Drivetrain;
 
 import org.littletonrobotics.junction.AutoLogOutput;
+import org.littletonrobotics.junction.Logger;
 
 public class Limelight extends SubsystemBase {
   private double lastTx = 0;
@@ -149,16 +150,19 @@ public class Limelight extends SubsystemBase {
   @Override
   public void periodic() {
 
-    // if (getPipelineType() == DetectionType.APRIL_TAG && hasValidTarget()) { //TODO test this TEST THIS
-    //   LimelightHelpers.PoseEstimate targetPose = getAdjustedPose();
-    //   if (targetPose.tagCount >= 2) {
-    //     RobotContainer.drivetrain.addVisionMeasurement(
-    //       targetPose.pose,
-    //       targetPose.timestampSeconds
-    //     );
-    //   }
-    // }
+    if (getPipelineType() == DetectionType.APRIL_TAG && hasValidTarget()) { //TODO test this TEST THIS
+      LimelightHelpers.PoseEstimate targetPose = getAdjustedPose();
+      if (targetPose.tagCount >= 2) {
+        RobotContainer.drivetrain.addVisionMeasurement(
+          targetPose.pose,
+          targetPose.timestampSeconds
+        );
+      }
+    }
 
+    Logger.recordOutput(cameraName + "/TX", getObjectTX()); 
+    Logger.recordOutput(cameraName + "/TY", getObjectTY()); 
+    Logger.recordOutput(cameraName + "/HasTarget", hasValidTarget());
     // if (DriverStation.isDisabled()) {
       if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red) {
         LimelightHelpers.setPriorityTagID(cameraName, 4); //4

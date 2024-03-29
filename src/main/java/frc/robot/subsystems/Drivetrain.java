@@ -6,6 +6,7 @@ import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -49,6 +50,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 
 public class Drivetrain extends SubsystemBase {
 
+  private ChassisSpeeds speeds;
   private final SwerveDrive swerveDrive;
   Timer timer = new Timer();
 
@@ -73,6 +75,9 @@ public class Drivetrain extends SubsystemBase {
       throw new RuntimeException(e);
     }
 
+    SimpleMotorFeedforward ff = new SimpleMotorFeedforward(DriveConstants.DRIVE_KS, DriveConstants.DRIVE_KV, DriveConstants.DRIVE_KA);
+    swerveDrive.replaceSwerveModuleFeedforward(ff);
+
     PathPlannerLogging.setLogActivePathCallback(
         (activePath) -> {
           Logger.recordOutput(
@@ -82,6 +87,8 @@ public class Drivetrain extends SubsystemBase {
         (targetPose) -> {
           Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose);
         });
+
+    Shuffleboard.getTab("Debug").addDouble("Drivetrain/FrontLeftVoltage", getSwerveDrive().getModules()[0].getDriveMotor()::getVoltage);
     modules = swerveDrive.getModules();
     ArrayList<TalonFX> motors = new ArrayList<TalonFX>();
     motors.add((TalonFX) modules[0].getDriveMotor().getMotor());
@@ -119,6 +126,8 @@ public class Drivetrain extends SubsystemBase {
     Shuffleboard.getTab("Debug").addDouble("Back Right Velocity", () -> {
       return motors.get(3).getVelocity().getValueAsDouble();
     });
+
+    
   }
 
   public static boolean angleDeadband(Rotation2d angle1, Rotation2d angle2, Rotation2d deadband) {
@@ -155,7 +164,7 @@ public class Drivetrain extends SubsystemBase {
 
   /** It drives with certain linear velocities with a certain rotational velocity */
   public void drive(Translation2d translation, double rotation) {
-
+    
     swerveDrive.drive(translation, rotation, this.isFieldRelative, DriveConstants.IS_OPEN_LOOP);
   }
 
