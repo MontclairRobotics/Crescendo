@@ -148,16 +148,16 @@ public class Limelight extends SubsystemBase {
 
   @Override
   public void periodic() {
-
-    if (getPipelineType() == DetectionType.APRIL_TAG && hasValidTarget()) { //TODO test this TEST THIS
-      LimelightHelpers.PoseEstimate targetPose = getAdjustedPose();
-      if (targetPose.tagCount >= 2) {
-        RobotContainer.drivetrain.addVisionMeasurement(
-          targetPose.pose,
-          targetPose.timestampSeconds
-        );
-      }
-    }
+    // TODO: LOOK INTO THIS PLEASE TYSM <3
+    // if (getPipelineType() == DetectionType.APRIL_TAG && hasValidTarget()) { //TODO test this TEST THIS
+    //   LimelightHelpers.PoseEstimate targetPose = getAdjustedPose();
+    //   if (targetPose.tagCount >= 2) {
+    //     RobotContainer.drivetrain.addVisionMeasurement(
+    //       targetPose.pose,
+    //       targetPose.timestampSeconds
+    //     );
+    //   }
+    // }
 
     // if (DriverStation.isDisabled()) {
       if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red) {
