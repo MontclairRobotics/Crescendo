@@ -211,10 +211,10 @@ public final class Constants {
     // public static final double TOP_SHOOTER_PID_KP = 3.8326e-07;
     // public static final double TOP_SHOOTER_PID_KI = 0;
     // public static final double TOP_SHOOTER_PID_KD = 0;
-    public static final double TOP_SHOOTER_FF_KS = 0.18454;
-    public static final double TOP_SHOOTER_FF_KV = 0.0021629;
-    public static final double TOP_SHOOTER_FF_KA = 0.00026348;
-    public static final double TOP_SHOOTER_PID_KP = 4.4848e-07;
+    public static final double TOP_SHOOTER_FF_KS = 0.25244; // 0.18454
+    public static final double TOP_SHOOTER_FF_KV = 0.0022082; // 0.0021629
+    public static final double TOP_SHOOTER_FF_KA = 0.0002064; // 0.00026348
+    public static final double TOP_SHOOTER_PID_KP = 1.932E-09; //4.4848e-07
     public static final double TOP_SHOOTER_PID_KI = 0;
     public static final double TOP_SHOOTER_PID_KD = 0;
 
@@ -224,10 +224,10 @@ public final class Constants {
     // public static final double BOTTOM_SHOOTER_PID_KP = 4.1584e-07;
     // public static final double BOTTOM_SHOOTER_PID_KI = 0;
     // public static final double BOTTOM_SHOOTER_PID_KD = 0;
-    public static final double BOTTOM_SHOOTER_FF_KS = 0.19665;
-    public static final double BOTTOM_SHOOTER_FF_KV = 0.0022763;
-    public static final double BOTTOM_SHOOTER_FF_KA = 0.00033793;
-    public static final double BOTTOM_SHOOTER_PID_KP = 7.1995e-07;
+    public static final double BOTTOM_SHOOTER_FF_KS = 0.22311; // 0.19665
+    public static final double BOTTOM_SHOOTER_FF_KV = 0.0021558; // 0.0022763
+    public static final double BOTTOM_SHOOTER_FF_KA = 0.00021675; // 0.00033793 
+    public static final double BOTTOM_SHOOTER_PID_KP = 8.0536E-09; // 7.1995e-07
     public static final double BOTTOM_SHOOTER_PID_KI = 0;
     public static final double BOTTOM_SHOOTER_PID_KD = 0;
 
