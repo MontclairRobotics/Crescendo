@@ -1,5 +1,8 @@
 package frc.robot.vision;
 
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.Num;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.util.Units;
@@ -10,6 +13,8 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ShooterConstants;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -18,6 +23,7 @@ import frc.robot.RobotContainer;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Drivetrain;
 
+import org.ejml.simple.SimpleMatrix;
 import org.littletonrobotics.junction.AutoLogOutput;
 
 public class Limelight extends SubsystemBase {
@@ -95,6 +101,10 @@ public class Limelight extends SubsystemBase {
     return LimelightHelpers.getBotPose2d_wpiBlue(cameraName);
   }
 
+  public Pose2d funBotPose() {
+    return LimelightHelpers.toPose2D(LimelightHelpers.getBotPose_TargetSpace(cameraName));
+  }
+
   public DetectionType getPipelineType() {
     if (LimelightHelpers.getLimelightNTDouble(cameraName, "camMode") == 1) {
       return DetectionType.DRIVER;
@@ -169,16 +179,20 @@ public class Limelight extends SubsystemBase {
 
   @Override
   public void periodic() {
+    
+    
     // TODO: LOOK INTO THIS PLEASE TYSM <3
-    // if (getPipelineType() == DetectionType.APRIL_TAG && hasValidTarget()) { //TODO test this TEST THIS
-    //   LimelightHelpers.PoseEstimate targetPose = getAdjustedPose();
-    //   if (targetPose.tagCount >= 2) {
-    //     RobotContainer.drivetrain.addVisionMeasurement(
-    //       targetPose.pose,
-    //       targetPose.timestampSeconds
-    //     );
-    //   }
-    // }
+    if (getPipelineType() == DetectionType.APRIL_TAG && hasValidTarget()) { //TODO test this TEST THIS
+      LimelightHelpers.PoseEstimate targetPose = getAdjustedPose();
+      if (targetPose.tagCount >= 2) {
+        RobotContainer.drivetrain.addVisionMeasurement(
+          targetPose.pose,
+          targetPose.timestampSeconds,
+          VisionConstants.VISION_STD_DEVS
+        );
+        
+      }
+    }
 
     // if (DriverStation.isDisabled()) {
       // if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red) {

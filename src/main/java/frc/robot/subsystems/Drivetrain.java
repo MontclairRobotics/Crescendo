@@ -5,12 +5,15 @@ import com.pathplanner.lib.util.PathPlannerLogging;
 import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
 import static edu.wpi.first.units.Units.*;
@@ -195,6 +198,9 @@ public class Drivetrain extends SubsystemBase {
 
   public void addVisionMeasurement(Pose2d pose, double time) {
     swerveDrive.addVisionMeasurement(pose, time);
+  }
+  public void addVisionMeasurement(Pose2d pose, double time, Matrix<N3, N1> visionMeasurementStdDevs) {
+    swerveDrive.addVisionMeasurement(pose, time, visionMeasurementStdDevs);
   }
 
   /** sets isFieldRelative to either true or false, used for getIsFieldRelative */

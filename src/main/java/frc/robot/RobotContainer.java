@@ -83,7 +83,7 @@ public class RobotContainer {
     Shuffleboard.getTab("Debug").addBoolean("Is aligned", RobotContainer.shooterLimelight::isAlignedAuto);
     Shuffleboard.getTab("Debug").addBoolean("Is at angle", RobotContainer.sprocket::isAtAngle);
     Shuffleboard.getTab("Debug").addBoolean("Is at speed", RobotContainer.shooter::isAtSpeed);
-    
+
 
     auto.setupPathPlanner();
     auto.setupAutoTab();

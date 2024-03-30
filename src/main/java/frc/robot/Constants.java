@@ -17,9 +17,14 @@ import com.pathplanner.lib.util.GeometryUtil;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
+
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.util.Tunable;
@@ -70,6 +75,7 @@ public final class Constants {
     public static final double SHOOTER_LIMELIGHT_ANGLE_DEGREES = 26.74; //31.07;
     public static final double INTAKE_LIMELIGHT_ANGLE_DEGREES = 0;
     public static final double ALIGN_CENTER_OFFSET = 3;
+    public static final Matrix<N3, N1> VISION_STD_DEVS = VecBuilder.fill(0.05, 0.05, .98);
   }
 
   public static class Ports { // TODO: add correct ports

@@ -97,7 +97,9 @@ public class Robot extends LoggedRobot {
   @Override
   public void teleopPeriodic() {
     
-    System.out.println(Rotation2d.fromDegrees(-RobotContainer.shooterLimelight.getObjectTX() + RobotContainer.shooterLimelight.maxIsStupid().getDegrees()));
+    
+    System.out.println(RobotContainer.shooterLimelight.getBotPose());
+    //System.out.println(Rotation2d.fromDegrees(-RobotContainer.shooterLimelight.getObjectTX() + RobotContainer.shooterLimelight.maxIsStupid().getDegrees()));
   }
 
   @Override
