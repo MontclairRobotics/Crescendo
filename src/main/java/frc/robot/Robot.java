@@ -90,22 +90,22 @@ public class Robot extends LoggedRobot {
     RobotContainer.intake.teleopInit();
     // RobotContainer.shooterLimelight.setDefaultPipeline();
     // RobotContainer.intakeLimelight.setDefaultPipeline();
+    
   }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    //System.out.println("distance prob: " + RobotContainer.shooterLimelight.getDistanceToSpeaker()  + " : " + RobotContainer.shooterLimelight.getObjectTY());
-    //System.out.println(RobotContainer.sprocket.getEncoderPosition());
-    //System.out.println(RobotContainer.shooterLimelight.bestFit());
+    
+    System.out.println(Rotation2d.fromDegrees(-RobotContainer.shooterLimelight.getObjectTX() + RobotContainer.shooterLimelight.maxIsStupid().getDegrees()));
   }
 
   @Override
   public void testInit() {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
-    System.out.println("hi");
-    RobotContainer.drivetrain.playMusic();
+    
+    
   }
 
   @Override

@@ -220,6 +220,8 @@ public class Drivetrain extends SubsystemBase {
     this.swerveDrive.resetOdometry(new Pose2d(0.0, 0.0, new Rotation2d(0.0)));
   }
 
+  
+
   @AutoLogOutput
   /** returns direction */
   public Rotation2d getRotation() {

@@ -124,13 +124,27 @@ public class Limelight extends SubsystemBase {
     return distance/Math.cos(getObjectTX() * (Math.PI / 180));
   }
 
-  // public double getModifiedHeading() {
-  //   double distance = getDistanceToSpeaker();
-  //   double gyroHeading = RobotContainer.drivetrain.getWrappedRotation().getDegrees();
-  //   double offset = 6.0;
-  //   double modifiedHeading = (180 / Math.PI * Math.asin(offset * Math.sin(gyroHeading * Math.PI / 180.0))) / Math.sqrt(Math.pow(offset, 2) + (distance * distance) ;
-  // }
+  public double getStraightDistanceToSpeaker() {
+    double distance =
+        (VisionConstants.SPEAKER_APRILTAG_HEIGHT - VisionConstants.SHOOTER_LIMELIGHT_HEIGHT)
+            / Math.tan(
+                (Math.PI / 180.0)
+                    * (VisionConstants.SHOOTER_LIMELIGHT_ANGLE_DEGREES + getObjectTY()));
 
+    return distance;
+
+  }
+
+  public Rotation2d maxIsStupid() {
+    double distance = getStraightDistanceToSpeaker();
+    double gyroHeading = RobotContainer.drivetrain.getWrappedRotation().getRadians();
+    double offsetFromTag = 6.0;
+
+    double angle = Math.asin((offsetFromTag * Math.sin(gyroHeading)) / (Math.sqrt(Math.pow(distance,2) + Math.pow(offsetFromTag,2) - 2 * distance * offsetFromTag * Math.cos(gyroHeading))));
+
+    return Rotation2d.fromRadians(angle);
+
+  }
 
   // public double getAngleForSpeaker() {
   //   double distance = getDistanceToSpeaker() + 14.5 - 6.0; // in the middle of speaker, not the edge.
@@ -156,22 +170,22 @@ public class Limelight extends SubsystemBase {
   @Override
   public void periodic() {
     // TODO: LOOK INTO THIS PLEASE TYSM <3
-    if (getPipelineType() == DetectionType.APRIL_TAG && hasValidTarget()) { //TODO test this TEST THIS
-      LimelightHelpers.PoseEstimate targetPose = getAdjustedPose();
-      if (targetPose.tagCount >= 2) {
-        RobotContainer.drivetrain.addVisionMeasurement(
-          targetPose.pose,
-          targetPose.timestampSeconds
-        );
-      }
-    }
+    // if (getPipelineType() == DetectionType.APRIL_TAG && hasValidTarget()) { //TODO test this TEST THIS
+    //   LimelightHelpers.PoseEstimate targetPose = getAdjustedPose();
+    //   if (targetPose.tagCount >= 2) {
+    //     RobotContainer.drivetrain.addVisionMeasurement(
+    //       targetPose.pose,
+    //       targetPose.timestampSeconds
+    //     );
+    //   }
+    // }
 
     // if (DriverStation.isDisabled()) {
-      if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red) {
-        LimelightHelpers.setPriorityTagID(cameraName, 4); //4
-      } else {
-        LimelightHelpers.setPriorityTagID(cameraName, 7);
-      }
+      // if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red) {
+      //   LimelightHelpers.setPriorityTagID(cameraName, 4); //4
+      // } else {
+      //   LimelightHelpers.setPriorityTagID(cameraName, 7);
+      // }
     // }
 
   }

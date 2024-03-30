@@ -401,6 +401,21 @@ public class Commands555 {
                 })); // TODO should we lock drive?
   }
 
+  public static Command alignToLimelightTargetExtreme(Limelight camera) {
+    return Commands.sequence(
+      waitForPipe(camera, DetectionType.APRIL_TAG),
+      ifHasTarget(
+        alignToAngleRobotRelative(() -> {return Rotation2d.fromDegrees(-camera.getObjectTX() + RobotContainer.shooterLimelight.maxIsStupid().getDegrees());}, false), camera
+      ).finallyDo(
+        () -> {
+          RobotContainer.drivetrain.setChassisSpeeds(new ChassisSpeeds(0, 0, 0));
+          camera.setDefaultPipeline();
+
+        }
+      )
+    );
+  }
+
   public static Command alignToLimelightTargetWithDrive(Limelight camera, DetectionType targetType, Translation2d speeds) {
 
     // Rotation2d targetAngle = Rotation2d.fromDegrees(-camera.getObjectTX());
@@ -447,7 +462,7 @@ public class Commands555 {
 
   public static Command scoreMode() {
     return Commands.parallel(
-        alignToLimelightTarget(RobotContainer.shooterLimelight, DetectionType.APRIL_TAG),
+        alignToLimelightTargetExtreme(RobotContainer.shooterLimelight),
         setSprocketAngle(RobotContainer.shooterLimelight::bestFit),
         Commands.runOnce(() -> {
           RobotContainer.isDriverMode = true;
@@ -458,6 +473,8 @@ public class Commands555 {
           RobotContainer.isDriverMode = false;
         });
   }
+
+  
 
   public static Command alignToAmpAndShoot() {
     Pose2d botPose = RobotContainer.shooterLimelight.getAdjustedPose().pose;
