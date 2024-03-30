@@ -115,6 +115,25 @@ public class Commands555 {
 
   }
 
+  public static Command loadNoteSource() {
+    Command alignSprocket = Commands.sequence(
+      Commands555.setSprocketAngle(ArmConstants.SOURCE_ANGLE),
+      waitUntil(RobotContainer.sprocket::isAtAngle));
+    Command shoot = Commands.runOnce(() -> { RobotContainer.shooter.shootVelocity(-ShooterConstants.SOURCE_SPEED, -ShooterConstants.SOURCE_SPEED);});
+    // Command intake = Commands.sequence(alignSprocket, Commands.parallel(
+    //     }, RobotContainer.shooter), Commands555.transport(ShooterConstants.TRANSPORT_SPEED)));
+    Command intake = Commands.sequence(alignSprocket, log("done aligning"), Commands.parallel(shoot, Commands555.transport(ShooterConstants.TRANSPORT_SPEED)));
+    return intake
+        .withName("intake in")
+        .until(() -> {
+          return RobotContainer.shooter.isNoteInTransport();
+        })
+        .finallyDo(() -> {
+          // RobotContainer.shooter.stop();
+          RobotContainer.shooter.stopTransport();
+        });
+  }
+
   public static Command unloadNote() {
     Command alignSprocket = Commands555.setSprocketAngle(ArmConstants.INTAKE_ANGLE);
     Command intakeAndTransport = Commands.sequence(alignSprocket,
@@ -231,9 +250,9 @@ public class Commands555 {
               boolean isAligned = Drivetrain.angleDeadband(
                   RobotContainer.drivetrain.getWrappedRotation(),
                       rot.get(), Rotation2d.fromDegrees(DriveConstants.ANGLE_DEADBAND));
-              System.out.println(rot.get().getDegrees());
-              System.out.println(isAligned);
-              System.out.println(RobotContainer.drivetrain.getWrappedRotation().getDegrees());
+              // System.out.println(rot.get().getDegrees());
+              // System.out.println(isAligned);
+              // System.out.println(RobotContainer.drivetrain.getWrappedRotation().getDegrees());
 
               return isAligned;
             });
@@ -493,7 +512,7 @@ public class Commands555 {
   public static Command scoreModeAuto() {
     Command alignAndAngle = Commands.race(alignToLimelightTargetWithStop(RobotContainer.shooterLimelight, DetectionType.APRIL_TAG), setSprocketAngle(RobotContainer.shooterLimelight::bestFit));
     return Commands.sequence(
-      alignAndAngle, 
+      alignAndAngle.withTimeout(1), 
       setSprocketAngleWithStop(RobotContainer.shooterLimelight::bestFit),
       log("Scoring mode auto suckers!"),
       Commands.waitUntil(() -> {

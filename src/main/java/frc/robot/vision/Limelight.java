@@ -124,6 +124,13 @@ public class Limelight extends SubsystemBase {
     return distance/Math.cos(getObjectTX() * (Math.PI / 180));
   }
 
+  // public double getModifiedHeading() {
+  //   double distance = getDistanceToSpeaker();
+  //   double gyroHeading = RobotContainer.drivetrain.getWrappedRotation().getDegrees();
+  //   double offset = 6.0;
+  //   double modifiedHeading = (180 / Math.PI * Math.asin(offset * Math.sin(gyroHeading * Math.PI / 180.0))) / Math.sqrt(Math.pow(offset, 2) + (distance * distance) ;
+  // }
+
 
   // public double getAngleForSpeaker() {
   //   double distance = getDistanceToSpeaker() + 14.5 - 6.0; // in the middle of speaker, not the edge.
@@ -149,15 +156,15 @@ public class Limelight extends SubsystemBase {
   @Override
   public void periodic() {
     // TODO: LOOK INTO THIS PLEASE TYSM <3
-    // if (getPipelineType() == DetectionType.APRIL_TAG && hasValidTarget()) { //TODO test this TEST THIS
-    //   LimelightHelpers.PoseEstimate targetPose = getAdjustedPose();
-    //   if (targetPose.tagCount >= 2) {
-    //     RobotContainer.drivetrain.addVisionMeasurement(
-    //       targetPose.pose,
-    //       targetPose.timestampSeconds
-    //     );
-    //   }
-    // }
+    if (getPipelineType() == DetectionType.APRIL_TAG && hasValidTarget()) { //TODO test this TEST THIS
+      LimelightHelpers.PoseEstimate targetPose = getAdjustedPose();
+      if (targetPose.tagCount >= 2) {
+        RobotContainer.drivetrain.addVisionMeasurement(
+          targetPose.pose,
+          targetPose.timestampSeconds
+        );
+      }
+    }
 
     // if (DriverStation.isDisabled()) {
       if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red) {

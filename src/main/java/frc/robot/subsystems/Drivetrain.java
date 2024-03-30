@@ -182,12 +182,12 @@ public class Drivetrain extends SubsystemBase {
     // Logger.recordOutput("Drivetrain/Pose", getSwerveDrive().getPose());
     
     if (timer.get() >= 0.4) {
-      System.out.println("FL " + modules[0].getDriveMotor().getVelocity());
-      System.out.println("FR " + modules[1].getDriveMotor().getVelocity());
-      System.out.println("BL " + modules[2].getDriveMotor().getVelocity());
-      System.out.println("FR " + modules[3].getDriveMotor().getVelocity());
-      timer.reset();
-      timer.start();
+      // System.out.println("FL " + modules[0].getDriveMotor().getVelocity());
+      // System.out.println("FR " + modules[1].getDriveMotor().getVelocity());
+      // System.out.println("BL " + modules[2].getDriveMotor().getVelocity());
+      // System.out.println("FR " + modules[3].getDriveMotor().getVelocity());
+      // timer.reset();
+      // timer.start();
     } 
 
     RobotContainer.field.setRobotPose(swerveDrive.getPose());

@@ -172,7 +172,7 @@ public class RobotContainer {
     ControllerTools.getDPad(DPad.LEFT, driverController).onTrue(Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(60), false));
     ControllerTools.getDPad(DPad.RIGHT, driverController).onTrue(Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(300), false));
     ControllerTools.getDPad(DPad.UP, driverController).onTrue(Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(180), false));
-    // ControllerTools.getDPad(DPad.DOWN, driverController).whileTrue(Commands555.scoreModeAuto());
+    ControllerTools.getDPad(DPad.DOWN, driverController).whileTrue(Commands555.scoreModeAuto());
                     
   }
   private void configureOperatorBindings() {
@@ -201,12 +201,14 @@ public class RobotContainer {
     operatorController.cross().whileTrue(Commands555.ferryNote(42));
     operatorController.triangle().onTrue(Commands555.scoreAmp());
     operatorController.square().onTrue(Commands555.ferryNote(32));
+    operatorController.L1().whileTrue(Commands555.loadNoteSource());
     
     
 
     // operatorController.circle().and(() -> !isDriverMode).onTrue(Commands555.shoot(ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.TRANSPORT_SPEED, 1));
     operatorController.circle().and(() -> !isDriverMode).whileTrue(Commands555.scoreSubwoofer());
     operatorController.circle().and(() -> isDriverMode).whileTrue(Commands555.runTransportManual());
+    
     // operatorController.R1().onTrue(Commands.runOnce(RobotContainer.shooter::toggleShooter)); //TODO 
    
     // ControllerTools.getDPad(DPad.LEFT, operatorController).onTrue(Commands.runOnce(drivetrain::playMusic).ignoringDisable(true));
