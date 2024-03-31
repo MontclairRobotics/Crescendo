@@ -200,8 +200,8 @@ public class RobotContainer {
 
     operatorController.cross().whileTrue(Commands555.ferryNote(42));
     operatorController.triangle().onTrue(Commands555.scoreAmp());
-    // operatorController.square().onTrue(Commands555.ferryNote(32));
-    operatorController.square().onTrue(Commands555.spinUpShooter(4000, 4000)).onFalse(Commands555.stopShooter());
+    operatorController.square().onTrue(Commands555.ferryNote(32));
+    // operatorController.square().onTrue(Commands555.spinUpShooter(4000, 4000)).onFalse(Commands555.stopShooter());
     operatorController.L1().whileTrue(Commands555.loadNoteSource());
     
     
