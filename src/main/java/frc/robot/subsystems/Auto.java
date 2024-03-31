@@ -278,74 +278,7 @@ public class Auto extends SubsystemBase {
     return wpiStates;
   }
 
-  @Deprecated
-  private void buildPathSequence(String autoString) {
 
-
-    SequentialCommandGroup finalPath = new SequentialCommandGroup();
-    trajectories.clear();
-
-    if (autoString.length() == 0) {
-      autoCommand = Commands.sequence(Commands555.setAutoPose(autoString), Commands555.scoreSubwoofer());
-      return;
-    }
-    
-    finalPath.addCommands(Commands555.setAutoPose(autoString));
-
-    if (autoString.length() >= 1) {
-      char digit = autoString.charAt(0);
-      if (digit == '4') {
-          finalPath.addCommands(Commands555.scoreAmp());
-        } else {
-          finalPath.addCommands(Commands555.scoreSubwoofer());
-        }
-    }
-
-  
-    for (int i = 0; i < autoString.length() - 1; i++) {
-
-      char current = autoString.charAt(i);
-      char next = autoString.charAt(i + 1);
-      try {
-        PathPlannerPath path = PathPlannerPath.fromPathFile("" + current + "-" + next);
-        
-        ParallelCommandGroup segment = new ParallelCommandGroup(AutoBuilder.followPath(path));
-        if (!Character.isDigit(next)) {
-          segment.addCommands(Commands555.setSprocketAngle(INTAKE_ANGLE));
-
-        }
-        finalPath.addCommands(segment);
-        trajectories.add(
-            path.getTrajectory(
-              new ChassisSpeeds(),
-              path.getPreviewStartingHolonomicPose().getRotation()
-            ));
-
-        // if (firstPath) {
-        //   RobotContainer.drivetrain.getSwerveDrive().resetOdometry(path.getPreviewStartingHolonomicPose());
-        //   firstPath = false;
-        // } //TODO make this a command, this won't work if they move the robot after
-      } catch (Exception e) {
-        // TODO: amazing error handling
-        setFeedback("Path File Not Found");
-        autoCommand = Commands.runOnce(() -> {}); //TODO this right?
-      }
-
-      if (Character.isDigit(next)) {
-        if (next == '4') {
-          finalPath.addCommands(Commands555.scoreAmp());
-        } else {
-          finalPath.addCommands(Commands555.scoreSubwoofer());
-        }
-
-      } else {
-        
-        finalPath.addCommands(Commands555.autonomousIntake());
-      }
-    }
-    setFeedback("Successfully Created Auto Sequence!");
-    autoCommand = finalPath;
-  }
 
   public void validateAndCreatePaths() {
     String autoString = autoStringEntry.getString("");
@@ -398,7 +331,7 @@ public class Auto extends SubsystemBase {
     finalPath.addCommands(Commands.runOnce(() -> {
       RobotContainer.shooter.shootVelocity(ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.SPEAKER_EJECT_SPEED);
     }));
-    finalPath.addCommands(Commands555.waitUntil(RobotContainer.shooter::isAtSpeed)); //Wait for shooter to ramp up initially
+    
 
     if (autoString.charAt(0) == '4') {
       finalPath.addCommands(Commands555.scoreAmp());
@@ -464,19 +397,19 @@ public class Auto extends SubsystemBase {
           angle = Rotation2d.fromDegrees(0);
         }
         else if (next == 'C') {
-          angle = Rotation2d.fromDegrees(30);
+          angle = Rotation2d.fromDegrees(26.57);
         }
         else if (next == '5') {
-          angle = Rotation2d.fromDegrees(-30);
+          angle = Rotation2d.fromDegrees(-26.57);
         }
 
         if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red) {
           angle = GeometryUtil.flipFieldRotation(angle);
         }
         if (next != '5') {
-          finalPath.addCommands(Commands555.goToAngleFieldRelative(Drivetrain.wrapRotation(angle), false).withTimeout(0.9));
+          finalPath.addCommands(Commands.parallel(Commands555.goToAngleFieldRelative(Drivetrain.wrapRotation(angle), false).withTimeout(0.9)), Commands555.setSprocketAngleWithStop(RobotContainer.shooterLimelight::bestFit));
         }
-        finalPath.addCommands(Commands555.log("DONE ALIGNING TO FIELD ANGLE"));
+        
         finalPath.addCommands(Commands555.scoreModeAuto().withTimeout(0.9));
       }
 
@@ -485,7 +418,7 @@ public class Auto extends SubsystemBase {
         finalPath.addCommands(Commands555.scoreAmpAuto());
       } else if (next == '1' || next == '2' || next == '3') { // Up against subwoofer
         finalPath.addCommands(Commands555.scoreSubwoofer());
-        System.out.println("dfskjl");
+  
       }
       
     }
