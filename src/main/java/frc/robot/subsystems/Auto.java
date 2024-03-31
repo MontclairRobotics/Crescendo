@@ -358,7 +358,7 @@ public class Auto extends SubsystemBase {
                 new ChassisSpeeds(),
                 path.getPreviewStartingHolonomicPose().getRotation()
               ));
-          Command cmd = Commands.sequence(AutoBuilder.followPath(path), Commands555.waitForTime(0.2));
+          Command cmd = Commands.sequence(AutoBuilder.followPath(path), Commands555.waitForTime(0.2).until(RobotContainer.shooter::isNoteInTransport));
           segment = new ParallelRaceGroup(cmd);
         } else {
           setFeedback("Scoring Mode "); // TODO: Better feedback, or none. :D
@@ -407,7 +407,8 @@ public class Auto extends SubsystemBase {
           angle = GeometryUtil.flipFieldRotation(angle);
         }
         if (next != '5') {
-          finalPath.addCommands(Commands.parallel(Commands555.goToAngleFieldRelative(Drivetrain.wrapRotation(angle), false).withTimeout(0.9)), Commands555.setSprocketAngleWithStop(RobotContainer.shooterLimelight::bestFit));
+          finalPath.addCommands(Commands.parallel(Commands555.goToAngleFieldRelative(Drivetrain.wrapRotation(angle), false).withTimeout(0.9)), Commands555.setSprocketAngleWithStop(RobotContainer.shooterLimelight::bestFit)
+          .withTimeout(1));
         }
         
         finalPath.addCommands(Commands555.scoreModeAuto().withTimeout(0.9));
