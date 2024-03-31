@@ -36,6 +36,9 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.FieldConstants;
+import frc.robot.vision.LimelightHelpers;
+
 import java.io.File;
 import java.util.ArrayList;
 
@@ -50,6 +53,7 @@ import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
 import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.FieldCentric;
 
 public class Drivetrain extends SubsystemBase {
 
@@ -395,4 +399,34 @@ public class Drivetrain extends SubsystemBase {
         
         return routine;
     }
+
+    public Rotation2d getHeadingForSpeaker() { // Ripped straight out of the cold dead hands of Thomas
+      Pose2d targetPose;
+      Pose2d currentPose = getSwerveDrive().getPose();
+
+      if (DriverStation.getAlliance().get() == Alliance.Blue) {
+        targetPose = FieldConstants.BLUE_SPEAKER_POSE;
+      } else {
+        targetPose = FieldConstants.RED_SPEAKER_POSE;
+      }
+
+      return currentPose.getTranslation().minus(targetPose.getTranslation()).getAngle();
+    
+    }
+
+    public double getDistanceToSpeaker() { // Straight out of the guts of the roboraiders
+      Pose2d currentPose = getSwerveDrive().getPose();
+      Pose2d targetPose;
+     
+
+      if (DriverStation.getAlliance().get() == Alliance.Blue) {
+        targetPose = FieldConstants.BLUE_SPEAKER_POSE;
+      } else {
+        targetPose = FieldConstants.RED_SPEAKER_POSE;
+      }
+      return currentPose.getTranslation().getDistance(targetPose.getTranslation());
+    }
+
+
+  
 }
