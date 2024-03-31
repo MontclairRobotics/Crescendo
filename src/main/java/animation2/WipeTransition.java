@@ -18,3 +18,4 @@ public class WipeTransition extends TransitionBase {
     }
   }
 }
+

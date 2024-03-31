@@ -147,7 +147,7 @@ public class Commands555 {
         Commands.parallel(Commands555.alignToLimelightTargetWithStop(RobotContainer.intakeLimelight, DetectionType.NOTE),
             Commands555.setSprocketAngle(ArmConstants.INTAKE_ANGLE)),
         log("Done aligning"),
-        Commands.waitUntil(() -> {return RobotContainer.sprocket.isAtAngle() && RobotContainer.intakeLimelight.isAlignedAuto();}),
+        Commands.waitUntil(() -> {return RobotContainer.sprocket.isAtAngle() && RobotContainer.intakeLimelight.isAligned();}),
         log("Done waiting, hhunting down note"),
         Commands555.transport(ShooterConstants.TRANSPORT_SPEED),
         log("Drive Intaking"),
@@ -438,7 +438,7 @@ public class Commands555 {
                 },
                 false),
             camera)
-            .until(camera::isAlignedAuto)
+            .until(camera::isAligned)
             .finallyDo(
                 () -> {
                   RobotContainer.drivetrain.setChassisSpeeds(new ChassisSpeeds(0, 0, 0));
@@ -517,7 +517,7 @@ public class Commands555 {
       setSprocketAngleWithStop(RobotContainer.shooterLimelight::bestFit),
       log("Scoring mode auto suckers!"),
       Commands.waitUntil(() -> {
-        return (RobotContainer.shooterLimelight.isAlignedAuto() && RobotContainer.sprocket.isAtAngle()) && RobotContainer.shooter.isAtSpeed();
+        return (RobotContainer.shooterLimelight.isAligned() && RobotContainer.sprocket.isAtAngle()) && RobotContainer.shooter.isAtSpeed();
       }).withTimeout(0.5), 
       log("Shooting Auto!"),
       Commands555.shoot(ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.TRANSPORT_SPEED));

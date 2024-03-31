@@ -80,7 +80,7 @@ public class RobotContainer {
   public RobotContainer() {
     DriverStation.silenceJoystickConnectionWarning(true);
     Shuffleboard.getTab("Debug").addDouble("Speed!", shooterLimelight::getSpeedForSpeaker);
-    Shuffleboard.getTab("Debug").addBoolean("Is aligned", RobotContainer.shooterLimelight::isAlignedAuto);
+    Shuffleboard.getTab("Debug").addBoolean("Is aligned", RobotContainer.shooterLimelight::isAligned);
     Shuffleboard.getTab("Debug").addBoolean("Is at angle", RobotContainer.sprocket::isAtAngle);
     Shuffleboard.getTab("Debug").addBoolean("Is at speed", RobotContainer.shooter::isAtSpeed);
     
