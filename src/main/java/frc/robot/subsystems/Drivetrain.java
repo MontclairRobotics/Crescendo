@@ -91,19 +91,19 @@ public class Drivetrain extends SubsystemBase {
           Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose);
         });
 
-    Shuffleboard.getTab("Debug").addDouble("Drivetrain/FrontLeftVoltage", getSwerveDrive().getModules()[0].getDriveMotor()::getVoltage);
-    modules = swerveDrive.getModules();
-    ArrayList<TalonFX> motors = new ArrayList<TalonFX>();
-    motors.add((TalonFX) modules[0].getDriveMotor().getMotor());
-    motors.add((TalonFX) modules[1].getDriveMotor().getMotor());
-    motors.add((TalonFX) modules[2].getDriveMotor().getMotor());
-    motors.add((TalonFX) modules[3].getDriveMotor().getMotor());
-    orchestra = new Orchestra();
-    orchestra.addInstrument(motors.get(0));
-    orchestra.addInstrument(motors.get(1));
-    orchestra.addInstrument(motors.get(2));
-    orchestra.addInstrument(motors.get(3));
-    orchestra.loadMusic("nationGood.chrp");
+    // Shuffleboard.getTab("Debug").addDouble("Drivetrain/FrontLeftVoltage", getSwerveDrive().getModules()[0].getDriveMotor()::getVoltage);
+    // modules = swerveDrive.getModules();
+    // ArrayList<TalonFX> motors = new ArrayList<TalonFX>();
+    // motors.add((TalonFX) modules[0].getDriveMotor().getMotor());
+    // motors.add((TalonFX) modules[1].getDriveMotor().getMotor());
+    // motors.add((TalonFX) modules[2].getDriveMotor().getMotor());
+    // motors.add((TalonFX) modules[3].getDriveMotor().getMotor());
+    // orchestra = new Orchestra();
+    // orchestra.addInstrument(motors.get(0));
+    // orchestra.addInstrument(motors.get(1));
+    // orchestra.addInstrument(motors.get(2));
+    // orchestra.addInstrument(motors.get(3));
+    // orchestra.loadMusic("nationGood.chrp");
 
 
     getSwerveDrive().getSwerveController().thetaController.setTolerance(DriveConstants.ANGLE_DEADBAND * ((Math.PI ) / 180 ));
@@ -117,18 +117,18 @@ public class Drivetrain extends SubsystemBase {
 
     
     Shuffleboard.getTab("Debug").addDouble("Wrapped Angle", () -> RobotContainer.drivetrain.getWrappedRotation().getDegrees());
-    Shuffleboard.getTab("Debug").addDouble("Front Left Velocity", () -> {
-      return motors.get(0).getVelocity().getValueAsDouble();
-    });
-    Shuffleboard.getTab("Debug").addDouble("Front Right Velocity", () -> {
-      return motors.get(1).getVelocity().getValueAsDouble();
-    });
-    Shuffleboard.getTab("Debug").addDouble("Back Left Velocity", () -> {
-      return motors.get(2).getVelocity().getValueAsDouble();
-    });
-    Shuffleboard.getTab("Debug").addDouble("Back Right Velocity", () -> {
-      return motors.get(3).getVelocity().getValueAsDouble();
-    });
+    // Shuffleboard.getTab("Debug").addDouble("Front Left Velocity", () -> {
+    //   return motors.get(0).getVelocity().getValueAsDouble();
+    // });
+    // Shuffleboard.getTab("Debug").addDouble("Front Right Velocity", () -> {
+    //   return motors.get(1).getVelocity().getValueAsDouble();
+    // });
+    // Shuffleboard.getTab("Debug").addDouble("Back Left Velocity", () -> {
+    //   return motors.get(2).getVelocity().getValueAsDouble();
+    // });
+    // Shuffleboard.getTab("Debug").addDouble("Back Right Velocity", () -> {
+    //   return motors.get(3).getVelocity().getValueAsDouble();
+    // });
 
     
   }

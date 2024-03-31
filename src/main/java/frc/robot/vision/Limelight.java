@@ -85,16 +85,16 @@ public class Limelight extends SubsystemBase {
 
   @AutoLogOutput
   public double getObjectTX() {
-    return LimelightHelpers.getLimelightNTDouble(cameraName, "tx");
+    return LimelightHelpers.getTX(cameraName);
   }
 
   @AutoLogOutput
   public double getObjectTY() {
-    return LimelightHelpers.getLimelightNTDouble(cameraName, "ty");
+    return LimelightHelpers.getTY(cameraName);
   }
 
   public double getPipeline() {
-    return LimelightHelpers.getLimelightNTDouble(cameraName, "getpipe");
+    return LimelightHelpers.getCurrentPipelineIndex(cameraName);
   }
 
   public Pose2d getBotPose() {
@@ -156,15 +156,7 @@ public class Limelight extends SubsystemBase {
 
   }
 
-  // public double getAngleForSpeaker() {
-  //   double distance = getDistanceToSpeaker() + 14.5 - 6.0; // in the middle of speaker, not the edge.
-  //   double targetHeight = VisionConstants.SPEAKER_GOAL_HEIGHT - 4.5;
 
-  //   double angle = Math.atan((targetHeight / distance));
-
-  //   return angle * (180.0 / Math.PI);
-
-  // }
 
   
 
@@ -183,15 +175,15 @@ public class Limelight extends SubsystemBase {
     
     // TODO: LOOK INTO THIS PLEASE TYSM <3
     if (getPipelineType() == DetectionType.APRIL_TAG && hasValidTarget()) { //TODO test this TEST THIS
-      LimelightHelpers.PoseEstimate targetPose = getAdjustedPose();
-      if (targetPose.tagCount >= 2) {
-        RobotContainer.drivetrain.addVisionMeasurement(
-          targetPose.pose,
-          targetPose.timestampSeconds,
-          VisionConstants.VISION_STD_DEVS
-        );
+      // LimelightHelpers.PoseEstimate targetPose = getAdjustedPose();
+      // if (targetPose.tagCount >= 2) {
+      //   RobotContainer.drivetrain.addVisionMeasurement(
+      //     targetPose.pose,
+      //     targetPose.timestampSeconds,
+      //     VisionConstants.VISION_STD_DEVS
+      //   );
         
-      }
+      // }
     }
 
     // if (DriverStation.isDisabled()) {
