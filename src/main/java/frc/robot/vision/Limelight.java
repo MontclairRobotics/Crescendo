@@ -183,15 +183,15 @@ public class Limelight extends SubsystemBase {
     
     // TODO: LOOK INTO THIS PLEASE TYSM <3
     if (getPipelineType() == DetectionType.APRIL_TAG && hasValidTarget()) { //TODO test this TEST THIS
-      // LimelightHelpers.PoseEstimate targetPose = getAdjustedPose();
-      // if (targetPose.tagCount >= 2) {
-      //   RobotContainer.drivetrain.addVisionMeasurement(
-      //     targetPose.pose,
-      //     targetPose.timestampSeconds,
-      //     VisionConstants.VISION_STD_DEVS
-      //   );
+      LimelightHelpers.PoseEstimate targetPose = getAdjustedPose();
+      if (targetPose.tagCount >= 2) {
+        RobotContainer.drivetrain.addVisionMeasurement(
+          targetPose.pose,
+          targetPose.timestampSeconds,
+          VisionConstants.VISION_STD_DEVS
+        );
         
-      // }
+      }
     }
 
     if (DriverStation.isDisabled()) {
@@ -209,6 +209,7 @@ public class Limelight extends SubsystemBase {
   //degrees
   public double getAngleToSpeaker() {
     LimelightHelpers.PoseEstimate botPose = getAdjustedPose();
+    Pose2d odomPose = RobotContainer.drivetrain.getSwerveDrive().getPose();
     // if (botPose.tagCount < 2 || botPose.avgTagDist > 4) {
     LimelightHelpers.RawFiducial[] tagArr = botPose.rawFiducials;
     tagArr = Arrays.stream(tagArr).filter((entry) -> {return entry.id == priorityId;}).toArray(LimelightHelpers.RawFiducial[]::new);
@@ -217,11 +218,11 @@ public class Limelight extends SubsystemBase {
       // }
     }
 
-    double verticalDistance = 5.55-botPose.pose.getY();
-    double horizontalDistance = botPose.pose.getX() - 0.1524; //6 inches in meters
+    double verticalDistance = 5.55-odomPose.getY();
+    double horizontalDistance = odomPose.getX() - 0.1524; //6 inches in meters
 
     if (DriverStation.isAutonomous()) {
-      horizontalDistance = 16.54 - botPose.pose.getX();
+      horizontalDistance = 16.54 - odomPose.getX();
     }
 
     double rotation = 180 + (180 / Math.PI) * Math.atan(verticalDistance/horizontalDistance); //180 + because we are on the back of robot
@@ -239,6 +240,7 @@ public class Limelight extends SubsystemBase {
 
     public double getPoseDistanceToSpeaker() {
     LimelightHelpers.PoseEstimate botPose = getAdjustedPose();
+    Pose2d odomPose = RobotContainer.drivetrain.getSwerveDrive().getPose();
     // if (botPose.tagCount < 2 || botPose.avgTagDist > 4) {
     LimelightHelpers.RawFiducial[] tagArr = botPose.rawFiducials;
     tagArr = Arrays.stream(tagArr).filter((entry) -> {return entry.id == priorityId;}).toArray(LimelightHelpers.RawFiducial[]::new);
@@ -247,11 +249,11 @@ public class Limelight extends SubsystemBase {
       // }
     }
 
-    double verticalDistance = 5.55-botPose.pose.getY();
-    double horizontalDistance = botPose.pose.getX() - 0.1524; //6 inches in meters
+    double verticalDistance = 5.55-odomPose.getY();
+    double horizontalDistance = odomPose.getX() - 0.1524; //6 inches in meters
 
     if (DriverStation.isAutonomous()) {
-      horizontalDistance = 16.54 - botPose.pose.getX();
+      horizontalDistance = 16.54 - odomPose.getX();
     }
 
     double distance = Math.sqrt(Math.pow(verticalDistance, 2) + Math.pow(horizontalDistance, 2));
