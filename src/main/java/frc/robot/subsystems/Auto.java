@@ -15,7 +15,6 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 // import com.pathplanner.lib.path.PathPlannerTrajectory.State;
 import edu.wpi.first.math.trajectory.Trajectory.State;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -400,7 +399,7 @@ public class Auto extends SubsystemBase {
     finalPath.addCommands(Commands.runOnce(() -> {
       RobotContainer.shooter.shootVelocity(ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.SPEAKER_EJECT_SPEED);
     }));
-    
+    finalPath.addCommands(Commands555.waitUntil(RobotContainer.shooter::isAtSpeed)); //Wait for shooter to ramp up initially
 
     if (autoString.charAt(0) == '4') {
       finalPath.addCommands(Commands555.scoreAmp());
@@ -422,31 +421,21 @@ public class Auto extends SubsystemBase {
         // Load path
         if (!(next == current)) {
           PathPlannerPath path = PathPlannerPath.fromPathFile("" + current + "-" + next);
-          // trajectories.add(
-          //      path.getTrajectory(
-          //        new ChassisSpeeds(),
-          //        path.getPreviewStartingHolonomicPose().getRotation()
-          //      ));
-
-          PathPlannerTrajectory trajectory = path.getTrajectory(new ChassisSpeeds(), path.getPreviewStartingHolonomicPose().getRotation());
-          List<PathPlannerTrajectory.State> states = trajectory.getStates();
-          List<PathPlannerTrajectory.State> newStates = new ArrayList<PathPlannerTrajectory.State>();
-          for (int z = 0; z < states.size()-1; z++) {
-            PathPlannerTrajectory.State currentState = states.get(z);
-            PathPlannerTrajectory.State nextState = states.get(z+1);
-            PathPlannerTrajectory.State interpolatedState = currentState.interpolate(nextState, 0.5);
-            
-            newStates.add(currentState);
-            newStates.add(interpolatedState);
-          }
-          PathPlannerTrajectory finalTrajectory = new PathPlannerTrajectory(newStates);
-          trajectories.add(finalTrajectory);
-
-
+          trajectories.add(
+              path.getTrajectory(
+                new ChassisSpeeds(),
+                path.getPreviewStartingHolonomicPose().getRotation()
+              ));
           Command pathCommand;
-         
-          
-          pathCommand = AutoBuilder.followPath(path);
+          // If we are heading towards a far note, then run the AutoPoseEstimateToNote in parallel
+          if ((next == 'D') || (next == 'E') || (next == 'F') || (next == 'G') || (next == 'H')) {
+            pathCommand = Commands.parallel(
+              AutoBuilder.followPath(path),
+              new AutoPoseEstimateToNote(RobotContainer.drivetrain.getSwerveDrive().kinematics, next)
+            );
+          } else {
+            pathCommand = AutoBuilder.followPath(path);
+          }
           Command cmd = Commands.sequence(pathCommand, Commands555.waitForTime(0.2).until(RobotContainer.shooter::isNoteInTransport));
           // Command cmd = Commands.sequence(AutoBuilder.followPath(path), Commands555.waitForTime(0.2));
           segment = new ParallelRaceGroup(cmd);
@@ -497,7 +486,7 @@ public class Auto extends SubsystemBase {
           angle = GeometryUtil.flipFieldRotation(angle);
         }
         if (next != '5') {
-          finalPath.addCommands(Commands.parallel(Commands555.goToAngleFieldRelative(Drivetrain.wrapRotation(angle), false).withTimeout(0.9), Commands555.setSprocketAngleWithStop(RobotContainer.shooterLimelight::bestFit)));
+          finalPath.addCommands(Commands555.goToAngleFieldRelative(Drivetrain.wrapRotation(angle), false).withTimeout(0.9));
         }
         finalPath.addCommands(Commands555.log("DONE ALIGNING TO FIELD ANGLE"));
         finalPath.addCommands(Commands555.scoreModeAuto().withTimeout(0.9));
