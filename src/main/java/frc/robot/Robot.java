@@ -31,7 +31,7 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void robotInit() {
-    Logger.recordMetadata("ProjectName", "Tchaikovsky");
+    Logger.recordMetadata("ProjectName", "Katherine Tchaikovsky Swift");
 
     if (isReal()) {
       Logger.addDataReceiver(new WPILOGWriter()); // Log to a USB stick ("/U/logs")

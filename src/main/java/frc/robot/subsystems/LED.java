@@ -3,7 +3,6 @@ package frc.robot.subsystems;
 import animation2.AnimationStack;
 import animation2.CelebrationAnimation;
 import animation2.SolidAnimation;
-import animation2.WipeTransition;
 import animation2.api.Animation;
 import animation2.api.TransitionBase;
 import edu.wpi.first.wpilibj.AddressableLED;
@@ -49,13 +48,7 @@ public class LED extends SubsystemBase {
     add(new SolidAnimation(Color.kBlueViolet));
   }
 
-  public void shootAnimation() {
-    add(new SolidAnimation(Color.kOrange));
-    add(new WipeTransition());
-    add(new SolidAnimation(Color.kBlack));
-  }
   /**
-   * 
    * Cancel the top command and return to the previous
    *
    * @return The cancelled command

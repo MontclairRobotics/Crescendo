@@ -190,9 +190,12 @@ public class Limelight extends SubsystemBase {
     return LimelightHelpers.getBotPoseEstimate_wpiBlue(cameraName);
   }
 
-
-
   public boolean isAligned() {
+    double tx = getObjectTX();
+    return Drivetrain.angleDeadband(Rotation2d.fromDegrees(tx), RobotContainer.drivetrain.getWrappedRotation(), Drivetrain.wrapRotation(Rotation2d.fromDegrees(DriveConstants.ANGLE_DEADBAND)));
+  }
+
+  public boolean isAlignedAuto() {
     return Math.abs(getObjectTX()) < DriveConstants.ANGLE_DEADBAND;
   }
 
