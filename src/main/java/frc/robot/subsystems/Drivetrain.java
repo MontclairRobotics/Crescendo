@@ -414,7 +414,7 @@ public class Drivetrain extends SubsystemBase {
     
     }
 
-    public double getDistanceToSpeaker() { // Straight out of the guts of the roboraiders
+    public double getDistanceToSpeaker() { // Straight out of the guts of the robowarriors
       Pose2d currentPose = getSwerveDrive().getPose();
       Pose2d targetPose;
      
