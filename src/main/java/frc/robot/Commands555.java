@@ -416,6 +416,21 @@ public class Commands555 {
     );
   }
 
+  public static Command alignToLimelightTargetPose(Limelight camera) {
+    return Commands.sequence(
+      waitForPipe(camera, DetectionType.APRIL_TAG),
+      ifHasTarget(
+        alignToAngleRobotRelative(() -> {return Rotation2d.fromDegrees(camera.getAngleToSpeaker());}, false), camera
+      ).finallyDo(
+        () -> {
+          RobotContainer.drivetrain.setChassisSpeeds(new ChassisSpeeds(0, 0, 0));
+          camera.setDefaultPipeline();
+
+        }
+      )
+    );
+  }
+
   public static Command alignToLimelightTargetWithDrive(Limelight camera, DetectionType targetType, Translation2d speeds) {
 
     // Rotation2d targetAngle = Rotation2d.fromDegrees(-camera.getObjectTX());
@@ -474,6 +489,21 @@ public class Commands555 {
         });
   }
 
+   public static Command scoreModePose() {
+    return Commands.parallel(
+        alignToLimelightTargetPose(RobotContainer.shooterLimelight),
+        setSprocketAngle(() -> {
+          return RobotContainer.shooterLimelight.bestFitFromDistance(RobotContainer.shooterLimelight.getPoseDistanceToSpeaker());
+        }),
+        Commands.runOnce(() -> {
+          RobotContainer.isDriverMode = true;
+          RobotContainer.shooter.shootVelocity(ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.SPEAKER_EJECT_SPEED);
+          // RobotContainer.shooter.transportStart(ShooterConstants.TRANSPORT_SPEED);
+        })).finallyDo(() -> {
+          RobotContainer.shooter.stop();
+          RobotContainer.isDriverMode = false;
+        });
+  }
   
 
   public static Command alignToAmpAndShoot() {

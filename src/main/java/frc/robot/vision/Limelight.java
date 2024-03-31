@@ -23,8 +23,12 @@ import frc.robot.RobotContainer;
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Drivetrain;
 
+import java.util.Arrays;
+
 import org.ejml.simple.SimpleMatrix;
 import org.littletonrobotics.junction.AutoLogOutput;
+
+import com.pathplanner.lib.util.GeometryUtil;
 
 public class Limelight extends SubsystemBase {
   private double lastTx = 0;
@@ -33,6 +37,7 @@ public class Limelight extends SubsystemBase {
   private DetectionType defaultPipe;
   private Debouncer targetDebouncer =
       new Debouncer(VisionConstants.TARGET_DEBOUNCE_TIME, DebounceType.kFalling);
+  private double priorityId = 0;
 
   public Limelight(String cameraName, DetectionType defaultPipe) {
     this.defaultPipe = defaultPipe;
@@ -134,6 +139,7 @@ public class Limelight extends SubsystemBase {
     return distance/Math.cos(getObjectTX() * (Math.PI / 180));
   }
 
+  //returns the component of distance in a straight wall from the lens of the limelight to the wall
   public double getStraightDistanceToSpeaker() {
     double distance =
         (VisionConstants.SPEAKER_APRILTAG_HEIGHT - VisionConstants.SHOOTER_LIMELIGHT_HEIGHT)
@@ -145,6 +151,8 @@ public class Limelight extends SubsystemBase {
 
   }
 
+
+  //returns adjusted heading to aim for the actual target instead of the april tag
   public Rotation2d maxIsStupid() {
     double distance = getStraightDistanceToSpeaker();
     double gyroHeading = RobotContainer.drivetrain.getWrappedRotation().getRadians();
@@ -194,19 +202,83 @@ public class Limelight extends SubsystemBase {
       }
     }
 
-    // if (DriverStation.isDisabled()) {
-      // if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red) {
-      //   LimelightHelpers.setPriorityTagID(cameraName, 4); //4
-      // } else {
-      //   LimelightHelpers.setPriorityTagID(cameraName, 7);
+    if (DriverStation.isDisabled()) {
+      if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red) {
+        LimelightHelpers.setPriorityTagID(cameraName, 4); //4
+        priorityId = 4;
+      } else {
+        LimelightHelpers.setPriorityTagID(cameraName, 7);
+        priorityId = 7;
+      }
+    }
+
+  }
+
+  //degrees
+  public double getAngleToSpeaker() {
+    LimelightHelpers.PoseEstimate botPose = getAdjustedPose();
+    // if (botPose.tagCount < 2 || botPose.avgTagDist > 4) {
+    LimelightHelpers.RawFiducial[] tagArr = botPose.rawFiducials;
+    tagArr = Arrays.stream(tagArr).filter((entry) -> {return entry.id == priorityId;}).toArray(LimelightHelpers.RawFiducial[]::new);
+    if (tagArr.length == 1) {
+      return -tagArr[0].txnc + RobotContainer.shooterLimelight.maxIsStupid().getDegrees();
       // }
-    // }
+    }
+
+    double verticalDistance = 5.55-botPose.pose.getY();
+    double horizontalDistance = botPose.pose.getX() - 0.1524; //6 inches in meters
+
+    if (DriverStation.isAutonomous()) {
+      horizontalDistance = 16.54 - botPose.pose.getX();
+    }
+
+    double rotation = 180 + (180 / Math.PI) * Math.atan(verticalDistance/horizontalDistance); //180 + because we are on the back of robot
+
+    if (DriverStation.isAutonomous()) {
+      rotation = 180 - rotation;
+    }
+    return rotation;
+    
+
+
+    
+
+  }
+
+    public double getPoseDistanceToSpeaker() {
+    LimelightHelpers.PoseEstimate botPose = getAdjustedPose();
+    // if (botPose.tagCount < 2 || botPose.avgTagDist > 4) {
+    LimelightHelpers.RawFiducial[] tagArr = botPose.rawFiducials;
+    tagArr = Arrays.stream(tagArr).filter((entry) -> {return entry.id == priorityId;}).toArray(LimelightHelpers.RawFiducial[]::new);
+    if (tagArr.length == 1) {
+      getDistanceToSpeaker();
+      // }
+    }
+
+    double verticalDistance = 5.55-botPose.pose.getY();
+    double horizontalDistance = botPose.pose.getX() - 0.1524; //6 inches in meters
+
+    if (DriverStation.isAutonomous()) {
+      horizontalDistance = 16.54 - botPose.pose.getX();
+    }
+
+    double distance = Math.sqrt(Math.pow(verticalDistance, 2) + Math.pow(horizontalDistance, 2));
+
+    return distance;
+    
+
+
+    
 
   }
 
   public double bestFit() {
-    double x = getDistanceToSpeaker();
+    // double  
     // return (0.001717 * (Math.pow(x, 2))) + (-0.6251 * x) + (83.41);
+    return bestFitFromDistance(getDistanceToSpeaker());
+  }
+
+  public double bestFitFromDistance(double x) {
     return (78.3*Math.exp(-0.0177*x)) + 25.04;
   }
 
