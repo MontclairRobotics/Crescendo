@@ -15,6 +15,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.util.Units;
 
 import static edu.wpi.first.units.Units.*;
 import edu.wpi.first.units.Angle;
@@ -37,6 +38,7 @@ import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.FieldConstants;
+import frc.robot.vision.Limelight;
 import frc.robot.vision.LimelightHelpers;
 
 import java.io.File;
@@ -401,30 +403,50 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public Rotation2d getHeadingForSpeaker() { // Ripped straight out of the cold dead hands of Thomas
+      
       Pose2d targetPose;
       Pose2d currentPose = getSwerveDrive().getPose();
+      LimelightHelpers.PoseEstimate visionPose = RobotContainer.shooterLimelight.getAdjustedPose();
 
-      if (DriverStation.getAlliance().get() == Alliance.Blue) {
-        targetPose = FieldConstants.BLUE_SPEAKER_POSE;
+      if (visionPose.tagCount > 1) {
+        if (DriverStation.getAlliance().get() == Alliance.Blue) {
+          targetPose = FieldConstants.BLUE_SPEAKER_POSE;
+        } else {
+          targetPose = FieldConstants.RED_SPEAKER_POSE;
+        }
+        return currentPose.getTranslation().minus(targetPose.getTranslation()).getAngle();
+
       } else {
-        targetPose = FieldConstants.RED_SPEAKER_POSE;
+        return Rotation2d.fromDegrees(-RobotContainer.shooterLimelight.getObjectTX());
       }
+      
 
-      return currentPose.getTranslation().minus(targetPose.getTranslation()).getAngle();
+      
     
     }
 
     public double getDistanceToSpeaker() { // Straight out of the guts of the robowarriors
       Pose2d currentPose = getSwerveDrive().getPose();
       Pose2d targetPose;
+      LimelightHelpers.PoseEstimate visionPose = RobotContainer.shooterLimelight.getAdjustedPose();
+
+      if (visionPose.tagCount > 1) {
+        if (DriverStation.getAlliance().get() == Alliance.Blue) {
+          targetPose = FieldConstants.BLUE_SPEAKER_POSE;
+        } else {
+          targetPose = FieldConstants.RED_SPEAKER_POSE;
+        }
+
+        return Units.metersToInches(currentPose.getTranslation().getDistance(targetPose.getTranslation()));
+      
+
+      } else {
+        return RobotContainer.shooterLimelight.getDistanceToSpeaker();
+      }
      
 
-      if (DriverStation.getAlliance().get() == Alliance.Blue) {
-        targetPose = FieldConstants.BLUE_SPEAKER_POSE;
-      } else {
-        targetPose = FieldConstants.RED_SPEAKER_POSE;
-      }
-      return currentPose.getTranslation().getDistance(targetPose.getTranslation());
+      
+      
     }
 
 
