@@ -184,16 +184,16 @@ public class Limelight extends SubsystemBase {
     // TODO: LOOK INTO THIS PLEASE TYSM <3
     if (getPipelineType() == DetectionType.APRIL_TAG && hasValidTarget()) { //TODO test this TEST THIS
       LimelightHelpers.PoseEstimate targetPose = getAdjustedPose();
-      if (targetPose.tagCount >= 2) {
-        RobotContainer.drivetrain.addVisionMeasurement(
-          targetPose.pose,
-          targetPose.timestampSeconds,
-          VisionConstants.VISION_STD_DEVS
-        );
+      
+      RobotContainer.drivetrain.addVisionMeasurement(
+        targetPose.pose,
+        targetPose.timestampSeconds,
+        getVisionStdDevs(targetPose)
+      );
         
-      }
+      
     }
-
+    
     if (DriverStation.isDisabled()) {
       if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red) {
         LimelightHelpers.setPriorityTagID(cameraName, 4); //4
@@ -205,6 +205,27 @@ public class Limelight extends SubsystemBase {
     }
 
   }
+
+
+  public Matrix<N3, N1> getVisionStdDevs(LimelightHelpers.PoseEstimate visionPose) {
+    int tagCount = visionPose.tagCount;
+    
+    double avgTagDistance = visionPose.avgTagDist;
+    // outside a soft cutout for apriltag distance, only use tags outside of this distance if there is >2 in view.
+    boolean outsideSoftCutoff = avgTagDistance > VisionConstants.TAG_DISTANCE_SOFT_CUTOFF;
+
+    if (tagCount > 1) {
+      if (!outsideSoftCutoff) {
+        return VisionConstants.IDEAL_VISION_STD_DEVS;
+      } else if (tagCount > 2) {
+        return VisionConstants.OK_VISION_STD_DEVS;
+      } 
+      
+    } 
+
+    return VisionConstants.TERRIBLE_VISION_STD_DEVS; // don't use vision measurement
+    
+  } 
 
   //degrees
   public double getAngleToSpeaker() {

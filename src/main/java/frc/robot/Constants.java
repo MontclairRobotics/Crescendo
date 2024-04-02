@@ -36,6 +36,7 @@ public final class Constants {
   public static class FieldConstants {
     public static final double SPEAKER_SCORE_X_OFFSET = 6.0;
     
+    
     public static final Pose2d RED_SPEAKER_POSE = new Pose2d(Units.inchesToMeters(652.3 - SPEAKER_SCORE_X_OFFSET), Units.inchesToMeters(218.42), new Rotation2d());
     public static final Pose2d BLUE_SPEAKER_POSE = new Pose2d(Units.inchesToMeters(-1.5 + SPEAKER_SCORE_X_OFFSET), Units.inchesToMeters(218.42), new Rotation2d());
     
@@ -83,7 +84,11 @@ public final class Constants {
     public static final double SHOOTER_LIMELIGHT_ANGLE_DEGREES = 26.74; //31.07;
     public static final double INTAKE_LIMELIGHT_ANGLE_DEGREES = 0;
     public static final double ALIGN_CENTER_OFFSET = 3;
-    public static final Matrix<N3, N1> VISION_STD_DEVS = VecBuilder.fill(0.05, 0.05, .98);
+
+    public static final Matrix<N3, N1> IDEAL_VISION_STD_DEVS = VecBuilder.fill(0.50, 0.50, Double.MAX_VALUE);
+    public static final Matrix<N3, N1> OK_VISION_STD_DEVS = VecBuilder.fill(0.25, 0.25,  Double.MAX_VALUE);
+    public static final Matrix<N3, N1> TERRIBLE_VISION_STD_DEVS = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+    public static final double TAG_DISTANCE_SOFT_CUTOFF = 4; // meters
   }
 
   public static class Ports { // TODO: add correct ports
