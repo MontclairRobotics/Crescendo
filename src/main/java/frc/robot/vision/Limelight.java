@@ -134,9 +134,9 @@ public class Limelight extends SubsystemBase {
         (VisionConstants.SPEAKER_APRILTAG_HEIGHT - VisionConstants.SHOOTER_LIMELIGHT_HEIGHT)
             / Math.tan(
                 (Math.PI / 180.0)
-                    * (VisionConstants.SHOOTER_LIMELIGHT_ANGLE_DEGREES + getObjectTY()));
+                    * (VisionConstants.SHOOTER_LIMELIGHT_ANGLE_DEGREES + getVerticalToPriorityID()));
 
-    return distance/Math.cos(getObjectTX() * (Math.PI / 180));
+    return distance/Math.cos(getHeadingToPriorityID() * (Math.PI / 180));
   }
 
   //returns the component of distance in a straight wall from the lens of the limelight to the wall
@@ -145,7 +145,7 @@ public class Limelight extends SubsystemBase {
         (VisionConstants.SPEAKER_APRILTAG_HEIGHT - VisionConstants.SHOOTER_LIMELIGHT_HEIGHT)
             / Math.tan(
                 (Math.PI / 180.0)
-                    * (VisionConstants.SHOOTER_LIMELIGHT_ANGLE_DEGREES + getObjectTY()));
+                    * (VisionConstants.SHOOTER_LIMELIGHT_ANGLE_DEGREES + getVerticalToPriorityID()));
 
     return distance;
 
@@ -155,10 +155,11 @@ public class Limelight extends SubsystemBase {
   //returns adjusted heading to aim for the actual target instead of the april tag
   public Rotation2d maxIsStupid() {
     double distance = getStraightDistanceToSpeaker();
-    double gyroHeading = RobotContainer.drivetrain.getWrappedRotation().getRadians();
+    double distanceNorm = getDistanceToSpeaker();
+    double heading = Math.acos(distance / distanceNorm);
     double offsetFromTag = 6.0;
-
-    double angle = Math.asin((offsetFromTag * Math.sin(gyroHeading)) / (Math.sqrt(Math.pow(distance,2) + Math.pow(offsetFromTag,2) - 2 * distance * offsetFromTag * Math.cos(gyroHeading))));
+System.out.println(distance + " " + distanceNorm + " " + Math.acos(distance / distanceNorm) * (180/Math.PI)+" " + RobotContainer.drivetrain.getWrappedRotation().getDegrees());
+    double angle = Math.asin((offsetFromTag * Math.sin(heading)) / (Math.sqrt(Math.pow(distance,2) + Math.pow(offsetFromTag,2) - 2 * distance * offsetFromTag * Math.cos(heading))));
 
     return Rotation2d.fromRadians(angle);
 
@@ -181,7 +182,7 @@ public class Limelight extends SubsystemBase {
   public void periodic() {
     
     
-    // TODO: LOOK INTO THIS PLEASE TYSM <3
+    // // TODO: LOOK INTO THIS PLEASE TYSM <3
     if (getPipelineType() == DetectionType.APRIL_TAG && hasValidTarget()) { //TODO test this TEST THIS
       LimelightHelpers.PoseEstimate targetPose = getAdjustedPose();
       
@@ -211,21 +212,40 @@ public class Limelight extends SubsystemBase {
     int tagCount = visionPose.tagCount;
     
     double avgTagDistance = visionPose.avgTagDist;
-    // outside a soft cutout for apriltag distance, only use tags outside of this distance if there is >2 in view.
-    boolean outsideSoftCutoff = avgTagDistance > VisionConstants.TAG_DISTANCE_SOFT_CUTOFF;
+    // cutoff for distance
+    boolean exceedsCutoff = avgTagDistance > VisionConstants.TAG_DISTANCE_CUTOFF;
 
-    if (tagCount > 1) {
-      if (!outsideSoftCutoff) {
-        return VisionConstants.IDEAL_VISION_STD_DEVS;
-      } else if (tagCount > 2) {
-        return VisionConstants.OK_VISION_STD_DEVS;
-      } 
-      
+    if (tagCount > 1 && !exceedsCutoff) {
+      return VisionConstants.IDEAL_VISION_STD_DEVS;
     } 
 
     return VisionConstants.TERRIBLE_VISION_STD_DEVS; // don't use vision measurement
     
   } 
+
+  public double getHeadingToPriorityID() {
+    LimelightHelpers.RawFiducial[] tagArr = getAdjustedPose().rawFiducials;
+   tagArr = Arrays.stream(tagArr).filter((entry) -> {return entry.id == priorityId;}).toArray(LimelightHelpers.RawFiducial[]::new);
+
+   if (tagArr.length == 1) {
+    // System.out.println(tagArr[0].txnc);
+    return -tagArr[0].txnc + 1.5;
+   // }
+   }
+   return 0;
+ }
+
+ public double getVerticalToPriorityID() {
+    LimelightHelpers.RawFiducial[] tagArr = getAdjustedPose().rawFiducials;
+   tagArr = Arrays.stream(tagArr).filter((entry) -> {return entry.id == priorityId;}).toArray(LimelightHelpers.RawFiducial[]::new);
+
+   if (tagArr.length == 1) {
+    // System.out.println(tagArr[0].tync+0.6);
+    return tagArr[0].tync+0.6;
+   // }
+   }
+   return 0;
+ }
 
   //degrees
   public double getAngleToSpeaker() {
@@ -249,7 +269,7 @@ public class Limelight extends SubsystemBase {
     double rotation = 180 + (180 / Math.PI) * Math.atan(verticalDistance/horizontalDistance); //180 + because we are on the back of robot
 
     if (DriverStation.isAutonomous()) {
-      rotation = 180 - rotation;
+      rotation = Drivetrain.wrapRotation(Rotation2d.fromDegrees(180 - rotation - RobotContainer.drivetrain.getWrappedRotation().getDegrees())).getDegrees();
     }
     return rotation;
     
@@ -294,7 +314,7 @@ public class Limelight extends SubsystemBase {
   }
 
   public double bestFitFromDistance(double x) {
-    return (78.3*Math.exp(-0.0177*x)) + 25.04;
+    return (59.41*Math.exp(-0.01694*x)) + 27.01;
   }
 
   public double getSpeedForSpeaker() {

@@ -417,9 +417,14 @@ public class Auto extends SubsystemBase {
 
       if (next == '4') { // Amp
         finalPath.addCommands(Commands555.scoreAmpAuto());
+        
       } else if (next == '1' || next == '2' || next == '3') { // Up against subwoofer
         finalPath.addCommands(Commands555.scoreSubwoofer());
-  
+        
+      }
+
+      if (next == 'A' || next == 'B' || next == 'C' || next == '5') {
+        finalPath.addCommands(Commands555.addVisionMeasurement());
       }
       
     }

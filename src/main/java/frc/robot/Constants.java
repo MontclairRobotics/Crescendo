@@ -81,14 +81,13 @@ public final class Constants {
     public static final double INTAKE_LIMELIGHT_HEIGHT = 10.227995;
     public static final double SPEAKER_APRILTAG_HEIGHT = 57.125; //57.875;
     public static final double SPEAKER_GOAL_HEIGHT = 81.8; //78.13-82.90
-    public static final double SHOOTER_LIMELIGHT_ANGLE_DEGREES = 26.74; //31.07;
+    public static final double SHOOTER_LIMELIGHT_ANGLE_DEGREES = 28.4; //26.74; //31.07;
     public static final double INTAKE_LIMELIGHT_ANGLE_DEGREES = 0;
     public static final double ALIGN_CENTER_OFFSET = 3;
 
-    public static final Matrix<N3, N1> IDEAL_VISION_STD_DEVS = VecBuilder.fill(0.50, 0.50, Double.MAX_VALUE);
-    public static final Matrix<N3, N1> OK_VISION_STD_DEVS = VecBuilder.fill(0.25, 0.25,  Double.MAX_VALUE);
+    public static final Matrix<N3, N1> IDEAL_VISION_STD_DEVS = VecBuilder.fill(0.5, 0.5, Double.MAX_VALUE);
     public static final Matrix<N3, N1> TERRIBLE_VISION_STD_DEVS = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
-    public static final double TAG_DISTANCE_SOFT_CUTOFF = 4; // meters
+    public static final double TAG_DISTANCE_CUTOFF = 3.3; // meters
   }
 
   public static class Ports { // TODO: add correct ports
@@ -168,6 +167,7 @@ public final class Constants {
     public static final Tunable<Boolean> LEFT_INVERT = Tunable.of(true, "arm.invert.left");
     public static final Tunable<Boolean> RIGHT_INVERT = Tunable.of(true, "arm.invert.right");
 
+
     // Sprocket
     // TODO: Validate values
     public static final double SPROCKET_ANGLE_MOVE_SPEED = 0.5;
@@ -206,7 +206,7 @@ public final class Constants {
 
     public static final double MAX_RPM = 5700;
 
-    public static final int VELOCITY_DEADBAND = 300;
+    public static final int VELOCITY_DEADBAND = 150;
 
     public static final double TRANSPORT_SPEED = 0.7;
     

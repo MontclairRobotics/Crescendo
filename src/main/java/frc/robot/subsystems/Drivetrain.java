@@ -34,6 +34,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
+import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.DriveConstants;
@@ -43,6 +44,7 @@ import frc.robot.vision.LimelightHelpers;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
@@ -199,7 +201,12 @@ public class Drivetrain extends SubsystemBase {
       // timer.start();
     } 
 
+    // Pose2d pose = LimelightHelpers.toPose2D(LimelightHelpers.getBotPose_wpiBlue("limelight-shooter"));
+    // System.out.println(Units.metersToInches(pose.minus(new Pose2d(0, 5.55, new Rotation2d())).getTranslation().getNorm()));
+    // System.out.println(Units.metersToInches(LimelightHelpers.toPose2D(LimelightHelpers.getBotPose_TargetSpace("limelight-shooter")).getTranslation().getNorm()));
+
     RobotContainer.field.setRobotPose(swerveDrive.getPose());
+    System.out.println(swerveDrive.getPose().getX() + " " + swerveDrive.getPose().getY() + " " + swerveDrive.getPose().getRotation().getDegrees());
   }
 
   public void addVisionMeasurement(Pose2d pose, double time) {
@@ -424,6 +431,7 @@ public class Drivetrain extends SubsystemBase {
       
     
     }
+    
 
     public double getDistanceToSpeaker() { // Straight out of the guts of the robowarriors
       Pose2d currentPose = getSwerveDrive().getPose();

@@ -30,6 +30,7 @@ import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.vision.DetectionType;
 import frc.robot.vision.Limelight;
+import frc.robot.vision.LimelightHelpers;
 
 public class Commands555 {
   private static double initTurnAngle;
@@ -405,7 +406,7 @@ public class Commands555 {
     return Commands.sequence(
       waitForPipe(camera, DetectionType.APRIL_TAG),
       ifHasTarget(
-        alignToAngleRobotRelative(() -> {return Rotation2d.fromDegrees(-camera.getObjectTX() + RobotContainer.shooterLimelight.maxIsStupid().getDegrees());}, false), camera
+        alignToAngleRobotRelativeContinuous(() -> {return Rotation2d.fromDegrees(camera.getHeadingToPriorityID() - RobotContainer.shooterLimelight.maxIsStupid().getDegrees());}, false), camera
       ).finallyDo(
         () -> {
           RobotContainer.drivetrain.setChassisSpeeds(new ChassisSpeeds(0, 0, 0));
@@ -420,7 +421,7 @@ public class Commands555 {
     return Commands.sequence(
       waitForPipe(camera, DetectionType.APRIL_TAG),
       ifHasTarget(
-        alignToAngleRobotRelative(() -> {return Rotation2d.fromDegrees(camera.getAngleToSpeaker());}, false), camera
+        alignToAngleRobotRelativeContinuous(() -> {return Rotation2d.fromDegrees(camera.getAngleToSpeaker());}, false), camera
       ).finallyDo(
         () -> {
           RobotContainer.drivetrain.setChassisSpeeds(new ChassisSpeeds(0, 0, 0));
@@ -477,7 +478,9 @@ public class Commands555 {
 
   public static Command scoreMode() {
     return Commands.parallel(
-        alignToLimelightTargetExtreme(RobotContainer.shooterLimelight),
+        alignToAngleRobotRelativeContinuous(() -> Rotation2d.fromDegrees(RobotContainer.shooterLimelight.getHeadingToPriorityID()), false),
+        //alignToLimelightTargetExtreme(RobotContainer.shooterLimelight),
+        // alignToLimelightTarget(RobotContainer.shooterLimelight, DetectionType.APRIL_TAG),
         setSprocketAngle(RobotContainer.shooterLimelight::bestFit),
         Commands.runOnce(() -> {
           RobotContainer.isDriverMode = true;
@@ -554,10 +557,21 @@ public class Commands555 {
     );
   }
 
+  public static Command addVisionMeasurement() {
+    return Commands.runOnce(() -> {
+      LimelightHelpers.PoseEstimate targetPose = RobotContainer.shooterLimelight.getAdjustedPose();
+      
+      RobotContainer.drivetrain.addVisionMeasurement(
+        targetPose.pose,
+        targetPose.timestampSeconds,
+        RobotContainer.shooterLimelight.getVisionStdDevs(targetPose)
+      );
+    });
+  }
  
   // Used during auto for scoring speaker(usually from one of the note locations)
   public static Command scoreModeAuto() {
-    Command alignAndAngle = Commands.race(alignToLimelightTargetWithStop(RobotContainer.shooterLimelight, DetectionType.APRIL_TAG), setSprocketAngle(RobotContainer.shooterLimelight::bestFit));
+    Command alignAndAngle = Commands.race(alignToAngleRobotRelative(() -> Rotation2d.fromDegrees(RobotContainer.shooterLimelight.getHeadingToPriorityID()), false), setSprocketAngle(RobotContainer.shooterLimelight::bestFit));
     return Commands.sequence(
       alignAndAngle.withTimeout(1), 
       setSprocketAngleWithStop(RobotContainer.shooterLimelight::bestFit),
@@ -923,14 +937,15 @@ public class Commands555 {
   public static Command scoreSubwoofer() {
     return Commands.sequence(
         Commands.runOnce(() -> System.out.println("Scoring subwoofer!")),
-        setSprocketAngle(ArmConstants.SPEAKER_SCORE_ANGLE),
-        waitUntil(() -> {
-          return RobotContainer.sprocket.isAtAngle();
-        }),
+        // setSprocketAngle(ArmConstants.SPEAKER_SCORE_ANGLE),
+        // waitUntil(() -> {
+        //   return RobotContainer.sprocket.isAtAngle();
+        // }),
         shoot(ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.SPEAKER_EJECT_SPEED,
             ShooterConstants.TRANSPORT_SPEED),
-        Commands.runOnce(() -> System.out.println("Done Shooting subwoofer!")),
-        setSprocketAngle(ArmConstants.INTAKE_ANGLE));
+        Commands.runOnce(() -> System.out.println("Done Shooting subwoofer!"))
+        //setSprocketAngle(ArmConstants.INTAKE_ANGLE)
+        );
   }
 
   // public static Command scoreSubwooferAtAngle() {

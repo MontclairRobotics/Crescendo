@@ -174,7 +174,7 @@ public class Sprocket extends SubsystemBase {
   }
 
   public double getEncoderPosition() {
-    return ((-absEncoder.getDistance()) * ((double) 14/64)) + 76;
+    return ((absEncoder.getDistance())-281.6); //* ((double) 14/64)) + 79;//76;
   }
 
   public boolean isAtAngle() {
