@@ -206,7 +206,7 @@ public class Drivetrain extends SubsystemBase {
     // System.out.println(Units.metersToInches(LimelightHelpers.toPose2D(LimelightHelpers.getBotPose_TargetSpace("limelight-shooter")).getTranslation().getNorm()));
 
     RobotContainer.field.setRobotPose(swerveDrive.getPose());
-    System.out.println(swerveDrive.getPose().getX() + " " + swerveDrive.getPose().getY() + " " + swerveDrive.getPose().getRotation().getDegrees());
+    // System.out.println(swerveDrive.getPose().getX() + " " + swerveDrive.getPose().getY() + " " + swerveDrive.getPose().getRotation().getDegrees());
   }
 
   public void addVisionMeasurement(Pose2d pose, double time) {
@@ -241,7 +241,7 @@ public class Drivetrain extends SubsystemBase {
 
   
 
-  @AutoLogOutput
+  // @AutoLogOutput
   /** returns direction */
   public Rotation2d getRotation() {
 
