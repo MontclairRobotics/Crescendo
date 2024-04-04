@@ -571,14 +571,14 @@ public class Commands555 {
  
   // Used during auto for scoring speaker(usually from one of the note locations)
   public static Command scoreModeAuto() {
-    Command alignAndAngle = Commands.race(alignToAngleRobotRelative(() -> Rotation2d.fromDegrees(RobotContainer.shooterLimelight.getHeadingToPriorityID()), false), setSprocketAngle(RobotContainer.shooterLimelight::bestFit));
+    Command alignAndAngle = alignToAngleRobotRelative(() -> Rotation2d.fromDegrees(RobotContainer.shooterLimelight.getHeadingToPriorityID()), false).deadlineWith(setSprocketAngle(RobotContainer.shooterLimelight::bestFit));
     return Commands.sequence(
-      alignAndAngle.withTimeout(1), 
+      alignAndAngle.withTimeout(1.3), 
       setSprocketAngleWithStop(RobotContainer.shooterLimelight::bestFit),
       log("Scoring mode auto suckers!"),
-      Commands.waitUntil(() -> {
-        return (RobotContainer.shooterLimelight.isAlignedAuto() && RobotContainer.sprocket.isAtAngle()) && RobotContainer.shooter.isAtSpeed();
-      }).withTimeout(0.5), 
+      // Commands.waitUntil(() -> {
+      //   return (RobotContainer.shooterLimelight.isAlignedAuto() && RobotContainer.sprocket.isAtAngle()) && RobotContainer.shooter.isAtSpeed();
+      // }).withTimeout(0.5), 
       log("Shooting Auto!"),
       Commands555.shoot(ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.TRANSPORT_SPEED));
 
@@ -937,14 +937,14 @@ public class Commands555 {
   public static Command scoreSubwoofer() {
     return Commands.sequence(
         Commands.runOnce(() -> System.out.println("Scoring subwoofer!")),
-        // setSprocketAngle(ArmConstants.SPEAKER_SCORE_ANGLE),
-        // waitUntil(() -> {
-        //   return RobotContainer.sprocket.isAtAngle();
-        // }),
+        setSprocketAngle(ArmConstants.SPEAKER_SCORE_ANGLE),
+        waitUntil(() -> {
+          return RobotContainer.sprocket.isAtAngle();
+        }),
         shoot(ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.SPEAKER_EJECT_SPEED,
             ShooterConstants.TRANSPORT_SPEED),
-        Commands.runOnce(() -> System.out.println("Done Shooting subwoofer!"))
-        //setSprocketAngle(ArmConstants.INTAKE_ANGLE)
+        Commands.runOnce(() -> System.out.println("Done Shooting subwoofer!")),
+        setSprocketAngle(ArmConstants.INTAKE_ANGLE)
         );
   }
 

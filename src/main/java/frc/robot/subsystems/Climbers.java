@@ -128,8 +128,10 @@ public class Climbers extends SubsystemBase {
   public void setInputFromController(CommandPS5Controller controller) {
     double yAxis = -MathUtil.applyDeadband(controller.getRightY(), 0.05);
 
-    leftMotor.set(-yAxis);
-    rightMotor.set(-yAxis);
+    leftSpeed = yAxis;
+    rightSpeed = yAxis;
+    // leftMotor.set(-yAxis);
+    // rightMotor.set(-yAxis);
 
     // if (yAxis == 0.0) {
     //   rightSpeed = 0;
@@ -160,6 +162,26 @@ public class Climbers extends SubsystemBase {
 
   /** If the arm reaches the bottom limit, it will stop Same for top */
   public void periodic() {
+
+    if (Math.abs(leftSpeed) > 0.4) {
+      leftSpeed = Math.signum(leftSpeed) * 0.4;
+    }
+
+    if (Math.abs(rightSpeed) > 0.4) {
+      rightSpeed = Math.signum(rightSpeed) * 0.4;
+    }
+
+    if (leftLimit.get() && leftSpeed < 0) {
+      leftMotor.set(0);
+    } else {
+      leftMotor.set(-leftSpeed);
+    }
+
+    if (rightLimit.get() && rightSpeed < 0) {
+      rightMotor.set(0);
+    } else {
+      rightMotor.set(-rightSpeed);
+    }
     // if (rightLimit.get() && !rightMovingUp && !rightAtTop) {
     //   rightAtBottom = true;
     // }

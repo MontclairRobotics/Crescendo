@@ -117,7 +117,7 @@ public final class Constants {
 
     public static final int CLIMBER_LEFT_LIMIT_SWITCH_PORT = 5;
 
-    public static final int CLIMBER_RIGHT_LIMIT_SWITCH_PORT = 6;
+    public static final int CLIMBER_RIGHT_LIMIT_SWITCH_PORT = 4;
   } 
 
   public static class ClimberConstants {

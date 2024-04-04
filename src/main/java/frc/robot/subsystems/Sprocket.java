@@ -68,6 +68,7 @@ public class Sprocket extends SubsystemBase {
     rightMotor.setInverted(RIGHT_INVERT.get());
     Shuffleboard.getTab("Debug").addBoolean("Using PID", () -> usingPID);
     Shuffleboard.getTab("Debug").addDouble("Sprocket Encoder", () -> getEncoderPosition());
+    Shuffleboard.getTab("Debug").addDouble("Sprocket Encoder Raw", () -> getRawPosition());
     angleKD.whenUpdate(
         (k) -> {
           pidController.setD(k);
@@ -174,6 +175,13 @@ public class Sprocket extends SubsystemBase {
   }
 
   public double getEncoderPosition() {
+    if (getRawPosition() < 0) {
+      return getRawPosition() + 360;
+    }
+    return getRawPosition();
+  }
+
+  public double getRawPosition() {
     return ((absEncoder.getDistance())-281.6); //* ((double) 14/64)) + 79;//76;
   }
 

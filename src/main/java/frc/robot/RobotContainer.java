@@ -83,7 +83,7 @@ public class RobotContainer {
     Shuffleboard.getTab("Debug").addBoolean("Is aligned", RobotContainer.shooterLimelight::isAlignedAuto);
     Shuffleboard.getTab("Debug").addBoolean("Is at angle", RobotContainer.sprocket::isAtAngle);
     Shuffleboard.getTab("Debug").addBoolean("Is at speed", RobotContainer.shooter::isAtSpeed);
-    //Shuffleboard.getTab("Debug").addDouble("Priority ID Angle", RobotContainer.shooterLimelight::getHeadingToPriorityID);
+    Shuffleboard.getTab("Debug").addDouble("Priority ID Angle", RobotContainer.shooterLimelight::getHeadingToPriorityID);
     //Shuffleboard.getTab("Debug").addDouble("Max Is Dumb", () -> RobotContainer.shooterLimelight.maxIsStupid().getDegrees());
 
     auto.setupPathPlanner();
@@ -130,6 +130,7 @@ public class RobotContainer {
     ControllerTools.getDPad(DPad.RIGHT, debugController).whileTrue(Commands555.rightClimberDown());
 
     debugController.cross().whileTrue(Commands555.driveOneMeter());
+    debugController.circle().whileTrue(Commands555.scoreModeAuto());
   }
 
   private void configureDriverBindings() {

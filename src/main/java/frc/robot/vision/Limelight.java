@@ -90,7 +90,11 @@ public class Limelight extends SubsystemBase {
 
   @AutoLogOutput
   public double getObjectTX() {
-    return LimelightHelpers.getTX(cameraName);
+    double tx = LimelightHelpers.getTX(cameraName);
+     if (cameraName.equals("limelight-shooter")) {
+      tx = -getHeadingToPriorityID();
+    }
+    return tx;
   }
 
   @AutoLogOutput
@@ -183,17 +187,17 @@ System.out.println(distance + " " + distanceNorm + " " + Math.acos(distance / di
     
     
     // // TODO: LOOK INTO THIS PLEASE TYSM <3
-    if (getPipelineType() == DetectionType.APRIL_TAG && hasValidTarget()) { //TODO test this TEST THIS
-      LimelightHelpers.PoseEstimate targetPose = getAdjustedPose();
+    // if (getPipelineType() == DetectionType.APRIL_TAG && hasValidTarget()) { //TODO test this TEST THIS
+    //   LimelightHelpers.PoseEstimate targetPose = getAdjustedPose();
       
-      RobotContainer.drivetrain.addVisionMeasurement(
-        targetPose.pose,
-        targetPose.timestampSeconds,
-        getVisionStdDevs(targetPose)
-      );
+    //   RobotContainer.drivetrain.addVisionMeasurement(
+    //     targetPose.pose,
+    //     targetPose.timestampSeconds,
+    //     getVisionStdDevs(targetPose)
+    //   );
         
       
-    }
+    // }
     
     if (DriverStation.isDisabled()) {
       if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red) {
@@ -223,6 +227,7 @@ System.out.println(distance + " " + distanceNorm + " " + Math.acos(distance / di
     
   } 
 
+  @AutoLogOutput
   public double getHeadingToPriorityID() {
     LimelightHelpers.RawFiducial[] tagArr = getAdjustedPose().rawFiducials;
    tagArr = Arrays.stream(tagArr).filter((entry) -> {return entry.id == priorityId;}).toArray(LimelightHelpers.RawFiducial[]::new);
@@ -328,13 +333,16 @@ System.out.println(distance + " " + distanceNorm + " " + Math.acos(distance / di
     return LimelightHelpers.getBotPoseEstimate_wpiBlue(cameraName);
   }
 
+  @AutoLogOutput
   public boolean isAligned() {
     double tx = getObjectTX();
     return Drivetrain.angleDeadband(Rotation2d.fromDegrees(tx), RobotContainer.drivetrain.getWrappedRotation(), Drivetrain.wrapRotation(Rotation2d.fromDegrees(DriveConstants.ANGLE_DEADBAND)));
   }
 
+  @AutoLogOutput
   public boolean isAlignedAuto() {
-    return Math.abs(getObjectTX()) < DriveConstants.ANGLE_DEADBAND;
+    double tx = getObjectTX();
+    return Math.abs(tx) < DriveConstants.ANGLE_DEADBAND;
   }
 
   

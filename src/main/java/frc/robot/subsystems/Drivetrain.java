@@ -100,7 +100,11 @@ public class Drivetrain extends SubsystemBase {
         });
 
     // Shuffleboard.getTab("Debug").addDouble("Drivetrain/FrontLeftVoltage", getSwerveDrive().getModules()[0].getDriveMotor()::getVoltage);
-    // modules = swerveDrive.getModules();
+    modules = swerveDrive.getModules();
+
+    for (int i = 0; i < modules.length; i++) {
+      modules[i].getAngleMotor().setMotorBrake(true);
+    }
     // ArrayList<TalonFX> motors = new ArrayList<TalonFX>();
     // motors.add((TalonFX) modules[0].getDriveMotor().getMotor());
     // motors.add((TalonFX) modules[1].getDriveMotor().getMotor());
@@ -190,7 +194,7 @@ public class Drivetrain extends SubsystemBase {
   public void periodic() {
     // Logger.recordOutput("Drivetrain/Module-Positions", getSwerveDrive().getModulePositions());
     // Logger.recordOutput("Drivetrain/Gyro-Rotation", getSwerveDrive().getGyroRotation3d());
-    // Logger.recordOutput("Drivetrain/Pose", getSwerveDrive().getPose());
+    Logger.recordOutput("Drivetrain/Pose", getSwerveDrive().getPose());
     
     if (timer.get() >= 0.4) {
       // System.out.println("FL " + modules[0].getDriveMotor().getVelocity());
