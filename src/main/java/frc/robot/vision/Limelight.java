@@ -48,7 +48,7 @@ public class Limelight extends SubsystemBase {
     this.cameraName = cameraName;
   }
 
-  @AutoLogOutput
+  // @AutoLogOutput
   public double getTimestampSeconds() {
     double latency =
         (LimelightHelpers.getLimelightNTDouble(cameraName, "cl")
@@ -58,10 +58,11 @@ public class Limelight extends SubsystemBase {
     return Timer.getFPGATimestamp() - latency;
   }
 
-  @AutoLogOutput(key = "{cameraName}/ValidTarget")
+  // @AutoLogOutput(key = "{cameraName}/ValidTarget")
   public boolean hasValidTarget() {
     boolean hasMatch = (LimelightHelpers.getLimelightNTDouble(cameraName, "tv") == 1.0);
     return targetDebouncer.calculate(hasMatch);
+    // return true;
   }
 
   public boolean currentPipelineMatches(DetectionType type) {
@@ -88,7 +89,7 @@ public class Limelight extends SubsystemBase {
     LimelightHelpers.setPipelineIndex(cameraName, type.getPipe());
   }
 
-  @AutoLogOutput
+  // @AutoLogOutput
   public double getObjectTX() {
     double tx = LimelightHelpers.getTX(cameraName);
      if (cameraName.equals("limelight-shooter")) {
@@ -97,7 +98,7 @@ public class Limelight extends SubsystemBase {
     return tx;
   }
 
-  @AutoLogOutput
+  // @AutoLogOutput
   public double getObjectTY() {
     return LimelightHelpers.getTY(cameraName);
   }
@@ -131,7 +132,7 @@ public class Limelight extends SubsystemBase {
     LimelightHelpers.setPriorityTagID(cameraName, id);
   }
   
-  @AutoLogOutput(key="{cameraName}/Distance")
+  // @AutoLogOutput(key="{cameraName}/Distance")
   public double getDistanceToSpeaker() {
 
     double distance =
@@ -227,7 +228,7 @@ System.out.println(distance + " " + distanceNorm + " " + Math.acos(distance / di
     
   } 
 
-  @AutoLogOutput
+  // @AutoLogOutput
   public double getHeadingToPriorityID() {
     LimelightHelpers.RawFiducial[] tagArr = getAdjustedPose().rawFiducials;
    tagArr = Arrays.stream(tagArr).filter((entry) -> {return entry.id == priorityId;}).toArray(LimelightHelpers.RawFiducial[]::new);
@@ -334,13 +335,13 @@ System.out.println(distance + " " + distanceNorm + " " + Math.acos(distance / di
     return LimelightHelpers.getBotPoseEstimate_wpiBlue(cameraName);
   }
 
-  @AutoLogOutput(key = "{cameraName}/IsAligned")
+  // @AutoLogOutput(key = "{cameraName}/IsAligned")
   public boolean isAligned() {
     double tx = getObjectTX();
     return Drivetrain.angleDeadband(Rotation2d.fromDegrees(tx), RobotContainer.drivetrain.getWrappedRotation(), Drivetrain.wrapRotation(Rotation2d.fromDegrees(DriveConstants.ANGLE_DEADBAND)));
   }
 
-  @AutoLogOutput(key = "{cameraName}/IsAlignedAuto")
+  // @AutoLogOutput(key = "{cameraName}/IsAlignedAuto")
   public boolean isAlignedAuto() {
     double tx = getObjectTX();
     return Math.abs(tx) < DriveConstants.ANGLE_DEADBAND;

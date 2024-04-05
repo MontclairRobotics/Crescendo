@@ -309,10 +309,12 @@ public class Auto extends SubsystemBase {
 
   @Override
   public void periodic() {
-   if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() != alliance) {
-    alliance = DriverStation.getAlliance().get();
-    validateAndCreatePaths();
-   }
+    if (DriverStation.isDisabled()) {
+      if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() != alliance) {
+        alliance = DriverStation.getAlliance().get();
+        validateAndCreatePaths();
+      }
+  }
     
   }
 
@@ -384,7 +386,7 @@ public class Auto extends SubsystemBase {
 
       // Only rely on vision and driving forward manually if it's a close note.
       if (isGoingToNote) {
-        finalPath.addCommands(Commands555.loadNoteAuto().onlyWhile(() -> {return !RobotContainer.shooter.isNoteInTransport();}).withTimeout(1));
+        finalPath.addCommands(Commands555.loadNoteAuto().onlyWhile(() -> {return !RobotContainer.shooter.isNoteInTransport();}).withTimeout(1.5));
       }
 
       // If we're trying to score
@@ -411,7 +413,8 @@ public class Auto extends SubsystemBase {
           .withTimeout(1));
         }
         
-        finalPath.addCommands(Commands555.scoreModeAuto().withTimeout(0.9));
+        // finalPath.addCommands(Commands555.scoreModeAuto().withTimeout(0.9));
+        finalPath.addCommands(Commands555.scoreAmp());
       }
 
 

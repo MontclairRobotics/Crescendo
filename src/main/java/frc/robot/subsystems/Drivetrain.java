@@ -68,7 +68,7 @@ public class Drivetrain extends SubsystemBase {
   SwerveModule[] modules;
   Orchestra orchestra;
 
-  @AutoLogOutput private boolean isFieldRelative;
+ private boolean isFieldRelative;
 
   // private AHRS navX;
 
@@ -76,7 +76,7 @@ public class Drivetrain extends SubsystemBase {
 
     this.isFieldRelative = true;
 
-    SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
+    SwerveDriveTelemetry.verbosity = TelemetryVerbosity.NONE;
 
     timer.start();
     // })
@@ -89,15 +89,15 @@ public class Drivetrain extends SubsystemBase {
     SimpleMotorFeedforward ff = new SimpleMotorFeedforward(DriveConstants.DRIVE_KS, DriveConstants.DRIVE_KV, DriveConstants.DRIVE_KA);
     swerveDrive.replaceSwerveModuleFeedforward(ff);
 
-    PathPlannerLogging.setLogActivePathCallback(
-        (activePath) -> {
-          Logger.recordOutput(
-              "Odometry/Trajectory", activePath.toArray(new Pose2d[activePath.size()]));
-        });
-    PathPlannerLogging.setLogTargetPoseCallback(
-        (targetPose) -> {
-          Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose);
-        });
+    // PathPlannerLogging.setLogActivePathCallback(
+    //     (activePath) -> {
+    //       Logger.recordOutput(
+    //           "Odometry/Trajectory", activePath.toArray(new Pose2d[activePath.size()]));
+    //     });
+    // PathPlannerLogging.setLogTargetPoseCallback(
+    //     (targetPose) -> {
+    //       Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose);
+    //     });
 
     // Shuffleboard.getTab("Debug").addDouble("Drivetrain/FrontLeftVoltage", getSwerveDrive().getModules()[0].getDriveMotor()::getVoltage);
     modules = swerveDrive.getModules();
@@ -123,12 +123,12 @@ public class Drivetrain extends SubsystemBase {
     // DriveConstants.kd.whenUpdate(getSwerveDrive().getSwerveController().thetaController::setD);
     // DriveConstants.ki.whenUpdate(getSwerveDrive().getSwerveController().thetaController::setI);
 
-    Shuffleboard.getTab("Debug").addDouble("Gyroscope Angle", () -> {
-      return getSwerveDrive().getOdometryHeading().getDegrees();
-    });
+    // Shuffleboard.getTab("Debug").addDouble("Gyroscope Angle", () -> {
+    //   return getSwerveDrive().getOdometryHeading().getDegrees();
+    // });
 
     
-    Shuffleboard.getTab("Debug").addDouble("Wrapped Angle", () -> RobotContainer.drivetrain.getWrappedRotation().getDegrees());
+    // Shuffleboard.getTab("Debug").addDouble("Wrapped Angle", () -> RobotContainer.drivetrain.getWrappedRotation().getDegrees());
     // Shuffleboard.getTab("Debug").addDouble("Front Left Velocity", () -> {
     //   return motors.get(0).getVelocity().getValueAsDouble();
     // });
@@ -194,22 +194,22 @@ public class Drivetrain extends SubsystemBase {
   public void periodic() {
     // Logger.recordOutput("Drivetrain/Module-Positions", getSwerveDrive().getModulePositions());
     // Logger.recordOutput("Drivetrain/Gyro-Rotation", getSwerveDrive().getGyroRotation3d());
-    Logger.recordOutput("Drivetrain/Pose", getSwerveDrive().getPose());
+    // Logger.recordOutput("Drivetrain/Pose", getSwerveDrive().getPose());
     
-    if (timer.get() >= 0.4) {
+    // if (timer.get() >= 0.4) {
       // System.out.println("FL " + modules[0].getDriveMotor().getVelocity());
       // System.out.println("FR " + modules[1].getDriveMotor().getVelocity());
       // System.out.println("BL " + modules[2].getDriveMotor().getVelocity());
       // System.out.println("FR " + modules[3].getDriveMotor().getVelocity());
       // timer.reset();
       // timer.start();
-    } 
+    // } 
 
     // Pose2d pose = LimelightHelpers.toPose2D(LimelightHelpers.getBotPose_wpiBlue("limelight-shooter"));
     // System.out.println(Units.metersToInches(pose.minus(new Pose2d(0, 5.55, new Rotation2d())).getTranslation().getNorm()));
     // System.out.println(Units.metersToInches(LimelightHelpers.toPose2D(LimelightHelpers.getBotPose_TargetSpace("limelight-shooter")).getTranslation().getNorm()));
 
-    RobotContainer.field.setRobotPose(swerveDrive.getPose());
+    // RobotContainer.field.setRobotPose(swerveDrive.getPose());
     // System.out.println(swerveDrive.getPose().getX() + " " + swerveDrive.getPose().getY() + " " + swerveDrive.getPose().getRotation().getDegrees());
   }
 
@@ -283,8 +283,8 @@ public class Drivetrain extends SubsystemBase {
     //   ySpeed *= -1;
     // }
     Translation2d targetTranslation = new Translation2d(ySpeed, xSpeed);
-    Logger.recordOutput("Drivetrain/Controller-Translation", targetTranslation);
-    Logger.recordOutput("Drivetrain/Controller-Theta", thetaSpeed);
+    // Logger.recordOutput("Drivetrain/Controller-Translation", targetTranslation);
+    // Logger.recordOutput("Drivetrain/Controller-Theta", thetaSpeed);
 
     this.drive(targetTranslation, thetaSpeed);
   }

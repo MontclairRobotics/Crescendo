@@ -68,7 +68,7 @@ public class Sprocket extends SubsystemBase {
 
     leftMotor.setInverted(LEFT_INVERT.get());
     rightMotor.setInverted(RIGHT_INVERT.get());
-    Shuffleboard.getTab("Debug").addBoolean("Using PID", () -> usingPID);
+    // Shuffleboard.getTab("Debug").addBoolean("Using PID", () -> usingPID);
     Shuffleboard.getTab("Debug").addDouble("Sprocket Encoder", () -> getEncoderPosition());
     Shuffleboard.getTab("Debug").addDouble("Sprocket Encoder Raw", () -> getRawPosition());
     angleKD.whenUpdate(
@@ -84,9 +84,9 @@ public class Sprocket extends SubsystemBase {
           pidController.setP(k);
         });
 
-    Shuffleboard.getTab("Debug").addDouble("Limelight Distance", () -> {
-      return RobotContainer.shooterLimelight.getDistanceToSpeaker();
-    });
+    // Shuffleboard.getTab("Debug").addDouble("Limelight Distance", () -> {
+    //   return RobotContainer.shooterLimelight.getDistanceToSpeaker();
+    // });
 
     // TODO check conversion factors
     leftEncoder = leftMotor.getEncoder();
@@ -117,9 +117,9 @@ public class Sprocket extends SubsystemBase {
     leftMotor.setIdleMode(IdleMode.kBrake);
     rightMotor.setIdleMode(IdleMode.kBrake);
 
-        Shuffleboard.getTab("Debug").addDouble("Current Distance", () -> {
-      return getEncoderPosition();
-    });
+    //     Shuffleboard.getTab("Debug").addDouble("Current Distance", () -> {
+    //   return getEncoderPosition();
+    // });
 
     
   }
@@ -189,7 +189,7 @@ public class Sprocket extends SubsystemBase {
     return ((absEncoder.getDistance())-281.6); //* ((double) 14/64)) + 79;//76;
   }
 
-  @AutoLogOutput
+  // @AutoLogOutput
   public boolean isAtAngle() {
     return pidController.atSetpoint();
   }
@@ -205,7 +205,7 @@ public class Sprocket extends SubsystemBase {
         rightMotor.set(targetSpeed);
       } else {
         leftMotor.set(pidVoltage / leftMotor.getBusVoltage());
-        rightMotor.set(pidVoltage / leftMotor.getBusVoltage());
+        rightMotor.set(pidVoltage / rightMotor.getBusVoltage());
       }
     } else {
       stop();

@@ -60,10 +60,10 @@ public class Climbers extends SubsystemBase {
   //   Shuffleboard.getTab("Debug").addBoolean("At Top", () -> atTop());
   //   Shuffleboard.getTab("Debug").addBoolean("At Bottom", () -> atBottom());
 
-    Shuffleboard.getTab("Debug").addDouble("Left Encoder", () -> leftEncoder.getPosition());
-    Shuffleboard.getTab("Debug").addDouble("Right Encoder", () -> rightEncoder.getPosition());
-    Shuffleboard.getTab("Debug").addBoolean("Left Limit", () -> leftLimit.get());
-    Shuffleboard.getTab("Debug").addBoolean("Right Limit", () -> rightLimit.get());
+    // Shuffleboard.getTab("Debug").addDouble("Left Encoder", () -> leftEncoder.getPosition());
+    // Shuffleboard.getTab("Debug").addDouble("Right Encoder", () -> rightEncoder.getPosition());
+    // Shuffleboard.getTab("Debug").addBoolean("Left Limit", () -> leftLimit.get());
+    // Shuffleboard.getTab("Debug").addBoolean("Right Limit", () -> rightLimit.get());
 
   }
 

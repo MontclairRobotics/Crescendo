@@ -92,8 +92,8 @@ public class Shooter extends SubsystemBase {
   Debouncer m_debouncer = new Debouncer(0.3, Debouncer.DebounceType.kRising);
 
   public Shooter() {
-    Shuffleboard.getTab("Debug").addDouble("Top velocity", () -> {return topEncoder.getVelocity();});
-    Shuffleboard.getTab("Debug").addDouble("Bottom velocity", () -> {return bottomEncoder.getVelocity();});
+    // Shuffleboard.getTab("Debug").addDouble("Top velocity", () -> {return topEncoder.getVelocity();});
+    // Shuffleboard.getTab("Debug").addDouble("Bottom velocity", () -> {return bottomEncoder.getVelocity();});
     // topMotor.restoreFactoryDefaults();
     // bottomMotor.restoreFactoryDefaults();
     // transportMotor.restoreFactoryDefaults();
@@ -118,9 +118,9 @@ public class Shooter extends SubsystemBase {
     transportController.setD(Constants.ShooterConstants.TRANSPORT_PID_KD, 1);
     transportController.setOutputRange(-1, 1);
     
-    Shuffleboard.getTab("Debug").addBoolean("Transport Beam Break", () -> {
-      return isNoteInTransport();
-    });
+    // Shuffleboard.getTab("Debug").addBoolean("Transport Beam Break", () -> {
+    //   return isNoteInTransport();
+    // });
 
     transportMotor.setIdleMode(IdleMode.kBrake);
   } 
@@ -170,7 +170,7 @@ public class Shooter extends SubsystemBase {
     isTransporting = true;
   }
 
-  @AutoLogOutput
+  // @AutoLogOutput
   public boolean isAtSpeed() {
     double currentTopSpeed = topEncoder.getVelocity();
     double currentBottomSpeed = bottomEncoder.getVelocity();
@@ -247,7 +247,7 @@ public class Shooter extends SubsystemBase {
     bottomMotor.set(-ShooterConstants.SPEAKER_EJECT_SPEED);
   }
 
-  @AutoLogOutput
+  // @AutoLogOutput
   public boolean isNoteInTransport() {
 
     return breakBeam.get();
