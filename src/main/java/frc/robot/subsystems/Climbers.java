@@ -141,6 +141,11 @@ public class Climbers extends SubsystemBase {
 
   }
 
+  public void setInputFromSticks(CommandPS5Controller controller) {
+    leftSpeed = -MathUtil.applyDeadband(controller.getLeftY(), 0.05);
+    rightSpeed = -MathUtil.applyDeadband(controller.getRightY(), 0.05);
+  }
+
   /** Stops The Climbers */
   // public void stop() {
   //   leftSpeed = 0;

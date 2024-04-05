@@ -101,14 +101,20 @@ public class RobotContainer {
     sprocket.setDefaultCommand(
         Commands.run(
             () -> {
-              sprocket.setInputFromJoystick(operatorController);
+              if (!operatorController.L1().getAsBoolean()) {
+                sprocket.setInputFromJoystick(operatorController);
+              }
             },
             sprocket));
 
     climbers.setDefaultCommand(
       Commands.run(
         () -> {
-          climbers.setInputFromController(operatorController);
+          if (!operatorController.L1().getAsBoolean()) {
+            climbers.setInputFromController(operatorController);
+          } else {
+            climbers.setInputFromSticks(operatorController);
+          }
         },
         climbers
       )
@@ -204,7 +210,7 @@ public class RobotContainer {
     operatorController.triangle().onTrue(Commands555.scoreAmp());
     operatorController.square().onTrue(Commands555.ferryNote(32));
     // operatorController.square().onTrue(Commands555.spinUpShooter(4000, 4000)).onFalse(Commands555.stopShooter());
-    operatorController.L1().whileTrue(Commands555.loadNoteSource());
+    operatorController.R1().whileTrue(Commands555.loadNoteSource());
     
     
 

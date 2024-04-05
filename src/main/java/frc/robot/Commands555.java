@@ -117,20 +117,16 @@ public class Commands555 {
   }
 
   public static Command loadNoteSource() {
-    Command alignSprocket = Commands.sequence(
-      Commands555.setSprocketAngle(ArmConstants.SOURCE_ANGLE),
-      waitUntil(RobotContainer.sprocket::isAtAngle));
-    Command shoot = Commands.runOnce(() -> { RobotContainer.shooter.shootVelocity(-ShooterConstants.SOURCE_SPEED, -ShooterConstants.SOURCE_SPEED);});
-    // Command intake = Commands.sequence(alignSprocket, Commands.parallel(
-    //     }, RobotContainer.shooter), Commands555.transport(ShooterConstants.TRANSPORT_SPEED)));
-    Command intake = Commands.sequence(alignSprocket, log("done aligning"), Commands.parallel(shoot, Commands555.transport(ShooterConstants.TRANSPORT_SPEED)));
-    return intake
-        .withName("intake in")
+    Command alignSprocket = Commands555.setSprocketAngle(ArmConstants.SOURCE_ANGLE);
+    Command intakeAndTransport = Commands.sequence(alignSprocket,
+        Commands.parallel(Commands.runOnce(() -> {RobotContainer.shooter.shootVelocity(-ShooterConstants.SOURCE_SPEED);}), Commands555.transport(-ShooterConstants.TRANSPORT_SPEED), Commands555.waitUntil(() -> false)));
+    return intakeAndTransport
+        .withName("load note source")
         .until(() -> {
           return RobotContainer.shooter.isNoteInTransport();
         })
         .finallyDo(() -> {
-          // RobotContainer.shooter.stop();
+          RobotContainer.intake.stop();
           RobotContainer.shooter.stopTransport();
         });
   }
@@ -140,7 +136,7 @@ public class Commands555 {
     Command intakeAndTransport = Commands.sequence(alignSprocket,
         Commands.parallel(Commands555.reverseIntake(), Commands555.transport(-ShooterConstants.TRANSPORT_SPEED)));
     return intakeAndTransport
-        .withName("intake out")
+        .withName("unload note")
         // .until(() -> {
         //   return RobotContainer.shooter.isNoteInTransport();
         // })
