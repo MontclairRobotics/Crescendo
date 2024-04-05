@@ -37,6 +37,8 @@ import java.awt.geom.Point2D;
 
 import javax.sound.sampled.Port;
 
+import org.littletonrobotics.junction.AutoLogOutput;
+
 public class Sprocket extends SubsystemBase {
 
   private final CANSparkMax leftMotor =
@@ -185,6 +187,7 @@ public class Sprocket extends SubsystemBase {
     return ((absEncoder.getDistance())-281.6); //* ((double) 14/64)) + 79;//76;
   }
 
+  @AutoLogOutput
   public boolean isAtAngle() {
     return pidController.atSetpoint();
   }

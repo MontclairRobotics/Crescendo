@@ -8,6 +8,8 @@ import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Volts;
 import static frc.robot.Constants.ArmConstants.SPROCKET_BEAM_INVERT;
 
+import org.littletonrobotics.junction.AutoLogOutput;
+
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -168,6 +170,7 @@ public class Shooter extends SubsystemBase {
     isTransporting = true;
   }
 
+  @AutoLogOutput
   public boolean isAtSpeed() {
     double currentTopSpeed = topEncoder.getVelocity();
     double currentBottomSpeed = bottomEncoder.getVelocity();
@@ -243,6 +246,8 @@ public class Shooter extends SubsystemBase {
     topMotor.set(-ShooterConstants.SPEAKER_EJECT_SPEED);
     bottomMotor.set(-ShooterConstants.SPEAKER_EJECT_SPEED);
   }
+
+  @AutoLogOutput
   public boolean isNoteInTransport() {
 
     return breakBeam.get();
