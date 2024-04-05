@@ -413,8 +413,8 @@ public class Auto extends SubsystemBase {
           .withTimeout(1));
         }
         
-        // finalPath.addCommands(Commands555.scoreModeAuto().withTimeout(0.9));
-        finalPath.addCommands(Commands555.scoreAmp());
+        finalPath.addCommands(Commands555.scoreModeAuto().withTimeout(0.9));
+        // finalPath.addCommands(Commands555.scoreAmp());
       }
 
 
