@@ -113,7 +113,7 @@ public final class Constants {
 
     
 
-    public static final int SPROCKET_ABS_ENCODER = 8; //9
+    public static final int SPROCKET_ABS_ENCODER = 3; //9
 
     public static final int CLIMBER_LEFT_LIMIT_SWITCH_PORT = 5;
 
@@ -137,7 +137,7 @@ public final class Constants {
 
     public static final double MAX_VOLTAGE_V = 12.0;
 
-    public static double SOURCE_ANGLE = 52;
+    public static double SOURCE_ANGLE = 61;
     // TODO: needs to be set
     
     public static final boolean SPROCKET_BEAM_INVERT = false;

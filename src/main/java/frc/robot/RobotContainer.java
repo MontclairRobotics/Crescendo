@@ -49,7 +49,7 @@ public class RobotContainer {
 
   public static CommandPS5Controller driverController = new CommandPS5Controller(0);
   public static CommandPS5Controller operatorController = new CommandPS5Controller(1);
-  public static CommandPS5Controller debugController = new CommandPS5Controller(2);
+  // public static CommandPS5Controller debugController = new CommandPS5Controller(2);
 
   public static XboxController testController = new XboxController(2);
   public static Drivetrain drivetrain =
@@ -78,12 +78,12 @@ public class RobotContainer {
   public static boolean isDriverMode = false;
 
   public RobotContainer() {
-    DriverStation.silenceJoystickConnectionWarning(true);
-    Shuffleboard.getTab("Debug").addDouble("Speed!", shooterLimelight::getSpeedForSpeaker);
-    Shuffleboard.getTab("Debug").addBoolean("Is aligned", RobotContainer.shooterLimelight::isAlignedAuto);
-    Shuffleboard.getTab("Debug").addBoolean("Is at angle", RobotContainer.sprocket::isAtAngle);
-    Shuffleboard.getTab("Debug").addBoolean("Is at speed", RobotContainer.shooter::isAtSpeed);
-    Shuffleboard.getTab("Debug").addDouble("Priority ID Angle", RobotContainer.shooterLimelight::getHeadingToPriorityID);
+    // DriverStation.silenceJoystickConnectionWarning(true);
+    // Shuffleboard.getTab("Debug").addDouble("Speed!", shooterLimelight::getSpeedForSpeaker);
+    // Shuffleboard.getTab("Debug").addBoolean("Is aligned", RobotContainer.shooterLimelight::isAlignedAuto);
+    // Shuffleboard.getTab("Debug").addBoolean("Is at angle", RobotContainer.sprocket::isAtAngle);
+    // Shuffleboard.getTab("Debug").addBoolean("Is at speed", RobotContainer.shooter::isAtSpeed);
+    // Shuffleboard.getTab("Debug").addDouble("Priority ID Angle", RobotContainer.shooterLimelight::getHeadingToPriorityID);
     //Shuffleboard.getTab("Debug").addDouble("Max Is Dumb", () -> RobotContainer.shooterLimelight.maxIsStupid().getDegrees());
 
     auto.setupPathPlanner();
@@ -101,7 +101,8 @@ public class RobotContainer {
     sprocket.setDefaultCommand(
         Commands.run(
             () -> {
-              if (!operatorController.L1().getAsBoolean()) {
+              if (!operatorController.getHID().getL1Button()) {
+              //if (!operatorController.L1().getAsBoolean()) {
                 sprocket.setInputFromJoystick(operatorController);
               }
             },
@@ -110,7 +111,8 @@ public class RobotContainer {
     climbers.setDefaultCommand(
       Commands.run(
         () -> {
-          if (!operatorController.L1().getAsBoolean()) {
+          if (!operatorController.getHID().getL1Button()) {
+          //if (!operatorController.L1().getAsBoolean()) {
             climbers.setInputFromController(operatorController);
           } else {
             climbers.setInputFromSticks(operatorController);
@@ -129,14 +131,14 @@ public class RobotContainer {
   }
 
   private void configureDebugBindings() {
-    ControllerTools.getDPad(DPad.UP, debugController).whileTrue(Commands555.leftClimberUp());
-    ControllerTools.getDPad(DPad.DOWN, debugController).whileTrue(Commands555.leftClimberDown());
+    // ControllerTools.getDPad(DPad.UP, debugController).whileTrue(Commands555.leftClimberUp());
+    // ControllerTools.getDPad(DPad.DOWN, debugController).whileTrue(Commands555.leftClimberDown());
 
-    ControllerTools.getDPad(DPad.LEFT, debugController).whileTrue(Commands555.rightClimberUp());
-    ControllerTools.getDPad(DPad.RIGHT, debugController).whileTrue(Commands555.rightClimberDown());
+    // ControllerTools.getDPad(DPad.LEFT, debugController).whileTrue(Commands555.rightClimberUp());
+    // ControllerTools.getDPad(DPad.RIGHT, debugController).whileTrue(Commands555.rightClimberDown());
 
-    debugController.cross().whileTrue(Commands555.driveOneMeter());
-    debugController.circle().whileTrue(Commands555.scoreModeAuto());
+    // debugController.cross().whileTrue(Commands555.driveOneMeter());
+    // debugController.circle().whileTrue(Commands555.scoreModeAuto());
   }
 
   private void configureDriverBindings() {
@@ -180,7 +182,7 @@ public class RobotContainer {
     ControllerTools.getDPad(DPad.LEFT, driverController).onTrue(Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(60), false));
     ControllerTools.getDPad(DPad.RIGHT, driverController).onTrue(Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(300), false));
     ControllerTools.getDPad(DPad.UP, driverController).onTrue(Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(180), false));
-    ControllerTools.getDPad(DPad.DOWN, driverController).whileTrue(Commands555.scoreModeAuto());
+    ControllerTools.getDPad(DPad.DOWN, driverController).whileTrue(Commands555.loadNoteAuto().withTimeout(1.5));
                     
   }
   private void configureOperatorBindings() {
@@ -192,11 +194,11 @@ public class RobotContainer {
     // operatorController.R2().onTrue(Commands555.testPipeSwitch(intakeLimelight, DetectionType.APRIL_TAG));
     operatorController.L2().whileTrue(Commands555.loadNote());
 
-    ControllerTools.getDPad(DPad.UP, debugController).whileTrue(Commands555.leftClimberUp());
-    ControllerTools.getDPad(DPad.DOWN, debugController).whileTrue(Commands555.leftClimberDown());
+    // ControllerTools.getDPad(DPad.UP, debugController).whileTrue(Commands555.leftClimberUp());
+    // ControllerTools.getDPad(DPad.DOWN, debugController).whileTrue(Commands555.leftClimberDown());
 
-    ControllerTools.getDPad(DPad.LEFT, debugController).whileTrue(Commands555.rightClimberUp());
-    ControllerTools.getDPad(DPad.RIGHT, debugController).whileTrue(Commands555.rightClimberDown());
+    // ControllerTools.getDPad(DPad.LEFT, debugController).whileTrue(Commands555.rightClimberUp());
+    // ControllerTools.getDPad(DPad.RIGHT, debugController).whileTrue(Commands555.rightClimberDown());
 
     
       

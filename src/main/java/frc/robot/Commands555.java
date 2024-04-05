@@ -167,7 +167,7 @@ public class Commands555 {
         log("Done waiting, hhunting down note"),
         Commands555.transport(ShooterConstants.TRANSPORT_SPEED),
         log("Drive Intaking"),
-        driveIntake)
+        driveIntake.withTimeout(1))
         .finallyDo(() -> {
           RobotContainer.intake.stop();
           RobotContainer.shooter.stopTransport();
