@@ -326,7 +326,7 @@ System.out.println(distance + " " + distanceNorm + " " + Math.acos(distance / di
     return ShooterConstants.SPEAKER_EJECT_SPEED - 20 * Math.abs(90-RobotContainer.drivetrain.getWrappedRotation().getDegrees());
   }
 
-  @AutoLogOutput(key = "{cameraName}/Pose")
+  // @AutoLogOutput(key = "{cameraName}/Pose")
   public LimelightHelpers.PoseEstimate getAdjustedPose() {
     if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red && DriverStation.isTeleop()) {
       return LimelightHelpers.getBotPoseEstimate_wpiRed(cameraName);

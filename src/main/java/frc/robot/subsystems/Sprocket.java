@@ -177,10 +177,12 @@ public class Sprocket extends SubsystemBase {
   }
 
   public double getEncoderPosition() {
-    if (getRawPosition() < 0) {
-      return getRawPosition() + 360;
+    double pos = getRawPosition();
+    pos = pos % 360;
+    if (pos < 0) {
+      return pos + 360;
     }
-    return getRawPosition();
+    return pos;
   }
 
   public double getRawPosition() {

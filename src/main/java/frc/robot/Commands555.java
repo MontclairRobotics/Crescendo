@@ -126,7 +126,7 @@ public class Commands555 {
           return RobotContainer.shooter.isNoteInTransport();
         })
         .finallyDo(() -> {
-          RobotContainer.intake.stop();
+          RobotContainer.shooter.stop();
           RobotContainer.shooter.stopTransport();
         });
   }
