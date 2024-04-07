@@ -376,6 +376,7 @@ public class Auto extends SubsystemBase {
       boolean isFromCloseNote = current == 'A' || current == 'B' || current == 'C';
       
       boolean isFromNote = Array555.indexOf(AutoConstants.NOTES, current) != -1;
+      boolean isGoingToFarNoteScoreLocation = next == '6' || next == '7';
 
       // If we're trying to intake, not score
       if (isGoingToNote && (!isFromNote || isFromCloseNote)) {
@@ -390,7 +391,7 @@ public class Auto extends SubsystemBase {
       }
 
       // If we're trying to score
-      if ((isFromNote && isGoingToNote && !isFromCloseNote) || (current == next) || (next == '5')) { //TODO I fixed this did I screw up?
+      if ((isFromNote && isGoingToNote && !isFromCloseNote) || (current == next) || (next == '5') || isGoingToFarNoteScoreLocation) { //TODO I fixed this did I screw up?
         Rotation2d angle = new Rotation2d();
         if (next == 'A') {
           angle = Rotation2d.fromDegrees(-30);
@@ -404,11 +405,18 @@ public class Auto extends SubsystemBase {
         else if (next == '5') {
           angle = Rotation2d.fromDegrees(-26.57);
         }
+        else if (next == '6') {
+          angle = Rotation2d.fromDegrees(-35);
+        }
+        else if (next == '7') {
+          angle = Rotation2d.fromDegrees(0);
+        }
+
 
         if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red) {
           angle = GeometryUtil.flipFieldRotation(angle);
-        }
-        if (next != '5') {
+        } 
+        if (next != '5' || next != '7') {
           finalPath.addCommands(Commands.parallel(Commands555.goToAngleFieldRelative(Drivetrain.wrapRotation(angle), false).withTimeout(0.9)), Commands555.setSprocketAngleWithStop(RobotContainer.shooterLimelight::bestFit)
           .withTimeout(1));
         }
