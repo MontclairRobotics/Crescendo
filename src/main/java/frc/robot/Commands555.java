@@ -30,6 +30,7 @@ import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.vision.DetectionType;
 import frc.robot.vision.Limelight;
+import frc.robot.vision.LimelightHelpers;
 
 public class Commands555 {
   private static double initTurnAngle;
@@ -115,12 +116,27 @@ public class Commands555 {
 
   }
 
+  public static Command loadNoteSource() {
+    Command alignSprocket = Commands555.setSprocketAngle(ArmConstants.SOURCE_ANGLE);
+    Command intakeAndTransport = Commands.sequence(alignSprocket,
+        Commands.parallel(Commands.runOnce(() -> {RobotContainer.shooter.shootVelocity(-ShooterConstants.SOURCE_SPEED);}), Commands555.transport(-ShooterConstants.TRANSPORT_SPEED), Commands555.waitUntil(() -> false)));
+    return intakeAndTransport
+        .withName("load note source")
+        .until(() -> {
+          return RobotContainer.shooter.isNoteInTransport();
+        })
+        .finallyDo(() -> {
+          RobotContainer.shooter.stop();
+          RobotContainer.shooter.stopTransport();
+        });
+  }
+
   public static Command unloadNote() {
     Command alignSprocket = Commands555.setSprocketAngle(ArmConstants.INTAKE_ANGLE);
     Command intakeAndTransport = Commands.sequence(alignSprocket,
         Commands.parallel(Commands555.reverseIntake(), Commands555.transport(-ShooterConstants.TRANSPORT_SPEED)));
     return intakeAndTransport
-        .withName("intake out")
+        .withName("unload note")
         // .until(() -> {
         //   return RobotContainer.shooter.isNoteInTransport();
         // })
@@ -151,7 +167,7 @@ public class Commands555 {
         log("Done waiting, hhunting down note"),
         Commands555.transport(ShooterConstants.TRANSPORT_SPEED),
         log("Drive Intaking"),
-        driveIntake)
+        driveIntake.withTimeout(1))
         .finallyDo(() -> {
           RobotContainer.intake.stop();
           RobotContainer.shooter.stopTransport();
@@ -251,9 +267,9 @@ public class Commands555 {
               boolean isAligned = Drivetrain.angleDeadband(
                   RobotContainer.drivetrain.getWrappedRotation(),
                       rot.get(), Rotation2d.fromDegrees(DriveConstants.ANGLE_DEADBAND));
-              System.out.println(rot.get().getDegrees());
-              System.out.println(isAligned);
-              System.out.println(RobotContainer.drivetrain.getWrappedRotation().getDegrees());
+              // System.out.println(rot.get().getDegrees());
+              // System.out.println(isAligned);
+              // System.out.println(RobotContainer.drivetrain.getWrappedRotation().getDegrees());
 
               return isAligned;
             });
@@ -402,6 +418,36 @@ public class Commands555 {
                 })); // TODO should we lock drive?
   }
 
+  public static Command alignToLimelightTargetExtreme(Limelight camera) {
+    return Commands.sequence(
+      waitForPipe(camera, DetectionType.APRIL_TAG),
+      ifHasTarget(
+        alignToAngleRobotRelativeContinuous(() -> {return Rotation2d.fromDegrees(camera.getHeadingToPriorityID() - RobotContainer.shooterLimelight.maxIsStupid().getDegrees());}, false), camera
+      ).finallyDo(
+        () -> {
+          RobotContainer.drivetrain.setChassisSpeeds(new ChassisSpeeds(0, 0, 0));
+          camera.setDefaultPipeline();
+
+        }
+      )
+    );
+  }
+
+  public static Command alignToLimelightTargetPose(Limelight camera) {
+    return Commands.sequence(
+      waitForPipe(camera, DetectionType.APRIL_TAG),
+      ifHasTarget(
+        alignToAngleRobotRelativeContinuous(() -> {return Rotation2d.fromDegrees(camera.getAngleToSpeaker());}, false), camera
+      ).finallyDo(
+        () -> {
+          RobotContainer.drivetrain.setChassisSpeeds(new ChassisSpeeds(0, 0, 0));
+          camera.setDefaultPipeline();
+
+        }
+      )
+    );
+  }
+
   public static Command alignToLimelightTargetWithDrive(Limelight camera, DetectionType targetType, Translation2d speeds) {
 
     // Rotation2d targetAngle = Rotation2d.fromDegrees(-camera.getObjectTX());
@@ -448,7 +494,9 @@ public class Commands555 {
 
   public static Command scoreMode() {
     return Commands.parallel(
-        alignToLimelightTarget(RobotContainer.shooterLimelight, DetectionType.APRIL_TAG),
+        alignToAngleRobotRelativeContinuous(() -> Rotation2d.fromDegrees(RobotContainer.shooterLimelight.getHeadingToPriorityID()), false),
+        //alignToLimelightTargetExtreme(RobotContainer.shooterLimelight),
+        // alignToLimelightTarget(RobotContainer.shooterLimelight, DetectionType.APRIL_TAG),
         setSprocketAngle(RobotContainer.shooterLimelight::bestFit),
         Commands.runOnce(() -> {
           RobotContainer.isDriverMode = true;
@@ -459,6 +507,23 @@ public class Commands555 {
           RobotContainer.isDriverMode = false;
         });
   }
+
+   public static Command scoreModePose() {
+    return Commands.parallel(
+        alignToLimelightTargetPose(RobotContainer.shooterLimelight),
+        setSprocketAngle(() -> {
+          return RobotContainer.shooterLimelight.bestFitFromDistance(RobotContainer.shooterLimelight.getPoseDistanceToSpeaker());
+        }),
+        Commands.runOnce(() -> {
+          RobotContainer.isDriverMode = true;
+          RobotContainer.shooter.shootVelocity(ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.SPEAKER_EJECT_SPEED);
+          // RobotContainer.shooter.transportStart(ShooterConstants.TRANSPORT_SPEED);
+        })).finallyDo(() -> {
+          RobotContainer.shooter.stop();
+          RobotContainer.isDriverMode = false;
+        });
+  }
+  
 
   public static Command alignToAmpAndShoot() {
     Pose2d botPose = RobotContainer.shooterLimelight.getAdjustedPose().pose;
@@ -508,33 +573,32 @@ public class Commands555 {
     );
   }
 
+  public static Command addVisionMeasurement() {
+    return Commands.runOnce(() -> {
+      LimelightHelpers.PoseEstimate targetPose = RobotContainer.shooterLimelight.getAdjustedPose();
+      
+      RobotContainer.drivetrain.addVisionMeasurement(
+        targetPose.pose,
+        targetPose.timestampSeconds,
+        RobotContainer.shooterLimelight.getVisionStdDevs(targetPose)
+      );
+    });
+  }
  
   // Used during auto for scoring speaker(usually from one of the note locations)
-  public static Command scoreModeAutoOld() {
-    Command alignAndAngle = Commands.race(alignToLimelightTargetWithStop(RobotContainer.shooterLimelight, DetectionType.APRIL_TAG), setSprocketAngle(RobotContainer.shooterLimelight::bestFit));
+  public static Command scoreModeAuto() {
+    Command alignAndAngle = alignToAngleRobotRelative(() -> Rotation2d.fromDegrees(RobotContainer.shooterLimelight.getHeadingToPriorityID()), false).deadlineWith(setSprocketAngle(RobotContainer.shooterLimelight::bestFit));
     return Commands.sequence(
-      alignAndAngle, 
+      alignAndAngle.withTimeout(1.3), 
       setSprocketAngleWithStop(RobotContainer.shooterLimelight::bestFit),
       log("Scoring mode auto suckers!"),
-      Commands.waitUntil(() -> {
-        return (RobotContainer.shooterLimelight.isAlignedAuto() && RobotContainer.sprocket.isAtAngle()) && RobotContainer.shooter.isAtSpeed();
-      }).withTimeout(0.5), 
+      // Commands.waitUntil(() -> {
+      //   return (RobotContainer.shooterLimelight.isAlignedAuto() && RobotContainer.sprocket.isAtAngle()) && RobotContainer.shooter.isAtSpeed();
+      // }).withTimeout(0.5), 
       log("Shooting Auto!"),
       Commands555.shoot(ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.TRANSPORT_SPEED));
 
 
-  }
-
-  public static Command scoreModeAuto() {
-    return Commands.sequence(
-      log("Aligning for scoring mode auto!"),
-      Commands.parallel(
-        alignToLimelightTargetWithStop(RobotContainer.shooterLimelight, DetectionType.APRIL_TAG),
-        setSprocketAngleWithStop(RobotContainer.shooterLimelight::bestFit)
-      ).withTimeout(0.7),
-      log("Aligned for scoring mode auto!"),
-      shoot(ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.TRANSPORT_SPEED)
-    );
   }
 
   public static Command runTransportManual() {
@@ -896,7 +960,8 @@ public class Commands555 {
         shoot(ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.SPEAKER_EJECT_SPEED,
             ShooterConstants.TRANSPORT_SPEED),
         Commands.runOnce(() -> System.out.println("Done Shooting subwoofer!")),
-        setSprocketAngle(ArmConstants.INTAKE_ANGLE));
+        setSprocketAngle(ArmConstants.INTAKE_ANGLE)
+        );
   }
 
   // public static Command scoreSubwooferAtAngle() {

@@ -279,74 +279,7 @@ public class Auto extends SubsystemBase {
     return wpiStates;
   }
 
-  @Deprecated
-  private void buildPathSequence(String autoString) {
 
-
-    SequentialCommandGroup finalPath = new SequentialCommandGroup();
-    trajectories.clear();
-
-    if (autoString.length() == 0) {
-      autoCommand = Commands.sequence(Commands555.setAutoPose(autoString), Commands555.scoreSubwoofer());
-      return;
-    }
-    
-    finalPath.addCommands(Commands555.setAutoPose(autoString));
-
-    if (autoString.length() >= 1) {
-      char digit = autoString.charAt(0);
-      if (digit == '4') {
-          finalPath.addCommands(Commands555.scoreAmp());
-        } else {
-          finalPath.addCommands(Commands555.scoreSubwoofer());
-        }
-    }
-
-  
-    for (int i = 0; i < autoString.length() - 1; i++) {
-
-      char current = autoString.charAt(i);
-      char next = autoString.charAt(i + 1);
-      try {
-        PathPlannerPath path = PathPlannerPath.fromPathFile("" + current + "-" + next);
-        
-        ParallelCommandGroup segment = new ParallelCommandGroup(AutoBuilder.followPath(path));
-        if (!Character.isDigit(next)) {
-          segment.addCommands(Commands555.setSprocketAngle(INTAKE_ANGLE));
-
-        }
-        finalPath.addCommands(segment);
-        trajectories.add(
-            path.getTrajectory(
-              new ChassisSpeeds(),
-              path.getPreviewStartingHolonomicPose().getRotation()
-            ));
-
-        // if (firstPath) {
-        //   RobotContainer.drivetrain.getSwerveDrive().resetOdometry(path.getPreviewStartingHolonomicPose());
-        //   firstPath = false;
-        // } //TODO make this a command, this won't work if they move the robot after
-      } catch (Exception e) {
-        // TODO: amazing error handling
-        setFeedback("Path File Not Found");
-        autoCommand = Commands.runOnce(() -> {}); //TODO this right?
-      }
-
-      if (Character.isDigit(next)) {
-        if (next == '4') {
-          finalPath.addCommands(Commands555.scoreAmp());
-        } else {
-          finalPath.addCommands(Commands555.scoreSubwoofer());
-        }
-
-      } else {
-        
-        finalPath.addCommands(Commands555.autonomousIntake());
-      }
-    }
-    setFeedback("Successfully Created Auto Sequence!");
-    autoCommand = finalPath;
-  }
 
   public void validateAndCreatePaths() {
     String autoString = autoStringEntry.getString("");
@@ -377,10 +310,12 @@ public class Auto extends SubsystemBase {
 
   @Override
   public void periodic() {
-   if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() != alliance) {
-    alliance = DriverStation.getAlliance().get();
-    validateAndCreatePaths();
-   }
+    if (DriverStation.isDisabled()) {
+      if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() != alliance) {
+        alliance = DriverStation.getAlliance().get();
+        validateAndCreatePaths();
+      }
+  }
     
   }
 
@@ -399,7 +334,7 @@ public class Auto extends SubsystemBase {
     finalPath.addCommands(Commands.runOnce(() -> {
       RobotContainer.shooter.shootVelocity(ShooterConstants.SPEAKER_EJECT_SPEED, ShooterConstants.SPEAKER_EJECT_SPEED);
     }));
-    finalPath.addCommands(Commands555.waitUntil(RobotContainer.shooter::isAtSpeed)); //Wait for shooter to ramp up initially
+    
 
     if (autoString.charAt(0) == '4') {
       finalPath.addCommands(Commands555.scoreAmp());
@@ -426,18 +361,7 @@ public class Auto extends SubsystemBase {
                 new ChassisSpeeds(),
                 path.getPreviewStartingHolonomicPose().getRotation()
               ));
-          Command pathCommand;
-          // If we are heading towards a far note, then run the AutoPoseEstimateToNote in parallel
-          if ((next == 'D') || (next == 'E') || (next == 'F') || (next == 'G') || (next == 'H')) {
-            pathCommand = Commands.parallel(
-              AutoBuilder.followPath(path),
-              new AutoPoseEstimateToNote(RobotContainer.drivetrain.getSwerveDrive().kinematics, next)
-            );
-          } else {
-            pathCommand = AutoBuilder.followPath(path);
-          }
-          Command cmd = Commands.sequence(pathCommand, Commands555.waitForTime(0.2).until(RobotContainer.shooter::isNoteInTransport));
-          // Command cmd = Commands.sequence(AutoBuilder.followPath(path), Commands555.waitForTime(0.2));
+          Command cmd = Commands.sequence(AutoBuilder.followPath(path), Commands555.waitForTime(0.2).until(RobotContainer.shooter::isNoteInTransport));
           segment = new ParallelRaceGroup(cmd);
         } else {
           setFeedback("Scoring Mode "); // TODO: Better feedback, or none. :D
@@ -453,6 +377,7 @@ public class Auto extends SubsystemBase {
       boolean isFromCloseNote = current == 'A' || current == 'B' || current == 'C';
       
       boolean isFromNote = Array555.indexOf(AutoConstants.NOTES, current) != -1;
+      boolean isGoingToFarNoteScoreLocation = next == '6' || next == '7';
 
       // If we're trying to intake, not score
       if (isGoingToNote && (!isFromNote || isFromCloseNote)) {
@@ -463,11 +388,11 @@ public class Auto extends SubsystemBase {
 
       // Only rely on vision and driving forward manually if it's a close note.
       if (isGoingToNote) {
-        finalPath.addCommands(Commands555.loadNoteAuto().onlyWhile(() -> {return !RobotContainer.shooter.isNoteInTransport();}).withTimeout(1));
+        finalPath.addCommands(Commands555.loadNoteAuto().onlyWhile(() -> {return !RobotContainer.shooter.isNoteInTransport();}).withTimeout(1.5));
       }
 
       // If we're trying to score
-      if ((isFromNote && isGoingToNote && !isFromCloseNote) || (current == next) || (next == '5')) { //TODO I fixed this did I screw up?
+      if ((isFromNote && isGoingToNote && !isFromCloseNote) || (current == next) || (next == '5') || isGoingToFarNoteScoreLocation) { //TODO I fixed this did I screw up?
         Rotation2d angle = new Rotation2d();
         if (next == 'A') {
           angle = Rotation2d.fromDegrees(-30);
@@ -481,23 +406,37 @@ public class Auto extends SubsystemBase {
         else if (next == '5') {
           angle = Rotation2d.fromDegrees(-26.57);
         }
+        else if (next == '6') {
+          angle = Rotation2d.fromDegrees(-35);
+        }
+        else if (next == '7') {
+          angle = Rotation2d.fromDegrees(0);
+        }
+
 
         if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red) {
           angle = GeometryUtil.flipFieldRotation(angle);
+        } 
+        if (next != '5' || next != '7') {
+          finalPath.addCommands(Commands.parallel(Commands555.goToAngleFieldRelative(Drivetrain.wrapRotation(angle), false).withTimeout(0.9)), Commands555.setSprocketAngleWithStop(RobotContainer.shooterLimelight::bestFit)
+          .withTimeout(1));
         }
-        if (next != '5') {
-          finalPath.addCommands(Commands555.goToAngleFieldRelative(Drivetrain.wrapRotation(angle), false).withTimeout(0.9));
-        }
-        finalPath.addCommands(Commands555.log("DONE ALIGNING TO FIELD ANGLE"));
+        
         finalPath.addCommands(Commands555.scoreModeAuto().withTimeout(0.9));
+        // finalPath.addCommands(Commands555.scoreAmp());
       }
 
 
       if (next == '4') { // Amp
         finalPath.addCommands(Commands555.scoreAmpAuto());
+        
       } else if (next == '1' || next == '2' || next == '3') { // Up against subwoofer
         finalPath.addCommands(Commands555.scoreSubwoofer());
-        System.out.println("dfskjl");
+        
+      }
+
+      if (next == 'A' || next == 'B' || next == 'C' || next == '5') {
+        finalPath.addCommands(Commands555.addVisionMeasurement());
       }
       
     }

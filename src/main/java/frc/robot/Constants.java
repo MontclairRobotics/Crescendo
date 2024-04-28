@@ -17,9 +17,14 @@ import com.pathplanner.lib.util.GeometryUtil;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
+
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.util.Color;
 import frc.robot.util.Tunable;
@@ -27,6 +32,15 @@ import java.awt.geom.Point2D;
 
 
 public final class Constants {
+
+  public static class FieldConstants {
+    public static final double SPEAKER_SCORE_X_OFFSET = 6.0;
+    
+    
+    public static final Pose2d RED_SPEAKER_POSE = new Pose2d(Units.inchesToMeters(652.3 - SPEAKER_SCORE_X_OFFSET), Units.inchesToMeters(218.42), new Rotation2d());
+    public static final Pose2d BLUE_SPEAKER_POSE = new Pose2d(Units.inchesToMeters(-1.5 + SPEAKER_SCORE_X_OFFSET), Units.inchesToMeters(218.42), new Rotation2d());
+    
+  }
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
@@ -67,9 +81,13 @@ public final class Constants {
     public static final double INTAKE_LIMELIGHT_HEIGHT = 10.227995;
     public static final double SPEAKER_APRILTAG_HEIGHT = 57.125; //57.875;
     public static final double SPEAKER_GOAL_HEIGHT = 81.8; //78.13-82.90
-    public static final double SHOOTER_LIMELIGHT_ANGLE_DEGREES = 26.74; //31.07;
+    public static final double SHOOTER_LIMELIGHT_ANGLE_DEGREES = 28.4; //26.74; //31.07;
     public static final double INTAKE_LIMELIGHT_ANGLE_DEGREES = 0;
     public static final double ALIGN_CENTER_OFFSET = 3;
+
+    public static final Matrix<N3, N1> IDEAL_VISION_STD_DEVS = VecBuilder.fill(0.5, 0.5, Double.MAX_VALUE);
+    public static final Matrix<N3, N1> TERRIBLE_VISION_STD_DEVS = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
+    public static final double TAG_DISTANCE_CUTOFF = 3.3; // meters
   }
 
   public static class Ports { // TODO: add correct ports
@@ -95,11 +113,11 @@ public final class Constants {
 
     
 
-    public static final int SPROCKET_ABS_ENCODER = 8; //9
+    public static final int SPROCKET_ABS_ENCODER = 3; //9
 
     public static final int CLIMBER_LEFT_LIMIT_SWITCH_PORT = 5;
 
-    public static final int CLIMBER_RIGHT_LIMIT_SWITCH_PORT = 6;
+    public static final int CLIMBER_RIGHT_LIMIT_SWITCH_PORT = 4;
   } 
 
   public static class ClimberConstants {
@@ -118,6 +136,8 @@ public final class Constants {
   public static class ArmConstants {
 
     public static final double MAX_VOLTAGE_V = 12.0;
+
+    public static double SOURCE_ANGLE = 61;
     // TODO: needs to be set
     
     public static final boolean SPROCKET_BEAM_INVERT = false;
@@ -146,6 +166,7 @@ public final class Constants {
 
     public static final Tunable<Boolean> LEFT_INVERT = Tunable.of(true, "arm.invert.left");
     public static final Tunable<Boolean> RIGHT_INVERT = Tunable.of(true, "arm.invert.right");
+
 
     // Sprocket
     // TODO: Validate values
@@ -176,6 +197,8 @@ public final class Constants {
     public static final double AMP_EJECT_SPEED_TOP = 600; //0.2
     public static final double AMP_EJECT_SPEED_BOTTOM = 800;
 
+    public static final double SOURCE_SPEED = 4000;
+
     public static Tunable<Double> kp = Tunable.of(0.0005, "shooter.kp");
     public static Tunable<Double> ki = Tunable.of(0, "shooter.ki");
     public static Tunable<Double> kd = Tunable.of(0, "shooter.kd");
@@ -183,7 +206,7 @@ public final class Constants {
 
     public static final double MAX_RPM = 5700;
 
-    public static final int VELOCITY_DEADBAND = 300;
+    public static final int VELOCITY_DEADBAND = 150;
 
     public static final double TRANSPORT_SPEED = 0.7;
     
@@ -201,10 +224,10 @@ public final class Constants {
     // public static final double TOP_SHOOTER_PID_KP = 3.8326e-07;
     // public static final double TOP_SHOOTER_PID_KI = 0;
     // public static final double TOP_SHOOTER_PID_KD = 0;
-    public static final double TOP_SHOOTER_FF_KS = 0.18454;
-    public static final double TOP_SHOOTER_FF_KV = 0.0021629;
-    public static final double TOP_SHOOTER_FF_KA = 0.00026348;
-    public static final double TOP_SHOOTER_PID_KP = 4.4848e-07;
+    public static final double TOP_SHOOTER_FF_KS = 0.25244; // 0.18454
+    public static final double TOP_SHOOTER_FF_KV = 0.0022082; // 0.0021629
+    public static final double TOP_SHOOTER_FF_KA = 0.0002064; // 0.00026348
+    public static final double TOP_SHOOTER_PID_KP = 1.932E-09; //4.4848e-07
     public static final double TOP_SHOOTER_PID_KI = 0;
     public static final double TOP_SHOOTER_PID_KD = 0;
 
@@ -214,10 +237,10 @@ public final class Constants {
     // public static final double BOTTOM_SHOOTER_PID_KP = 4.1584e-07;
     // public static final double BOTTOM_SHOOTER_PID_KI = 0;
     // public static final double BOTTOM_SHOOTER_PID_KD = 0;
-    public static final double BOTTOM_SHOOTER_FF_KS = 0.19665;
-    public static final double BOTTOM_SHOOTER_FF_KV = 0.0022763;
-    public static final double BOTTOM_SHOOTER_FF_KA = 0.00033793;
-    public static final double BOTTOM_SHOOTER_PID_KP = 7.1995e-07;
+    public static final double BOTTOM_SHOOTER_FF_KS = 0.22311; // 0.19665
+    public static final double BOTTOM_SHOOTER_FF_KV = 0.0021558; // 0.0022763
+    public static final double BOTTOM_SHOOTER_FF_KA = 0.00021675; // 0.00033793 
+    public static final double BOTTOM_SHOOTER_PID_KP = 8.0536E-09; // 7.1995e-07
     public static final double BOTTOM_SHOOTER_PID_KI = 0;
     public static final double BOTTOM_SHOOTER_PID_KD = 0;
 

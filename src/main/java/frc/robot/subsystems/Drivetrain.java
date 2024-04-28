@@ -5,13 +5,17 @@ import com.pathplanner.lib.util.PathPlannerLogging;
 import com.revrobotics.CANSparkMax;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.util.Units;
 
 import static edu.wpi.first.units.Units.*;
 import edu.wpi.first.units.Angle;
@@ -30,11 +34,17 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
+import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.FieldConstants;
+import frc.robot.vision.Limelight;
+import frc.robot.vision.LimelightHelpers;
+
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
@@ -47,6 +57,7 @@ import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
 import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.FieldCentric;
 
 public class Drivetrain extends SubsystemBase {
 
@@ -57,7 +68,7 @@ public class Drivetrain extends SubsystemBase {
   SwerveModule[] modules;
   Orchestra orchestra;
 
-  @AutoLogOutput private boolean isFieldRelative;
+ private boolean isFieldRelative;
 
   // private AHRS navX;
 
@@ -65,7 +76,7 @@ public class Drivetrain extends SubsystemBase {
 
     this.isFieldRelative = true;
 
-    SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
+    SwerveDriveTelemetry.verbosity = TelemetryVerbosity.NONE;
 
     timer.start();
     // })
@@ -78,29 +89,33 @@ public class Drivetrain extends SubsystemBase {
     SimpleMotorFeedforward ff = new SimpleMotorFeedforward(DriveConstants.DRIVE_KS, DriveConstants.DRIVE_KV, DriveConstants.DRIVE_KA);
     swerveDrive.replaceSwerveModuleFeedforward(ff);
 
-    PathPlannerLogging.setLogActivePathCallback(
-        (activePath) -> {
-          Logger.recordOutput(
-              "Odometry/Trajectory", activePath.toArray(new Pose2d[activePath.size()]));
-        });
-    PathPlannerLogging.setLogTargetPoseCallback(
-        (targetPose) -> {
-          Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose);
-        });
+    // PathPlannerLogging.setLogActivePathCallback(
+    //     (activePath) -> {
+    //       Logger.recordOutput(
+    //           "Odometry/Trajectory", activePath.toArray(new Pose2d[activePath.size()]));
+    //     });
+    // PathPlannerLogging.setLogTargetPoseCallback(
+    //     (targetPose) -> {
+    //       Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose);
+    //     });
 
-    Shuffleboard.getTab("Debug").addDouble("Drivetrain/FrontLeftVoltage", getSwerveDrive().getModules()[0].getDriveMotor()::getVoltage);
+    // Shuffleboard.getTab("Debug").addDouble("Drivetrain/FrontLeftVoltage", getSwerveDrive().getModules()[0].getDriveMotor()::getVoltage);
     modules = swerveDrive.getModules();
-    ArrayList<TalonFX> motors = new ArrayList<TalonFX>();
-    motors.add((TalonFX) modules[0].getDriveMotor().getMotor());
-    motors.add((TalonFX) modules[1].getDriveMotor().getMotor());
-    motors.add((TalonFX) modules[2].getDriveMotor().getMotor());
-    motors.add((TalonFX) modules[3].getDriveMotor().getMotor());
-    orchestra = new Orchestra();
-    orchestra.addInstrument(motors.get(0));
-    orchestra.addInstrument(motors.get(1));
-    orchestra.addInstrument(motors.get(2));
-    orchestra.addInstrument(motors.get(3));
-    orchestra.loadMusic("nationGood.chrp");
+
+    for (int i = 0; i < modules.length; i++) {
+      modules[i].getAngleMotor().setMotorBrake(true);
+    }
+    // ArrayList<TalonFX> motors = new ArrayList<TalonFX>();
+    // motors.add((TalonFX) modules[0].getDriveMotor().getMotor());
+    // motors.add((TalonFX) modules[1].getDriveMotor().getMotor());
+    // motors.add((TalonFX) modules[2].getDriveMotor().getMotor());
+    // motors.add((TalonFX) modules[3].getDriveMotor().getMotor());
+    // orchestra = new Orchestra();
+    // orchestra.addInstrument(motors.get(0));
+    // orchestra.addInstrument(motors.get(1));
+    // orchestra.addInstrument(motors.get(2));
+    // orchestra.addInstrument(motors.get(3));
+    // orchestra.loadMusic("nationGood.chrp");
 
 
     getSwerveDrive().getSwerveController().thetaController.setTolerance(DriveConstants.ANGLE_DEADBAND * ((Math.PI ) / 180 ));
@@ -108,24 +123,24 @@ public class Drivetrain extends SubsystemBase {
     // DriveConstants.kd.whenUpdate(getSwerveDrive().getSwerveController().thetaController::setD);
     // DriveConstants.ki.whenUpdate(getSwerveDrive().getSwerveController().thetaController::setI);
 
-    Shuffleboard.getTab("Debug").addDouble("Gyroscope Angle", () -> {
-      return getSwerveDrive().getOdometryHeading().getDegrees();
-    });
+    // Shuffleboard.getTab("Debug").addDouble("Gyroscope Angle", () -> {
+    //   return getSwerveDrive().getOdometryHeading().getDegrees();
+    // });
 
     
-    Shuffleboard.getTab("Debug").addDouble("Wrapped Angle", () -> RobotContainer.drivetrain.getWrappedRotation().getDegrees());
-    Shuffleboard.getTab("Debug").addDouble("Front Left Velocity", () -> {
-      return motors.get(0).getVelocity().getValueAsDouble();
-    });
-    Shuffleboard.getTab("Debug").addDouble("Front Right Velocity", () -> {
-      return motors.get(1).getVelocity().getValueAsDouble();
-    });
-    Shuffleboard.getTab("Debug").addDouble("Back Left Velocity", () -> {
-      return motors.get(2).getVelocity().getValueAsDouble();
-    });
-    Shuffleboard.getTab("Debug").addDouble("Back Right Velocity", () -> {
-      return motors.get(3).getVelocity().getValueAsDouble();
-    });
+    // Shuffleboard.getTab("Debug").addDouble("Wrapped Angle", () -> RobotContainer.drivetrain.getWrappedRotation().getDegrees());
+    // Shuffleboard.getTab("Debug").addDouble("Front Left Velocity", () -> {
+    //   return motors.get(0).getVelocity().getValueAsDouble();
+    // });
+    // Shuffleboard.getTab("Debug").addDouble("Front Right Velocity", () -> {
+    //   return motors.get(1).getVelocity().getValueAsDouble();
+    // });
+    // Shuffleboard.getTab("Debug").addDouble("Back Left Velocity", () -> {
+    //   return motors.get(2).getVelocity().getValueAsDouble();
+    // });
+    // Shuffleboard.getTab("Debug").addDouble("Back Right Velocity", () -> {
+    //   return motors.get(3).getVelocity().getValueAsDouble();
+    // });
 
     
   }
@@ -181,20 +196,28 @@ public class Drivetrain extends SubsystemBase {
     // Logger.recordOutput("Drivetrain/Gyro-Rotation", getSwerveDrive().getGyroRotation3d());
     // Logger.recordOutput("Drivetrain/Pose", getSwerveDrive().getPose());
     
-    if (timer.get() >= 0.4) {
-      System.out.println("FL " + modules[0].getDriveMotor().getVelocity());
-      System.out.println("FR " + modules[1].getDriveMotor().getVelocity());
-      System.out.println("BL " + modules[2].getDriveMotor().getVelocity());
-      System.out.println("FR " + modules[3].getDriveMotor().getVelocity());
-      timer.reset();
-      timer.start();
-    } 
+    // if (timer.get() >= 0.4) {
+      // System.out.println("FL " + modules[0].getDriveMotor().getVelocity());
+      // System.out.println("FR " + modules[1].getDriveMotor().getVelocity());
+      // System.out.println("BL " + modules[2].getDriveMotor().getVelocity());
+      // System.out.println("FR " + modules[3].getDriveMotor().getVelocity());
+      // timer.reset();
+      // timer.start();
+    // } 
 
-    RobotContainer.field.setRobotPose(swerveDrive.getPose());
+    // Pose2d pose = LimelightHelpers.toPose2D(LimelightHelpers.getBotPose_wpiBlue("limelight-shooter"));
+    // System.out.println(Units.metersToInches(pose.minus(new Pose2d(0, 5.55, new Rotation2d())).getTranslation().getNorm()));
+    // System.out.println(Units.metersToInches(LimelightHelpers.toPose2D(LimelightHelpers.getBotPose_TargetSpace("limelight-shooter")).getTranslation().getNorm()));
+
+    // RobotContainer.field.setRobotPose(swerveDrive.getPose());
+    // System.out.println(swerveDrive.getPose().getX() + " " + swerveDrive.getPose().getY() + " " + swerveDrive.getPose().getRotation().getDegrees());
   }
 
   public void addVisionMeasurement(Pose2d pose, double time) {
     swerveDrive.addVisionMeasurement(pose, time);
+  }
+  public void addVisionMeasurement(Pose2d pose, double time, Matrix<N3, N1> visionMeasurementStdDevs) {
+    swerveDrive.addVisionMeasurement(pose, time, visionMeasurementStdDevs);
   }
 
   /** sets isFieldRelative to either true or false, used for getIsFieldRelative */
@@ -220,7 +243,9 @@ public class Drivetrain extends SubsystemBase {
     this.swerveDrive.resetOdometry(new Pose2d(0.0, 0.0, new Rotation2d(0.0)));
   }
 
-  @AutoLogOutput
+  
+
+  // @AutoLogOutput
   /** returns direction */
   public Rotation2d getRotation() {
 
@@ -258,8 +283,8 @@ public class Drivetrain extends SubsystemBase {
     //   ySpeed *= -1;
     // }
     Translation2d targetTranslation = new Translation2d(ySpeed, xSpeed);
-    Logger.recordOutput("Drivetrain/Controller-Translation", targetTranslation);
-    Logger.recordOutput("Drivetrain/Controller-Theta", thetaSpeed);
+    // Logger.recordOutput("Drivetrain/Controller-Translation", targetTranslation);
+    // Logger.recordOutput("Drivetrain/Controller-Theta", thetaSpeed);
 
     this.drive(targetTranslation, thetaSpeed);
   }
@@ -387,4 +412,55 @@ public class Drivetrain extends SubsystemBase {
         
         return routine;
     }
+
+    public Rotation2d getHeadingForSpeaker() { // Ripped straight out of the cold dead hands of Thomas
+      
+      Pose2d targetPose;
+      Pose2d currentPose = getSwerveDrive().getPose();
+      LimelightHelpers.PoseEstimate visionPose = RobotContainer.shooterLimelight.getAdjustedPose();
+
+      if (visionPose.tagCount > 1) {
+        if (DriverStation.getAlliance().get() == Alliance.Blue) {
+          targetPose = FieldConstants.BLUE_SPEAKER_POSE;
+        } else {
+          targetPose = FieldConstants.RED_SPEAKER_POSE;
+        }
+        return currentPose.getTranslation().minus(targetPose.getTranslation()).getAngle();
+
+      } else {
+        return Rotation2d.fromDegrees(-RobotContainer.shooterLimelight.getObjectTX());
+      }
+      
+
+      
+    
+    }
+    
+
+    public double getDistanceToSpeaker() { // Straight out of the guts of the robowarriors
+      Pose2d currentPose = getSwerveDrive().getPose();
+      Pose2d targetPose;
+      LimelightHelpers.PoseEstimate visionPose = RobotContainer.shooterLimelight.getAdjustedPose();
+
+      if (visionPose.tagCount > 1) {
+        if (DriverStation.getAlliance().get() == Alliance.Blue) {
+          targetPose = FieldConstants.BLUE_SPEAKER_POSE;
+        } else {
+          targetPose = FieldConstants.RED_SPEAKER_POSE;
+        }
+
+        return Units.metersToInches(currentPose.getTranslation().getDistance(targetPose.getTranslation()));
+      
+
+      } else {
+        return RobotContainer.shooterLimelight.getDistanceToSpeaker();
+      }
+     
+
+      
+      
+    }
+
+
+  
 }

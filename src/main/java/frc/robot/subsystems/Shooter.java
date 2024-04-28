@@ -8,6 +8,8 @@ import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Volts;
 import static frc.robot.Constants.ArmConstants.SPROCKET_BEAM_INVERT;
 
+import org.littletonrobotics.junction.AutoLogOutput;
+
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -19,6 +21,7 @@ import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.units.Angle;
 import edu.wpi.first.units.Measure;
 import edu.wpi.first.units.MutableMeasure;
+import edu.wpi.first.units.Units;
 import edu.wpi.first.units.Velocity;
 import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -26,9 +29,12 @@ import edu.wpi.first.wpilibj.PS5Controller;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Mechanism;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.*;
@@ -86,8 +92,8 @@ public class Shooter extends SubsystemBase {
   Debouncer m_debouncer = new Debouncer(0.3, Debouncer.DebounceType.kRising);
 
   public Shooter() {
-    Shuffleboard.getTab("Debug").addDouble("Top velocity", () -> {return topEncoder.getVelocity();});
-    Shuffleboard.getTab("Debug").addDouble("Bottom velocity", () -> {return bottomEncoder.getVelocity();});
+    // Shuffleboard.getTab("Debug").addDouble("Top velocity", () -> {return topEncoder.getVelocity();});
+    // Shuffleboard.getTab("Debug").addDouble("Bottom velocity", () -> {return bottomEncoder.getVelocity();});
     // topMotor.restoreFactoryDefaults();
     // bottomMotor.restoreFactoryDefaults();
     // transportMotor.restoreFactoryDefaults();
@@ -112,9 +118,9 @@ public class Shooter extends SubsystemBase {
     transportController.setD(Constants.ShooterConstants.TRANSPORT_PID_KD, 1);
     transportController.setOutputRange(-1, 1);
     
-    Shuffleboard.getTab("Debug").addBoolean("Transport Beam Break", () -> {
-      return isNoteInTransport();
-    });
+    // Shuffleboard.getTab("Debug").addBoolean("Transport Beam Break", () -> {
+    //   return isNoteInTransport();
+    // });
 
     transportMotor.setIdleMode(IdleMode.kBrake);
   } 
@@ -151,6 +157,7 @@ public class Shooter extends SubsystemBase {
     isShooting = true;
   }
 
+  
   /** Runs transport at given velocity */
   public void transportVelocity(double velocity) {
     System.out.println("transportVelocity: " + velocity);
@@ -163,6 +170,7 @@ public class Shooter extends SubsystemBase {
     isTransporting = true;
   }
 
+  // @AutoLogOutput
   public boolean isAtSpeed() {
     double currentTopSpeed = topEncoder.getVelocity();
     double currentBottomSpeed = bottomEncoder.getVelocity();
@@ -238,6 +246,8 @@ public class Shooter extends SubsystemBase {
     topMotor.set(-ShooterConstants.SPEAKER_EJECT_SPEED);
     bottomMotor.set(-ShooterConstants.SPEAKER_EJECT_SPEED);
   }
+
+  // @AutoLogOutput
   public boolean isNoteInTransport() {
 
     return breakBeam.get();

@@ -31,14 +31,14 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void robotInit() {
-    Logger.recordMetadata("ProjectName", "Katherine Tchaikovsky Swift");
+    // Logger.recordMetadata("ProjectName", "Katherine Tchaikovsky Swift");
 
     if (isReal()) {
       Logger.addDataReceiver(new WPILOGWriter()); // Log to a USB stick ("/U/logs")
       Logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
       new PowerDistribution(1, ModuleType.kRev); // Enables power distribution logging
     } else {
-      setUseTiming(false); // Run as fast as possible
+      // setUseTiming(false); // Run as fast as possible
       // String logPath = LogFileUtil.findReplayLog(); // Pull the replay log from AdvantageScope
       // (or prompt the user)
       // Logger.setReplaySource(new WPILOGReader(logPath)); // Read replay log
@@ -94,22 +94,24 @@ public class Robot extends LoggedRobot {
     RobotContainer.intake.teleopInit();
     // RobotContainer.shooterLimelight.setDefaultPipeline();
     // RobotContainer.intakeLimelight.setDefaultPipeline();
+    
   }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    //System.out.println("distance prob: " + RobotContainer.shooterLimelight.getDistanceToSpeaker()  + " : " + RobotContainer.shooterLimelight.getObjectTY());
-    //System.out.println(RobotContainer.sprocket.getEncoderPosition());
-    //System.out.println(RobotContainer.shooterLimelight.bestFit());
+    
+    
+    // System.out.println(RobotContainer.shooter.getTopVelocity() + " : " + RobotContainer.shooter.getBottomVelocity());
+    //System.out.println(Rotation2d.fromDegrees(-RobotContainer.shooterLimelight.getObjectTX() + RobotContainer.shooterLimelight.maxIsStupid().getDegrees()));
   }
 
   @Override
   public void testInit() {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
-    System.out.println("hi");
-    RobotContainer.drivetrain.playMusic();
+    
+    
   }
 
   @Override
