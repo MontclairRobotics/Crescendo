@@ -45,6 +45,7 @@ import frc.robot.vision.LimelightHelpers;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Optional;
 
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
@@ -183,6 +184,8 @@ public class Drivetrain extends SubsystemBase {
     swerveDrive.drive(translation, rotation, this.isFieldRelative, DriveConstants.IS_OPEN_LOOP);
   }
 
+  
+
   /** Moves chassis */
   public void setChassisSpeeds(ChassisSpeeds chassisSpeeds) {
 
@@ -277,14 +280,13 @@ public class Drivetrain extends SubsystemBase {
     double xSpeed = -MathUtil.applyDeadband(controller.getLeftX(), 0.05) * DriveConstants.MAX_SPEED;
     double ySpeed = -MathUtil.applyDeadband(controller.getLeftY(), 0.05) * DriveConstants.MAX_SPEED;
 
-    // if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red) {
-    //   thetaSpeed *= -1;
-    //   xSpeed *= -1;
-    //   ySpeed *= -1;
-    // }
+    if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red && isFieldRelative == false)  {
+       xSpeed *= -1;
+       ySpeed *= -1;
+    }
+
     Translation2d targetTranslation = new Translation2d(ySpeed, xSpeed);
-    // Logger.recordOutput("Drivetrain/Controller-Translation", targetTranslation);
-    // Logger.recordOutput("Drivetrain/Controller-Theta", thetaSpeed);
+
 
     this.drive(targetTranslation, thetaSpeed);
   }
