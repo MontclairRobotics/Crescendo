@@ -8,7 +8,7 @@ import java.util.function.Supplier;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.GoalEndState;
 import com.pathplanner.lib.path.PathPlannerPath;
-import com.pathplanner.lib.util.GeometryUtil;
+
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -258,6 +258,12 @@ public class Commands555 {
                 * DriveConstants.MAX_SPEED;
           }
 
+          if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red)  {
+            // TODO: Same possible problems detailed in setInputFromJoysticks in Drivetrain.java - JR
+             xSpeed *= -1;
+             ySpeed *= -1;
+          }
+
           RobotContainer.drivetrain.drive(new Translation2d(xSpeed, ySpeed), thetaSpeed);
           // RobotContainer.drivetrain.drive(targetTranslation, thetaSpeed);
         },
@@ -293,6 +299,12 @@ public class Commands555 {
                 * DriveConstants.MAX_SPEED;
             xSpeed = -MathUtil.applyDeadband(RobotContainer.driverController.getLeftY(), 0.05)
                 * DriveConstants.MAX_SPEED;
+          }
+
+          if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red)  {
+            // TODO: Same possible problems detailed in setInputFromJoysticks in Drivetrain.java - JR
+             xSpeed *= -1;
+             ySpeed *= -1;
           }
 
           RobotContainer.drivetrain.drive(new Translation2d(xSpeed, ySpeed), thetaSpeed);
@@ -415,7 +427,7 @@ public class Commands555 {
                 () -> {
                   RobotContainer.drivetrain.setChassisSpeeds(new ChassisSpeeds(0, 0, 0));
                   camera.setDefaultPipeline();
-                })); // TODO should we lock drive?
+                })); 
   }
 
   public static Command alignToLimelightTargetExtreme(Limelight camera) {
@@ -465,7 +477,7 @@ public class Commands555 {
                 () -> {
                   RobotContainer.drivetrain.setChassisSpeeds(new ChassisSpeeds(0, 0, 0));
                   camera.setDefaultPipeline();
-                })); // TODO should we lock drive?
+                })); 
   }
 
   //ONLY USE IN AUTO JANK AF
@@ -489,7 +501,7 @@ public class Commands555 {
                 () -> {
                   RobotContainer.drivetrain.setChassisSpeeds(new ChassisSpeeds(0, 0, 0));
                   camera.setDefaultPipeline();
-                })); // TODO should we lock drive?
+                })); 
   }
 
   public static Command scoreMode() {
@@ -526,7 +538,7 @@ public class Commands555 {
   
 
   public static Command alignToAmpAndShoot() {
-    Pose2d botPose = RobotContainer.shooterLimelight.getAdjustedPose().pose;
+  
     Pose2d drivePose = RobotContainer.drivetrain.getSwerveDrive().getPose();
 
     Translation2d targetTranslation = drivePose.getTranslation();
@@ -632,7 +644,7 @@ public class Commands555 {
     return cmd.onlyWhile(() -> limey.hasValidTarget());
   }
 
-  // TODO: Look over this
+
   /***
    * @param limey
    * @return A command that drives to the currently targeted april tag
@@ -644,7 +656,7 @@ public class Commands555 {
   // Pose2d aprilTagPose = new Pose2d(new Translation2d(aprilTagPoseArray[0],
   // aprilTagPoseArray[1]), new Rotation2d(aprilTagPoseArray[5]));
   // Pose2d botPose =
-  // aprilTagPose.relativeTo(DriveConstants.EDGE_OF_DRIVEBASE); //TODO does
+  // aprilTagPose.relativeTo(DriveConstants.EDGE_OF_DRIVEBASE);
   // this work the way I think it does
   // return driveToFieldRelativePoint(botPose);
 
@@ -736,7 +748,7 @@ public class Commands555 {
         log("In shoot command, at speed!"),
         Commands555.transport(transportSpeed),
         log("Transported"),
-        Commands555.waitForTime(0.3)) //TODO should be 0.75 maybe and ferry note
+        Commands555.waitForTime(0.3))
         .finallyDo(() -> {
           RobotContainer.shooter.stopTransport();
           if (!DriverStation.isAutonomous()) {
@@ -879,7 +891,7 @@ public class Commands555 {
     }).beforeStarting(() -> {
       camera.setPipelineTo(pipeline);
     }).until(() -> {
-      return camera.getPipelineType() == pipeline; // TODO need to check driver mode?
+      return camera.getPipelineType() == pipeline; 
     });
   }
 
@@ -979,7 +991,7 @@ public class Commands555 {
 
   
 
-  /** TODO ANGLE IS WRONG */
+ 
   public static Command receiveHumanPlayerNote() {
     return Commands.sequence(
         alignToLimelightTarget(RobotContainer.shooterLimelight, DetectionType.APRIL_TAG),

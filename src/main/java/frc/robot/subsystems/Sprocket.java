@@ -4,7 +4,6 @@ import static frc.robot.Constants.ArmConstants.*;
 
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.RobotCentric;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkBase.IdleMode;
@@ -19,7 +18,7 @@ import edu.wpi.first.units.MutableMeasure;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.Velocity;
 import edu.wpi.first.units.Voltage;
-import edu.wpi.first.wpilibj.DriverStation;
+
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
@@ -28,9 +27,9 @@ import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Mechanism;
-import frc.robot.RobotContainer;
+
 import frc.robot.Constants.*;
-import frc.robot.util.BreakBeam;
+
 import frc.robot.util.Tunable;
 
 import java.awt.geom.Point2D;
@@ -88,7 +87,7 @@ public class Sprocket extends SubsystemBase {
     //   return RobotContainer.shooterLimelight.getDistanceToSpeaker();
     // });
 
-    // TODO check conversion factors
+
     leftEncoder = leftMotor.getEncoder();
     leftEncoder.setPositionConversionFactor(1 / SPROCKET_ROTATIONS_PER_DEGREE);
     leftEncoder.setVelocityConversionFactor(1 / SPROCKET_ROTATIONS_PER_DEGREE * (1 / 60));

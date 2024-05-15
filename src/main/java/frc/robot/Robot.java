@@ -4,13 +4,9 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.DriverStation;
+
 import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.littletonrobotics.junction.LoggedRobot;
@@ -103,9 +99,7 @@ public class Robot extends LoggedRobot {
   @Override
   public void teleopPeriodic() {
     
-    
-    // System.out.println(RobotContainer.shooter.getTopVelocity() + " : " + RobotContainer.shooter.getBottomVelocity());
-    //System.out.println(Rotation2d.fromDegrees(-RobotContainer.shooterLimelight.getObjectTX() + RobotContainer.shooterLimelight.maxIsStupid().getDegrees()));
+   
   }
 
   @Override
@@ -129,7 +123,7 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void autonomousExit() {
-    // //TODO test thouroghly
+    
     // if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red) {
     //   Rotation2d rot = Rotation2d.fromDegrees(180).minus(RobotContainer.drivetrain.getSwerveDrive().getOdometryHeading());
     //   Pose2d pose = new Pose2d(RobotContainer.drivetrain.getSwerveDrive().getPose().getTranslation(), rot);

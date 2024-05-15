@@ -27,28 +27,23 @@ import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+
 import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
-import frc.robot.Constants;
-import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.FieldConstants;
-import frc.robot.vision.Limelight;
+
 import frc.robot.vision.LimelightHelpers;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Optional;
 
-import org.littletonrobotics.junction.AutoLogOutput;
-import org.littletonrobotics.junction.Logger;
+
+
 import swervelib.SwerveDrive;
 import swervelib.SwerveDriveTest;
 import swervelib.SwerveModule;
@@ -57,12 +52,11 @@ import swervelib.telemetry.SwerveDriveTelemetry;
 import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
 import com.ctre.phoenix6.Orchestra;
-import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.FieldCentric;
+
 
 public class Drivetrain extends SubsystemBase {
 
-  private ChassisSpeeds speeds;
+ 
   private final SwerveDrive swerveDrive;
   Timer timer = new Timer();
 
@@ -280,7 +274,13 @@ public class Drivetrain extends SubsystemBase {
     double xSpeed = -MathUtil.applyDeadband(controller.getLeftX(), 0.05) * DriveConstants.MAX_SPEED;
     double ySpeed = -MathUtil.applyDeadband(controller.getLeftY(), 0.05) * DriveConstants.MAX_SPEED;
 
+
+    /*  TODO: Should this be only for field relative since robot relative direction is always the same relative to the robot? -JR
+    This issue stems from the fact that field relative driving is actually alliance relative while WPILIB, Pathplanner, etc
+    are relative to the blue side 
+    */
     if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red && isFieldRelative == false)  {
+      // TODO: I don't think theta should be inverted but maybe? Test further. -JR
        xSpeed *= -1;
        ySpeed *= -1;
     }
@@ -391,7 +391,7 @@ public class Drivetrain extends SubsystemBase {
                 log.motor("front-left-drive")
                 .voltage(appliedVoltage.mut_replace(frontLeft.getAppliedOutput() * frontLeft.getBusVoltage(), Volts))
                 .linearVelocity(linearVelocity.mut_replace(frontLeft.getEncoder().getVelocity(), MetersPerSecond))
-                .linearPosition(distance.mut_replace(frontLeft.getEncoder().getPosition() * 1 /* TODO ticks to meters */, Meters));
+                .linearPosition(distance.mut_replace(frontLeft.getEncoder().getPosition() * 1, Meters));
 
                 log.motor("front-right-drive")
                 .voltage(appliedVoltage.mut_replace(frontRight.getAppliedOutput() * frontRight.getBusVoltage(), Volts))

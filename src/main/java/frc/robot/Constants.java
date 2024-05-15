@@ -71,7 +71,7 @@ public final class Constants {
 
     public static final Pose2d EDGE_OF_DRIVEBASE =
         new Pose2d(0, DRIVE_BASE_RADIUS + BUMPER_WIDTH, new Rotation2d());
-    // TODO: correct angle deadband
+    
     public static final double ANGLE_DEADBAND = 2.5;
   }
 
@@ -90,7 +90,7 @@ public final class Constants {
     public static final double TAG_DISTANCE_CUTOFF = 3.3; // meters
   }
 
-  public static class Ports { // TODO: add correct ports
+  public static class Ports {
     public static final int LED_PWM = 5;
 
     public static final int INTAKE_TOP_MOTOR = 21;
@@ -124,7 +124,7 @@ public final class Constants {
     // Climbers
     public static final double CLIMBER_SPEED = 0.3;
     public static final double MAX_HEIGHT = 18; // Inches
-    public static final double ROTATIONS_PER_INCH = Math.PI/30; //12.0672 * Math.PI; // TODO:
+    public static final double ROTATIONS_PER_INCH = Math.PI/30;
   }
 
   public static class IntakeConstants {
@@ -138,7 +138,7 @@ public final class Constants {
     public static final double MAX_VOLTAGE_V = 12.0;
 
     public static double SOURCE_ANGLE = 61;
-    // TODO: needs to be set
+
     
     public static final boolean SPROCKET_BEAM_INVERT = false;
     
@@ -149,7 +149,7 @@ public final class Constants {
     // public static final Tunable<Double> kV = Tunable.of(8.91, "arm.feedforward.kV");
     // public static final Tunable<Double> kA = Tunable.of(0.01, "arm.feedforward.ka");
 
-    // TODO: Angle PID Constants: (!!!!!!)
+    
     public static final Tunable<Double> angleKP = Tunable.of(0.8, "arm.kp");
     public static final Tunable<Double> angleKI = Tunable.of(0, "arm.ki");
     public static final Tunable<Double> angleKD = Tunable.of(0, "arm.kd");
@@ -168,8 +168,7 @@ public final class Constants {
     public static final Tunable<Boolean> RIGHT_INVERT = Tunable.of(true, "arm.invert.right");
 
 
-    // Sprocket
-    // TODO: Validate values
+
     public static final double SPROCKET_ANGLE_MOVE_SPEED = 0.5;
     public static final double SPROCKET_ANGLE_DEADBAND = 2;
     public static final double SPROCKET_ANGLE_LIMIT_DEADBAND = 2;
@@ -263,7 +262,7 @@ public final class Constants {
     public static final char[] ALL_POINTS = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', '1', '2', '3', '4'};
     public static final char[] STARTING_POINTS = {'1', '2', '3', '4'};
     
-    public static final Pose2d POSE_1 = new Pose2d(0.68, 4.38, Rotation2d.fromDegrees(-59.50)); //TODO check angles
+    public static final Pose2d POSE_1 = new Pose2d(0.68, 4.38, Rotation2d.fromDegrees(-59.50)); 
     public static final Pose2d POSE_2 = new Pose2d(1.37, 5.55, Rotation2d.fromDegrees(0));
     public static final Pose2d POSE_3 = new Pose2d(0.72, 6.72, Rotation2d.fromDegrees(59.50));
     public static final Pose2d POSE_4 = new Pose2d(1.82, 7.23, Rotation2d.fromDegrees(-90.00));

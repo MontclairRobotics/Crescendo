@@ -17,12 +17,8 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.Trajectory.State;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableEvent;
 import edu.wpi.first.networktables.NetworkTableEvent.Kind;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.StringSubscriber;
-import edu.wpi.first.networktables.Topic;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -31,30 +27,25 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.Commands555;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ShooterConstants;
-import frc.robot.command.AutoPoseEstimateToNote;
-import frc.robot.util.Array555;
-import frc.robot.vision.DetectionType;
 
-import static frc.robot.Constants.ArmConstants.INTAKE_ANGLE;
+import frc.robot.util.Array555;
+
 // import static frc.robot.Constants.ArmConstants.INTAKE_SCORE_ANGLE;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.function.Consumer;
+
 
 // ^(?=[^A-H1-4]*[A-H1-4])(?=[^0-9]*[0-9])(?!.*[A-Za-z]{2})(?!.*[0-9]{2})[A-H1-4]+$
 public class Auto extends SubsystemBase {
@@ -81,7 +72,7 @@ public class Auto extends SubsystemBase {
     // });
     
   }
-  //TODO maybe add handling in case command is invalid and robot is run?
+
 
   public Command getAutoCommand() {
     return autoCommand;
@@ -215,7 +206,7 @@ public class Auto extends SubsystemBase {
 
   public void setupAutoTab() {
     ShuffleboardTab autoTab = Shuffleboard.getTab("Auto");
-    // TODO make it the same string that was entered last time? I think i can mark nt key as
+   
     // persistent
     autoTab.add("Enter Command", "").withSize(3, 1).withPosition(0, 0);
     autoTab.add(RobotContainer.field).withSize(6, 4).withPosition(3, 0);
@@ -247,8 +238,7 @@ public class Auto extends SubsystemBase {
          validateAndCreatePaths();
         });    
     
-    //TODO needed In case there is already data in networktables?
-    // validateAndCreatePaths();
+    
 
   }
 
@@ -262,7 +252,7 @@ public class Auto extends SubsystemBase {
           currentState.timeSeconds,
           currentState.velocityMps,
           currentState.accelerationMpsSq,
-          new Pose2d(16.54175-currentState.positionMeters.getX(), currentState.positionMeters.getY(), currentState.heading), //TODO get correct number
+          new Pose2d(16.54175-currentState.positionMeters.getX(), currentState.positionMeters.getY(), currentState.heading),
           currentState.curvatureRadPerMeter
       ));
       } else {
@@ -364,7 +354,7 @@ public class Auto extends SubsystemBase {
           Command cmd = Commands.sequence(AutoBuilder.followPath(path), Commands555.waitForTime(0.2).until(RobotContainer.shooter::isNoteInTransport));
           segment = new ParallelRaceGroup(cmd);
         } else {
-          setFeedback("Scoring Mode "); // TODO: Better feedback, or none. :D
+          setFeedback("Scoring Mode "); 
         }
 
         
@@ -392,7 +382,7 @@ public class Auto extends SubsystemBase {
       }
 
       // If we're trying to score
-      if ((isFromNote && isGoingToNote && !isFromCloseNote) || (current == next) || (next == '5') || isGoingToFarNoteScoreLocation) { //TODO I fixed this did I screw up?
+      if ((isFromNote && isGoingToNote && !isFromCloseNote) || (current == next) || (next == '5') || isGoingToFarNoteScoreLocation) { 
         Rotation2d angle = new Rotation2d();
         if (next == 'A') {
           angle = Rotation2d.fromDegrees(-30);
