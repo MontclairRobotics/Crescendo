@@ -13,6 +13,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 
 import frc.robot.RobotContainer;
@@ -74,14 +75,43 @@ public class Limelight extends SubsystemBase {
     }
   }
 
+  /* 
+   TODO: Make sure I didn't mess up this pipeline switcher. setCameraMode_Driver() and setCameraMode_Processor()
+   were removed in 2024.6 LimelightHelpers so here's my fix! -JR
+
+  */
+  
+  // public void setPipelineTo(DetectionType type) {
+  //   if (type == DetectionType.DRIVER) {
+  //     LimelightHelpers.setCameraMode_Driver(cameraName);
+      
+  //   } else { LimelightHelpers.setCameraMode_Processor(cameraName);
+  //   }
+
+  //   LimelightHelpers.setPipelineIndex(cameraName, type.getPipe());
+  // }
+
   public void setPipelineTo(DetectionType type) {
     if (type == DetectionType.DRIVER) {
-      LimelightHelpers.setCameraMode_Driver(cameraName);
-    } else { LimelightHelpers.setCameraMode_Processor(cameraName);
+      setCameraMode(true);
+    } else {
+      setCameraMode(false);
     }
 
     LimelightHelpers.setPipelineIndex(cameraName, type.getPipe());
+
   }
+  
+  public void setCameraMode(boolean driverMode) {
+    if (driverMode) {
+      NetworkTableInstance.getDefault().getTable(cameraName).getEntry("camMode").setNumber(1);
+    } else {
+      NetworkTableInstance.getDefault().getTable(cameraName).getEntry("camMode").setNumber(0);
+    }
+    
+  }
+
+  
 
   // @AutoLogOutput
   public double getObjectTX() {
@@ -105,9 +135,9 @@ public class Limelight extends SubsystemBase {
     return LimelightHelpers.getBotPose2d_wpiBlue(cameraName);
   }
 
-  public Pose2d funBotPose() {
-    return LimelightHelpers.toPose2D(LimelightHelpers.getBotPose_TargetSpace(cameraName));
-  }
+  // public Pose2d funBotPose() {
+  //   return LimelightHelpers.toPose2D(LimelightHelpers.getBotPose_TargetSpace(cameraName));
+  // }
 
   public DetectionType getPipelineType() {
     if (LimelightHelpers.getLimelightNTDouble(cameraName, "camMode") == 1) {
@@ -191,6 +221,8 @@ System.out.println(distance + " " + distanceNorm + " " + Math.acos(distance / di
     //     getVisionStdDevs(targetPose)
     //   );
         
+
+
       
     // }
     
