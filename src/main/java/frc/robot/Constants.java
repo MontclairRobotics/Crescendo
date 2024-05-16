@@ -85,7 +85,7 @@ public final class Constants {
     public static final double INTAKE_LIMELIGHT_ANGLE_DEGREES = 0;
     public static final double ALIGN_CENTER_OFFSET = 3;
 
-    public static final Matrix<N3, N1> IDEAL_VISION_STD_DEVS = VecBuilder.fill(0.5, 0.5, Double.MAX_VALUE);
+    public static final Matrix<N3, N1> IDEAL_VISION_STD_DEVS = VecBuilder.fill(0.6, 0.6, Double.MAX_VALUE);
     public static final Matrix<N3, N1> TERRIBLE_VISION_STD_DEVS = VecBuilder.fill(Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE);
     public static final double TAG_DISTANCE_CUTOFF = 3.3; // meters
   }

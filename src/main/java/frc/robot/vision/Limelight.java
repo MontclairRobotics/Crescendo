@@ -15,11 +15,15 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
-
+import frc.robot.Constants;
 import frc.robot.RobotContainer;
 
 import frc.robot.Constants.VisionConstants;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.vision.LimelightHelpers.PoseEstimate;
+import frc.robot.vision.LimelightHelpers.RawFiducial;
+import swervelib.SwerveDrive;
+import swervelib.imu.SwerveIMU;
 
 import java.util.Arrays;
 
@@ -80,7 +84,7 @@ public class Limelight extends SubsystemBase {
    were removed in 2024.6 LimelightHelpers so here's my fix! -JR
 
   */
-  
+
   // public void setPipelineTo(DetectionType type) {
   //   if (type == DetectionType.DRIVER) {
   //     LimelightHelpers.setCameraMode_Driver(cameraName);
@@ -210,16 +214,19 @@ System.out.println(distance + " " + distanceNorm + " " + Math.acos(distance / di
   @Override
   public void periodic() {
     
+    SwerveDrive drivetrain = RobotContainer.drivetrain.getSwerveDrive();
+
+    LimelightHelpers.SetRobotOrientation(cameraName, 
+    drivetrain.getOdometryHeading().getDegrees(), 
+    0, 0, 0, 0, 0);
+
+    PoseEstimate estimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(cameraName);
     
-    // // TODO: LOOK INTO THIS PLEASE TYSM <3
-    // if (getPipelineType() == DetectionType.APRIL_TAG && hasValidTarget()) { //TODO test this TEST THIS
-    //   LimelightHelpers.PoseEstimate targetPose = getAdjustedPose();
-      
-    //   RobotContainer.drivetrain.addVisionMeasurement(
-    //     targetPose.pose,
-    //     targetPose.timestampSeconds,
-    //     getVisionStdDevs(targetPose)
-    //   );
+    
+    drivetrain.addVisionMeasurement(estimate.pose, Timer.getFPGATimestamp(), VisionConstants.IDEAL_VISION_STD_DEVS);
+    
+    
+   
         
 
 
