@@ -160,7 +160,6 @@ public final class Constants {
     public static final double ENCODER_MAX_ANGLE = 63;
 
     public static final double SPEAKER_SCORE_ANGLE = 58;
-    public static final double SPEAKER_LOWER_SCORE_ANGLE = 58;
     public static final double AMP_SCORE_ANGLE = 62;
 
 
@@ -179,13 +178,7 @@ public final class Constants {
     
     public static final double MAX_SPEED = 0.5;
     public static final double INTAKE_ANGLE = 52;
-    // First number in meters, second in degrees
-    public static final Point2D.Double[] ANGLE_POINTS = {
-      new Point2D.Double(0, 0) // example
-    };
-
-    // First number in meters, second in RPM
-    public static final Point2D.Double[] SPEED_POINTS = {};
+    
   }
     
   

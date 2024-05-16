@@ -98,17 +98,9 @@ public class Sprocket extends SubsystemBase {
     leftEncoder.setVelocityConversionFactor(1 / SPROCKET_ROTATIONS_PER_DEGREE * (1 / 60));
     rightEncoder.setPosition(ENCODER_MIN_ANGLE);
 
-    angleMap = new InterpolatingDoubleTreeMap();
+   
 
-    for (Point2D.Double point : ANGLE_POINTS) {
-      angleMap.put(point.getX(), point.getY());
-    }
-
-    speedMap = new InterpolatingDoubleTreeMap();
-
-    for (Point2D.Double point : SPEED_POINTS) {
-      speedMap.put(point.getX(), point.getY());
-    }
+    
 
     absEncoder.setDistancePerRotation(360.0);
     pidController.setTolerance(SPROCKET_ANGLE_DEADBAND);
