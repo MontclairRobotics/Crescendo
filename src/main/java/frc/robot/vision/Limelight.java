@@ -222,8 +222,12 @@ System.out.println(distance + " " + distanceNorm + " " + Math.acos(distance / di
 
     PoseEstimate estimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(cameraName);
     
+    double angularVelocity = drivetrain.getFieldVelocity().omegaRadiansPerSecond;
+
+    if (Math.abs(angularVelocity) <= 2 * Math.PI) {
+      drivetrain.addVisionMeasurement(estimate.pose, Timer.getFPGATimestamp(), VisionConstants.IDEAL_VISION_STD_DEVS);
+    }
     
-    drivetrain.addVisionMeasurement(estimate.pose, Timer.getFPGATimestamp(), VisionConstants.IDEAL_VISION_STD_DEVS);
     
     
    
