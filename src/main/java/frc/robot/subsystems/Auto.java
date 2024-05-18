@@ -42,7 +42,6 @@ import frc.robot.RobotContainer;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ShooterConstants;
-import frc.robot.command.AutoPoseEstimateToNote;
 import frc.robot.util.Array555;
 import frc.robot.vision.DetectionType;
 
