@@ -56,6 +56,8 @@ public final class Constants {
     public static final double DRIVE_KA = 0.17;
     public static final double BUMPER_WIDTH = Units.inchesToMeters(3); // TODO get real width
 
+    public static final double VELOCITY_DEADBAND = 5; //degrees per second
+
     public static final boolean IS_OPEN_LOOP = false;
 
     public static final double MAX_VOLTAGE_V = 12.0;
