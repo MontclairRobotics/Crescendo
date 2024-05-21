@@ -41,8 +41,7 @@ import frc.robot.Constants.FieldConstants;
 import frc.robot.vision.LimelightHelpers;
 
 import java.io.File;
-
-
+import java.util.Optional;
 
 import swervelib.SwerveDrive;
 import swervelib.SwerveDriveTest;
@@ -52,6 +51,7 @@ import swervelib.telemetry.SwerveDriveTelemetry;
 import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
 import com.ctre.phoenix6.Orchestra;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.FieldCentric;
 
 
 public class Drivetrain extends SubsystemBase {
@@ -185,6 +185,23 @@ public class Drivetrain extends SubsystemBase {
 
     swerveDrive.setChassisSpeeds(chassisSpeeds);
   }
+
+
+  public Translation2d getPoseDifferenceToSpeaker() {
+    Pose2d robotPose = getSwerveDrive().getPose();
+    Optional<Alliance> alliance = DriverStation.getAlliance();
+    double yDiff = (robotPose.getY()-FieldConstants.BLUE_SPEAKER_POSE.getY());
+    double xDiff;
+    if (alliance.isPresent() && DriverStation.getAlliance().get() == Alliance.Red) {
+      xDiff = (robotPose.getX()-FieldConstants.RED_SPEAKER_POSE.getX());
+    } else {
+      xDiff = (robotPose.getX()-FieldConstants.BLUE_SPEAKER_POSE.getX());
+    }
+    return new Translation2d(xDiff, yDiff);
+    
+    
+  }
+  
 
   /** logs data: module positions, gyro rotation, and pose */
   @Override

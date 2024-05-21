@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.vision.DetectionType;
@@ -536,6 +537,13 @@ public class Commands555 {
         });
   }
   
+  public static Command kickassScoreMode() {
+    return Commands.parallel(alignToAngleRobotRelative(() -> Rotation2d.fromDegrees(Math.atan(
+      RobotContainer.drivetrain.getPoseDifferenceToSpeaker().getY() / RobotContainer.drivetrain.getPoseDifferenceToSpeaker().getX()
+    )), false), setSprocketAngle(() -> {
+      return Math.atan(FieldConstants.SPEAKER_SCORE_HEIGHT / RobotContainer.drivetrain.getPoseDifferenceToSpeaker().getX());
+    }));
+  }
 
   public static Command alignToAmpAndShoot() {
   
@@ -612,6 +620,10 @@ public class Commands555 {
 
 
   }
+
+ 
+
+ 
 
   public static Command runTransportManual() {
     return Commands.run(() -> {
