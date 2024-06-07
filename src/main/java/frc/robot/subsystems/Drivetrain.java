@@ -480,6 +480,22 @@ public class Drivetrain extends SubsystemBase {
       
     }
 
+    public Rotation2d getSpeakerAngle() {
+      Pose2d t_pose = FieldConstants.RED_SPEAKER_POSE;
+      Pose2d r_pose = this.swerveDrive.getPose();
+
+      if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue) {
+        t_pose = FieldConstants.BLUE_SPEAKER_POSE;
+      }
+      
+      
+
+      Translation2d t_translation = new Translation2d(t_pose.getX(), t_pose.getY());
+      Translation2d r_translation = new Translation2d(r_pose.getX(), r_pose.getY());
+
+      return r_translation.minus(t_translation).getAngle();
+    }
+
 
   
 }

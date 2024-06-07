@@ -537,12 +537,9 @@ public class Commands555 {
         });
   }
   
-  public static Command kickassScoreMode() {
-    return Commands.parallel(alignToAngleRobotRelative(() -> Rotation2d.fromDegrees(Math.atan(
-      RobotContainer.drivetrain.getPoseDifferenceToSpeaker().getY() / RobotContainer.drivetrain.getPoseDifferenceToSpeaker().getX()
-    )), false), setSprocketAngle(() -> {
-      return Math.atan(FieldConstants.SPEAKER_SCORE_HEIGHT / RobotContainer.drivetrain.getPoseDifferenceToSpeaker().getX());
-    }));
+
+  public static Command angleToSpeaker() {
+    return Commands555.goToAngleFieldRelative(RobotContainer.drivetrain.getSpeakerAngle(), false);
   }
 
   public static Command alignToAmpAndShoot() {
