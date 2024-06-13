@@ -12,6 +12,8 @@ import animation2.RaceAnimation;
 import animation2.RainbowAnimation;
 import animation2.WipeTransition;
 import animation2.api.Animation;
+
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.GeometryUtil;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
@@ -52,6 +54,14 @@ public final class Constants {
     public static Tunable<Double> kd = Tunable.of(0, "heading.kd");
     public static Tunable<Double> ki = Tunable.of(0.01, "heading.ki");
 
+
+    public static final double DRIVE_STATOR_CURRENT_LIMIT = 80;
+    public static final double DRIVE_SUPPLY_CURRENT_LIMIT = 80;
+    public static final CurrentLimitsConfigs DRIVE_CONFIG = new CurrentLimitsConfigs()
+      .withStatorCurrentLimitEnable(true)
+      .withStatorCurrentLimit(80)
+      .withSupplyCurrentLimitEnable(true)
+      .withSupplyCurrentLimit(80);
     public static final double DRIVE_KS = 0.12;
     public static final double DRIVE_KV = 2.8;
     public static final double DRIVE_KA = 0.17;

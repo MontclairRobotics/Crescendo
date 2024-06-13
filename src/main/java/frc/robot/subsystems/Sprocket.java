@@ -177,7 +177,7 @@ public class Sprocket extends SubsystemBase {
   }
 
   public double getRawPosition() {
-    return ((absEncoder.getDistance())-281.6); //* ((double) 14/64)) + 79;//76;
+    return ((absEncoder.getDistance())-278.55); //* ((double) 14/64)) + 79;//76;
   }
 
   // @AutoLogOutput

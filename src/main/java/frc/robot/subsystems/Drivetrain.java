@@ -51,6 +51,8 @@ import swervelib.telemetry.SwerveDriveTelemetry;
 import swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity;
 
 import com.ctre.phoenix6.Orchestra;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.FieldCentric;
 
 
@@ -96,9 +98,11 @@ public class Drivetrain extends SubsystemBase {
 
     // Shuffleboard.getTab("Debug").addDouble("Drivetrain/FrontLeftVoltage", getSwerveDrive().getModules()[0].getDriveMotor()::getVoltage);
     modules = swerveDrive.getModules();
-
+      
     for (int i = 0; i < modules.length; i++) {
       modules[i].getAngleMotor().setMotorBrake(true);
+      TalonFX driveMotor = (TalonFX) modules[i].getDriveMotor().getMotor();
+      driveMotor.getConfigurator().apply(DriveConstants.DRIVE_CONFIG);
     }
     // ArrayList<TalonFX> motors = new ArrayList<TalonFX>();
     // motors.add((TalonFX) modules[0].getDriveMotor().getMotor());
