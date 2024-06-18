@@ -27,6 +27,8 @@ import swervelib.imu.SwerveIMU;
 
 import java.util.Arrays;
 
+import org.littletonrobotics.junction.AutoLogOutput;
+
 
 
 public class Limelight extends SubsystemBase {
@@ -47,7 +49,7 @@ public class Limelight extends SubsystemBase {
     this.cameraName = cameraName;
   }
 
-  // @AutoLogOutput
+
   public double getTimestampSeconds() {
     double latency =
         (LimelightHelpers.getLimelightNTDouble(cameraName, "cl")
@@ -57,7 +59,7 @@ public class Limelight extends SubsystemBase {
     return Timer.getFPGATimestamp() - latency;
   }
 
-  // @AutoLogOutput(key = "{cameraName}/ValidTarget")
+
   public boolean hasValidTarget() {
     boolean hasMatch = (LimelightHelpers.getLimelightNTDouble(cameraName, "tv") == 1.0);
     return targetDebouncer.calculate(hasMatch);
@@ -117,7 +119,7 @@ public class Limelight extends SubsystemBase {
 
   
 
-  // @AutoLogOutput
+  @AutoLogOutput(key="Limelight-({cameraName})/TX")
   public double getObjectTX() {
     double tx = LimelightHelpers.getTX(cameraName);
      if (cameraName.equals("limelight-shooter")) {
@@ -126,15 +128,16 @@ public class Limelight extends SubsystemBase {
     return tx;
   }
 
-  // @AutoLogOutput
+  @AutoLogOutput(key="Limelight-({cameraName})/TY")
   public double getObjectTY() {
     return LimelightHelpers.getTY(cameraName);
   }
-
+  
   public double getPipeline() {
     return LimelightHelpers.getCurrentPipelineIndex(cameraName);
   }
 
+  
   public Pose2d getBotPose() {
     return LimelightHelpers.getBotPose2d_wpiBlue(cameraName);
   }
@@ -142,7 +145,7 @@ public class Limelight extends SubsystemBase {
   // public Pose2d funBotPose() {
   //   return LimelightHelpers.toPose2D(LimelightHelpers.getBotPose_TargetSpace(cameraName));
   // }
-
+  
   public DetectionType getPipelineType() {
     if (LimelightHelpers.getLimelightNTDouble(cameraName, "camMode") == 1) {
       return DetectionType.DRIVER;
@@ -160,7 +163,7 @@ public class Limelight extends SubsystemBase {
     LimelightHelpers.setPriorityTagID(cameraName, id);
   }
   
-  // @AutoLogOutput(key="{cameraName}/Distance")
+  
   public double getDistanceToSpeaker() {
 
     double distance =
@@ -265,7 +268,7 @@ System.out.println(distance + " " + distanceNorm + " " + Math.acos(distance / di
     
   } 
 
-  // @AutoLogOutput
+
   public double getHeadingToPriorityID() {
     LimelightHelpers.RawFiducial[] tagArr = getAdjustedPose().rawFiducials;
    tagArr = Arrays.stream(tagArr).filter((entry) -> {return entry.id == priorityId;}).toArray(LimelightHelpers.RawFiducial[]::new);
@@ -349,7 +352,7 @@ System.out.println(distance + " " + distanceNorm + " " + Math.acos(distance / di
     
 
   }
-
+  
   public double bestFit() {
     // double  
     // return (0.001717 * (Math.pow(x, 2))) + (-0.6251 * x) + (83.41);
@@ -364,7 +367,7 @@ System.out.println(distance + " " + distanceNorm + " " + Math.acos(distance / di
     return ShooterConstants.SPEAKER_EJECT_SPEED - 20 * Math.abs(90-RobotContainer.drivetrain.getWrappedRotation().getDegrees());
   }
 
-  // @AutoLogOutput(key = "{cameraName}/Pose")
+
   public LimelightHelpers.PoseEstimate getAdjustedPose() {
     if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red && DriverStation.isTeleop()) {
       return LimelightHelpers.getBotPoseEstimate_wpiRed(cameraName);
@@ -372,18 +375,6 @@ System.out.println(distance + " " + distanceNorm + " " + Math.acos(distance / di
     return LimelightHelpers.getBotPoseEstimate_wpiBlue(cameraName);
   }
 
-  
-  // public boolean isAligned() {
-  //   double tx = getObjectTX();
-  //   return Drivetrain.angleDeadband(Rotation2d.fromDegrees(tx), RobotContainer.drivetrain.getWrappedRotation(), Drivetrain.wrapRotation(Rotation2d.fromDegrees(DriveConstants.ANGLE_DEADBAND)));
-  // }
-
-  public boolean isAlignedAuto() {
-    double tx = getObjectTX();
-    return Math.abs(tx) < DriveConstants.ANGLE_DEADBAND;
-  }
-
-  
 
 }
 

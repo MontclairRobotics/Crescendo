@@ -30,12 +30,6 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Mechanism;
 
 import frc.robot.Constants.*;
 
-import frc.robot.util.Tunable;
-
-import java.awt.geom.Point2D;
-
-import javax.sound.sampled.Port;
-
 import org.littletonrobotics.junction.AutoLogOutput;
 
 public class Sprocket extends SubsystemBase {
@@ -47,7 +41,7 @@ public class Sprocket extends SubsystemBase {
   private InterpolatingDoubleTreeMap angleMap;
   private InterpolatingDoubleTreeMap speedMap;
 
-  public Tunable<Double> angleSetpoint = Tunable.of(45, "arm.target");
+
 
   private double targetSpeed;
   private boolean usingPID;
@@ -140,6 +134,7 @@ public class Sprocket extends SubsystemBase {
     rightMotor.set(0);
   }
 
+  @AutoLogOutput(key = "Sprocket/IsSprocketSafe")
   public boolean isSprocketSafe() {
     // return true;
     boolean goingUp = false;
@@ -166,7 +161,7 @@ public class Sprocket extends SubsystemBase {
   public double calculateAngle(double distance) {
     return angleMap.get(distance);
   }
-
+  @AutoLogOutput(key = "Sprocket/EncoderAngle")
   public double getEncoderPosition() {
     double pos = getRawPosition();
     pos = pos % 360;
@@ -180,7 +175,7 @@ public class Sprocket extends SubsystemBase {
     return ((absEncoder.getDistance())-278.55); //* ((double) 14/64)) + 79;//76;
   }
 
-  // @AutoLogOutput
+  @AutoLogOutput(key = "Sprocket/IsAtAngle")
   public boolean isAtAngle() {
     return pidController.atSetpoint();
   }

@@ -5,6 +5,7 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.path.PathPlannerTrajectory;
 import com.pathplanner.lib.path.PathPoint;
 import com.pathplanner.lib.util.GeometryUtil;
+import com.pathplanner.lib.util.PathPlannerLogging;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 
@@ -45,6 +46,8 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
+
+import org.littletonrobotics.junction.Logger;
 
 
 // ^(?=[^A-H1-4]*[A-H1-4])(?=[^0-9]*[0-9])(?!.*[A-Za-z]{2})(?!.*[0-9]{2})[A-H1-4]+$
@@ -96,6 +99,19 @@ public class Auto extends SubsystemBase {
           return alliance.isPresent() ? alliance.get() == DriverStation.Alliance.Red : false;
         },
         RobotContainer.drivetrain);
+
+
+    
+    PathPlannerLogging.setLogActivePathCallback(
+        (activePath) -> {
+          Logger.recordOutput(
+              "Auto/ActivePath", activePath.toArray(new Pose2d[activePath.size()]));
+        });
+
+    PathPlannerLogging.setLogTargetPoseCallback(
+        (targetPose) -> {
+          Logger.recordOutput("Auto/TargetPose", targetPose);
+        });
   }
 
   // 1A2
