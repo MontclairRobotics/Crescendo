@@ -90,15 +90,15 @@ public class Drivetrain extends SubsystemBase {
     SimpleMotorFeedforward ff = new SimpleMotorFeedforward(DriveConstants.DRIVE_KS, DriveConstants.DRIVE_KV, DriveConstants.DRIVE_KA);
     swerveDrive.replaceSwerveModuleFeedforward(ff);
 
-    // PathPlannerLogging.setLogActivePathCallback(
-    //     (activePath) -> {
-    //       Logger.recordOutput(
-    //           "Odometry/Trajectory", activePath.toArray(new Pose2d[activePath.size()]));
-    //     });
-    // PathPlannerLogging.setLogTargetPoseCallback(
-    //     (targetPose) -> {
-    //       Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose);
-    //     });
+    PathPlannerLogging.setLogActivePathCallback(
+        (activePath) -> {
+          Logger.recordOutput(
+              "Auto/Trajectory", activePath.toArray(new Pose2d[activePath.size()]));
+        });
+    PathPlannerLogging.setLogTargetPoseCallback(
+        (targetPose) -> {
+          Logger.recordOutput("Auto/TrajectorySetpoint", targetPose);
+        });
 
     // Shuffleboard.getTab("Debug").addDouble("Drivetrain/FrontLeftVoltage", getSwerveDrive().getModules()[0].getDriveMotor()::getVoltage);
     modules = swerveDrive.getModules();
