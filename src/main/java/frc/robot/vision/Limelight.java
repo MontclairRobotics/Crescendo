@@ -372,13 +372,12 @@ System.out.println(distance + " " + distanceNorm + " " + Math.acos(distance / di
     return LimelightHelpers.getBotPoseEstimate_wpiBlue(cameraName);
   }
 
-  // @AutoLogOutput(key = "{cameraName}/IsAligned")
-  public boolean isAligned() {
-    double tx = getObjectTX();
-    return Drivetrain.angleDeadband(Rotation2d.fromDegrees(tx), RobotContainer.drivetrain.getWrappedRotation(), Drivetrain.wrapRotation(Rotation2d.fromDegrees(DriveConstants.ANGLE_DEADBAND)));
-  }
+  
+  // public boolean isAligned() {
+  //   double tx = getObjectTX();
+  //   return Drivetrain.angleDeadband(Rotation2d.fromDegrees(tx), RobotContainer.drivetrain.getWrappedRotation(), Drivetrain.wrapRotation(Rotation2d.fromDegrees(DriveConstants.ANGLE_DEADBAND)));
+  // }
 
-  // @AutoLogOutput(key = "{cameraName}/IsAlignedAuto")
   public boolean isAlignedAuto() {
     double tx = getObjectTX();
     return Math.abs(tx) < DriveConstants.ANGLE_DEADBAND;
