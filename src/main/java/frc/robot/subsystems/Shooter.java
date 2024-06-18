@@ -7,6 +7,7 @@ import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Volts;
 
+import org.littletonrobotics.junction.AutoLogOutput;
 
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
@@ -120,6 +121,7 @@ public class Shooter extends SubsystemBase {
   }
 
   /** Is transport running? */
+  
   public boolean isTransporting() {
     return isTransporting;
   }
@@ -159,7 +161,7 @@ public class Shooter extends SubsystemBase {
     isTransporting = true;
   }
 
-  // @AutoLogOutput
+  @AutoLogOutput(key = "Shooter/IsAtSpeed")
   public boolean isAtSpeed() {
     double currentTopSpeed = topEncoder.getVelocity();
     double currentBottomSpeed = bottomEncoder.getVelocity();
@@ -236,7 +238,7 @@ public class Shooter extends SubsystemBase {
     bottomMotor.set(-ShooterConstants.SPEAKER_EJECT_SPEED);
   }
 
-  // @AutoLogOutput
+  @AutoLogOutput(key = "Shooter/isNoteInTransport")
   public boolean isNoteInTransport() {
 
     return breakBeam.get();
