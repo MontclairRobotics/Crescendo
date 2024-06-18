@@ -164,7 +164,7 @@ public class Commands555 {
         Commands.parallel(Commands555.alignToLimelightTargetWithStop(RobotContainer.intakeLimelight, DetectionType.NOTE),
             Commands555.setSprocketAngle(ArmConstants.INTAKE_ANGLE)),
         log("Done aligning"),
-        Commands.waitUntil(() -> {return RobotContainer.sprocket.isAtAngle() && RobotContainer.intakeLimelight.isAlignedAuto();}),
+        Commands.waitUntil(() -> {return RobotContainer.sprocket.isAtAngle() && RobotContainer.intakeLimelight.isAligned();}),
         log("Done waiting, hhunting down note"),
         Commands555.transport(ShooterConstants.TRANSPORT_SPEED),
         log("Drive Intaking"),
@@ -497,7 +497,7 @@ public class Commands555 {
                 },
                 false),
             camera)
-            .until(camera::isAlignedAuto)
+            .until(camera::isAligned)
             .finallyDo(
                 () -> {
                   RobotContainer.drivetrain.setChassisSpeeds(new ChassisSpeeds(0, 0, 0));

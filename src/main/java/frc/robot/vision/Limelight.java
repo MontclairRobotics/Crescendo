@@ -375,6 +375,11 @@ System.out.println(distance + " " + distanceNorm + " " + Math.acos(distance / di
     return LimelightHelpers.getBotPoseEstimate_wpiBlue(cameraName);
   }
 
+  public boolean isAligned() {
+    double tx = getObjectTX();
+    return Math.abs(tx) < DriveConstants.ANGLE_DEADBAND;
+  }
+
 
 }
 
