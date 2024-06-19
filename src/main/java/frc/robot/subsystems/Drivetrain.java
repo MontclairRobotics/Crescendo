@@ -12,6 +12,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -70,6 +71,8 @@ public class Drivetrain extends SubsystemBase {
 
  private boolean isFieldRelative;
  private ChassisSpeeds velocityFromController;
+
+ private boolean logModuleStates = true;
 
   // private AHRS navX;
 
@@ -195,20 +198,20 @@ public class Drivetrain extends SubsystemBase {
   }
 
 
-  public Translation2d getPoseDifferenceToSpeaker() {
-    Pose2d robotPose = getSwerveDrive().getPose();
-    Optional<Alliance> alliance = DriverStation.getAlliance();
-    double yDiff = (robotPose.getY()-FieldConstants.BLUE_SPEAKER_POSE.getY());
-    double xDiff;
-    if (alliance.isPresent() && DriverStation.getAlliance().get() == Alliance.Red) {
-      xDiff = (robotPose.getX()-FieldConstants.RED_SPEAKER_POSE.getX());
-    } else {
-      xDiff = (robotPose.getX()-FieldConstants.BLUE_SPEAKER_POSE.getX());
-    }
-    return new Translation2d(xDiff, yDiff);
+  // public Translation2d getPoseDifferenceToSpeaker() {
+  //   Pose2d robotPose = getSwerveDrive().getPose();
+  //   Optional<Alliance> alliance = DriverStation.getAlliance();
+  //   double yDiff = (robotPose.getY()-FieldConstants.BLUE_SPEAKER_POSE.getY());
+  //   double xDiff;
+  //   if (alliance.isPresent() && DriverStation.getAlliance().get() == Alliance.Red) {
+  //     xDiff = (robotPose.getX()-FieldConstants.RED_SPEAKER_POSE.getX());
+  //   } else {
+  //     xDiff = (robotPose.getX()-FieldConstants.BLUE_SPEAKER_POSE.getX());
+  //   }
+  //   return new Translation2d(xDiff, yDiff);
     
     
-  }
+  // }
   
 
   /** logs data: module positions, gyro rotation, and pose */
@@ -216,6 +219,21 @@ public class Drivetrain extends SubsystemBase {
   public void periodic() {
     
     Logger.recordOutput("Drivetrain/ChassisSpeedsFromController", this.velocityFromController);
+    Logger.recordOutput("Drivetrain/TargetChassisSpeeds", swerveDrive.getRobotVelocity());
+
+    if (logModuleStates) {
+      SwerveModuleState[] states = swerveDrive.kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(swerveDrive.getRobotVelocity(), getWrappedRotation()));
+
+      Logger.recordOutput("Drivetrain/ModulesStates/FLModule", modules[0].getDriveMotor().getVelocity());
+      Logger.recordOutput("Drivetrain/ModulesStates/FRModule", modules[1].getDriveMotor().getVelocity());
+      Logger.recordOutput("Drivetrain/ModulesStates/BLModule", modules[2].getDriveMotor().getVelocity());
+      Logger.recordOutput("Drivetrain/ModulesStates/BRModule", modules[3].getDriveMotor().getVelocity());
+
+      Logger.recordOutput("Drivetrain/ModulesStates/FLModule_Target", states[0].speedMetersPerSecond);
+      Logger.recordOutput("Drivetrain/ModulesStates/FRModule_Target", states[1].speedMetersPerSecond);
+      Logger.recordOutput("Drivetrain/ModulesStates/BLModule_Target", states[2].speedMetersPerSecond);
+      Logger.recordOutput("Drivetrain/ModulesStates/BRModule_Target", states[3].speedMetersPerSecond);
+    }
     
   }
 

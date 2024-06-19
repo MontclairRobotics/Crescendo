@@ -335,8 +335,7 @@ public class Shooter extends SubsystemBase {
 
   @Override
   public void periodic() {
-    
-    
+
   
     // RobotContainer.operatorController.getHID().setRumble(RumbleType.kLeftRumble, 1);
     // RobotContainer.testController.setRumble(RumbleType.kBothRumble, 1);

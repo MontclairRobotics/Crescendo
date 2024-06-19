@@ -375,6 +375,7 @@ System.out.println(distance + " " + distanceNorm + " " + Math.acos(distance / di
     return LimelightHelpers.getBotPoseEstimate_wpiBlue(cameraName);
   }
 
+  @AutoLogOutput(key="Limelight-({cameraName})/Is_Aligned")
   public boolean isAligned() {
     double tx = getObjectTX();
     return Math.abs(tx) < DriveConstants.ANGLE_DEADBAND;

@@ -161,6 +161,7 @@ public class Sprocket extends SubsystemBase {
   public double calculateAngle(double distance) {
     return angleMap.get(distance);
   }
+  
   @AutoLogOutput(key = "Sprocket/EncoderAngle")
   public double getEncoderPosition() {
     double pos = getRawPosition();
@@ -171,6 +172,7 @@ public class Sprocket extends SubsystemBase {
     return pos;
   }
 
+  @AutoLogOutput(key = "Sprocket/EncoderRawAngle")
   public double getRawPosition() {
     return ((absEncoder.getDistance())-278.55); //* ((double) 14/64)) + 79;//76;
   }
