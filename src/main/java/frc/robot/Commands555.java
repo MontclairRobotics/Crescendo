@@ -260,7 +260,7 @@ public class Commands555 {
           }
 
           if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red)  {
-            // TODO: Same possible problems detailed in setInputFromJoysticks in Drivetrain.java - JR
+            
              xSpeed *= -1;
              ySpeed *= -1;
           }
@@ -303,7 +303,7 @@ public class Commands555 {
           }
 
           if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red)  {
-            // TODO: Same possible problems detailed in setInputFromJoysticks in Drivetrain.java - JR
+           
              xSpeed *= -1;
              ySpeed *= -1;
           }
@@ -590,17 +590,17 @@ public class Commands555 {
     );
   }
 
-  public static Command addVisionMeasurement() {
-    return Commands.runOnce(() -> {
-      LimelightHelpers.PoseEstimate targetPose = RobotContainer.shooterLimelight.getAdjustedPose();
+  // public static Command addVisionMeasurement() {
+  //   return Commands.runOnce(() -> {
+  //     LimelightHelpers.PoseEstimate targetPose = RobotContainer.shooterLimelight.getAdjustedPose();
       
-      RobotContainer.drivetrain.addVisionMeasurement(
-        targetPose.pose,
-        targetPose.timestampSeconds,
-        RobotContainer.shooterLimelight.getVisionStdDevs(targetPose)
-      );
-    });
-  }
+  //     RobotContainer.drivetrain.addVisionMeasurement(
+  //       targetPose.pose,
+  //       targetPose.timestampSeconds,
+  //       RobotContainer.shooterLimelight.getVisionStdDevs(targetPose)
+  //     );
+  //   });
+  // }
  
   // Used during auto for scoring speaker(usually from one of the note locations)
   public static Command scoreModeAuto() {

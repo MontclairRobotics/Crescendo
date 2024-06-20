@@ -227,7 +227,7 @@ System.out.println(distance + " " + distanceNorm + " " + Math.acos(distance / di
     
     double angularVelocity = drivetrain.getFieldVelocity().omegaRadiansPerSecond;
 
-    if (Math.abs(angularVelocity) <= 2 * Math.PI) {
+    if (Math.abs(angularVelocity) <= VisionConstants.POSE_ANGULAR_VELOCITY_CUTOFF || estimate.tagCount == 0) {
       drivetrain.addVisionMeasurement(estimate.pose, Timer.getFPGATimestamp(), VisionConstants.IDEAL_VISION_STD_DEVS);
     }
     
@@ -253,20 +253,7 @@ System.out.println(distance + " " + distanceNorm + " " + Math.acos(distance / di
   }
 
 
-  public Matrix<N3, N1> getVisionStdDevs(LimelightHelpers.PoseEstimate visionPose) {
-    int tagCount = visionPose.tagCount;
-    
-    double avgTagDistance = visionPose.avgTagDist;
-    // cutoff for distance
-    boolean exceedsCutoff = avgTagDistance > VisionConstants.TAG_DISTANCE_CUTOFF;
-
-    if (tagCount > 1 && !exceedsCutoff) {
-      return VisionConstants.IDEAL_VISION_STD_DEVS;
-    } 
-
-    return VisionConstants.TERRIBLE_VISION_STD_DEVS; // don't use vision measurement
-    
-  } 
+  
 
 
   public double getHeadingToPriorityID() {

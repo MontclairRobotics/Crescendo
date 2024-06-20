@@ -442,7 +442,7 @@ public class Auto extends SubsystemBase {
       }
 
       if (next == 'A' || next == 'B' || next == 'C' || next == '5') {
-        finalPath.addCommands(Commands555.addVisionMeasurement());
+        // finalPath.addCommands(Commands555.addVisionMeasurement());
       }
       
     }

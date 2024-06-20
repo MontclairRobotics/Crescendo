@@ -93,16 +93,6 @@ public class Drivetrain extends SubsystemBase {
     SimpleMotorFeedforward ff = new SimpleMotorFeedforward(DriveConstants.DRIVE_KS, DriveConstants.DRIVE_KV, DriveConstants.DRIVE_KA);
     swerveDrive.replaceSwerveModuleFeedforward(ff);
 
-    PathPlannerLogging.setLogActivePathCallback(
-        (activePath) -> {
-          Logger.recordOutput(
-              "Auto/Trajectory", activePath.toArray(new Pose2d[activePath.size()]));
-        });
-    PathPlannerLogging.setLogTargetPoseCallback(
-        (targetPose) -> {
-          Logger.recordOutput("Auto/TrajectorySetpoint", targetPose);
-        });
-
     // Shuffleboard.getTab("Debug").addDouble("Drivetrain/FrontLeftVoltage", getSwerveDrive().getModules()[0].getDriveMotor()::getVoltage);
     modules = swerveDrive.getModules();
       
@@ -219,20 +209,26 @@ public class Drivetrain extends SubsystemBase {
   public void periodic() {
     
     Logger.recordOutput("Drivetrain/ChassisSpeedsFromController", this.velocityFromController);
-    Logger.recordOutput("Drivetrain/TargetChassisSpeeds", swerveDrive.getRobotVelocity());
+   
 
     if (logModuleStates) {
-      SwerveModuleState[] states = swerveDrive.kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(swerveDrive.getRobotVelocity(), getWrappedRotation()));
+      SwerveModuleState[] targetStates = swerveDrive.kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(this.velocityFromController, getWrappedRotation()));
+      
+      // Logger.recordOutput("Drivetrain/ModulesStates/FLModule", modules[0].getDriveMotor().getVelocity());
+      // Logger.recordOutput("Drivetrain/ModulesStates/FRModule", modules[1].getDriveMotor().getVelocity());
+      // Logger.recordOutput("Drivetrain/ModulesStates/BLModule", modules[2].getDriveMotor().getVelocity());
+      // Logger.recordOutput("Drivetrain/ModulesStates/BRModule", modules[3].getDriveMotor().getVelocity());
 
-      Logger.recordOutput("Drivetrain/ModulesStates/FLModule", modules[0].getDriveMotor().getVelocity());
-      Logger.recordOutput("Drivetrain/ModulesStates/FRModule", modules[1].getDriveMotor().getVelocity());
-      Logger.recordOutput("Drivetrain/ModulesStates/BLModule", modules[2].getDriveMotor().getVelocity());
-      Logger.recordOutput("Drivetrain/ModulesStates/BRModule", modules[3].getDriveMotor().getVelocity());
+      // Logger.recordOutput("Drivetrain/ModulesStates/Target/FLModule", states[0].speedMetersPerSecond);
 
-      Logger.recordOutput("Drivetrain/ModulesStates/FLModule_Target", states[0].speedMetersPerSecond);
-      Logger.recordOutput("Drivetrain/ModulesStates/FRModule_Target", states[1].speedMetersPerSecond);
-      Logger.recordOutput("Drivetrain/ModulesStates/BLModule_Target", states[2].speedMetersPerSecond);
-      Logger.recordOutput("Drivetrain/ModulesStates/BRModule_Target", states[3].speedMetersPerSecond);
+      // // Logger.recordOutput("Drivetrain/ModulesStates/Target/FLModule_Target", states[0].speedMetersPerSecond);
+      // // Logger.recordOutput("Drivetrain/ModulesStates/FRModule_Target", states[1].speedMetersPerSecond);
+      // // Logger.recordOutput("Drivetrain/ModulesStates/BLModule_Target", states[2].speedMetersPerSecond);
+      // // Logger.recordOutput("Drivetrain/ModulesStates/BRModule_Target", states[3].speedMetersPerSecond);
+      this.swerveDrive.getStates();
+      Logger.recordOutput("Drivetrain/ModuleStates/CurrentStates", targetStates);
+      Logger.recordOutput("Drivetrain/ModuleStates/TargetStates", this.swerveDrive.getStates());
+      
     }
     
   }
@@ -244,7 +240,7 @@ public class Drivetrain extends SubsystemBase {
     swerveDrive.addVisionMeasurement(pose, time, visionMeasurementStdDevs);
   }
 
-  /** sets isFieldRelative to either true or false, used for getIsFieldRelative */
+  
   public void setIsFieldRelative(boolean relative) {
     this.isFieldRelative = relative;
   }
