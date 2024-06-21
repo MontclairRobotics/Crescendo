@@ -42,22 +42,22 @@ public class Commands555 {
    * @param targetTranslation Field-relative Translation2d to drive the robot to.
    * @param theta             Target angle for end position.
    */
-  public static Command driveToRobotRelativePoint(
-      Translation2d targetTranslation, Rotation2d theta) {
-    Pose2d currentRobotPosition = RobotContainer.drivetrain.getSwerveDrive().getPose();
-    Rotation2d currentOdometryHeading = RobotContainer.drivetrain.getSwerveDrive().getOdometryHeading();
+  // public static Command driveToRobotRelativePoint(
+  //     Translation2d targetTranslation, Rotation2d theta) {
+  //   Pose2d currentRobotPosition = RobotContainer.drivetrain.getSwerveDrive().getPose();
+  //   Rotation2d currentOdometryHeading = RobotContainer.drivetrain.getSwerveDrive().getOdometryHeading();
 
-    Translation2d targetTranslation2d = currentRobotPosition
-        .getTranslation()
-        .plus(targetTranslation.rotateBy(currentOdometryHeading));
-    Pose2d botPose = new Pose2d(targetTranslation2d.getX(), targetTranslation2d.getY(), theta);
+  //   Translation2d targetTranslation2d = currentRobotPosition
+  //       .getTranslation()
+  //       .plus(targetTranslation.rotateBy(currentOdometryHeading));
+  //   Pose2d botPose = new Pose2d(targetTranslation2d.getX(), targetTranslation2d.getY(), theta);
 
-    return AutoBuilder.pathfindToPose(
-        botPose,
-        AutoConstants.PATH_CONSTRAINTS,
-        AutoConstants.GOAL_END_VELOCITY,
-        AutoConstants.ROTATION_DELAY_DISTANCE);
-  }
+  //   // return AutoBuilder.pathfindToPose(
+  //   //     botPose,
+  //   //     AutoConstants.PATH_CONSTRAINTS,
+  //   //     AutoConstants.GOAL_END_VELOCITY,
+  //   //     AutoConstants.ROTATION_DELAY_DISTANCE);
+  // }
 
   // Zero gyro
   public static Command zeroGyro() {
@@ -84,13 +84,13 @@ public class Commands555 {
    *
    * @param botPose field-relative pose2d to drive the robot to.
    */
-  public static Command driveToFieldRelativePoint(Pose2d botPose) {
-    return AutoBuilder.pathfindToPose(
-        botPose,
-        AutoConstants.PATH_CONSTRAINTS,
-        AutoConstants.GOAL_END_VELOCITY,
-        AutoConstants.ROTATION_DELAY_DISTANCE);
-  }
+  // public static Command driveToFieldRelativePoint(Pose2d botPose) {
+  //   return AutoBuilder.pathfindToPose(
+  //       botPose,
+  //       AutoConstants.PATH_CONSTRAINTS,
+  //       AutoConstants.GOAL_END_VELOCITY,
+  //       AutoConstants.ROTATION_DELAY_DISTANCE);
+  // }
 
   /*
    * - - - - - - - - - -
@@ -542,33 +542,33 @@ public class Commands555 {
     return Commands555.goToAngleFieldRelative(RobotContainer.drivetrain.getSpeakerAngle(), false);
   }
 
-  public static Command alignToAmpAndShoot() {
+  // public static Command alignToAmpAndShoot() {
   
-    Pose2d drivePose = RobotContainer.drivetrain.getSwerveDrive().getPose();
+  //   Pose2d drivePose = RobotContainer.drivetrain.getSwerveDrive().getPose();
 
-    Translation2d targetTranslation = drivePose.getTranslation();
-    targetTranslation = targetTranslation.plus(RobotContainer.shooterLimelight.getTargetPoseRobotSpace().getTranslation()).minus(new Translation2d(DriveConstants.BUMPER_WIDTH + DriveConstants.DRIVE_BASE_RADIUS, 0));
+  //   Translation2d targetTranslation = drivePose.getTranslation();
+  //   targetTranslation = targetTranslation.plus(RobotContainer.shooterLimelight.getTargetPoseRobotSpace().getTranslation()).minus(new Translation2d(DriveConstants.BUMPER_WIDTH + DriveConstants.DRIVE_BASE_RADIUS, 0));
 
-    Rotation2d rot = Drivetrain.flipAngle(Rotation2d.fromDegrees(270));
+  //   Rotation2d rot = Drivetrain.flipAngle(Rotation2d.fromDegrees(270));
 
-    // targetTranslation.plus(AutoConstants.TRANSLATION_FROM_AMP);
+  //   // targetTranslation.plus(AutoConstants.TRANSLATION_FROM_AMP);
 
-    List<Translation2d> points = PathPlannerPath.bezierFromPoses(
-      drivePose,
-      new Pose2d(targetTranslation, rot)
-    );
+  //   List<Translation2d> points = PathPlannerPath.bezierFromPoses(
+  //     drivePose,
+  //     new Pose2d(targetTranslation, rot)
+  //   );
 
-    PathPlannerPath path = new PathPlannerPath(points, AutoConstants.PATH_CONSTRAINTS, new GoalEndState(0, rot));
+  //   PathPlannerPath path = new PathPlannerPath(points, AutoConstants.PATH_CONSTRAINTS, new GoalEndState(0, rot));
 
-    return Commands.sequence(
-      Commands.parallel(
-        AutoBuilder.followPath(path),
-        setSprocketAngle(ArmConstants.AMP_SCORE_ANGLE),
-        spinUpShooter(ShooterConstants.AMP_EJECT_SPEED_TOP, ShooterConstants.AMP_EJECT_SPEED_BOTTOM)
-      ),
-      shoot(ShooterConstants.AMP_EJECT_SPEED_TOP, ShooterConstants.AMP_EJECT_SPEED_BOTTOM, ShooterConstants.TRANSPORT_SPEED)
-    );
-  }
+  //   return Commands.sequence(
+  //     Commands.parallel(
+  //       AutoBuilder.followPath(path),
+  //       setSprocketAngle(ArmConstants.AMP_SCORE_ANGLE),
+  //       spinUpShooter(ShooterConstants.AMP_EJECT_SPEED_TOP, ShooterConstants.AMP_EJECT_SPEED_BOTTOM)
+  //     ),
+  //     shoot(ShooterConstants.AMP_EJECT_SPEED_TOP, ShooterConstants.AMP_EJECT_SPEED_BOTTOM, ShooterConstants.TRANSPORT_SPEED)
+  //   );
+  // }
 
   public static Command spinUpShooter(double topSpeed, double bottomSpeed) {
     return Commands.runOnce(() -> {

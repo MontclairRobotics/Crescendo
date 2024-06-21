@@ -59,9 +59,8 @@ public final class Constants {
     public static final double DRIVE_SUPPLY_CURRENT_LIMIT = 80;
     public static final CurrentLimitsConfigs DRIVE_CONFIG = new CurrentLimitsConfigs()
       .withStatorCurrentLimitEnable(true)
-      .withStatorCurrentLimit(80)
-      .withSupplyCurrentLimitEnable(true)
-      .withSupplyCurrentLimit(80);
+      .withStatorCurrentLimit(80);
+      
     public static final double DRIVE_KS = 0.12;
     public static final double DRIVE_KV = 2.8;
     public static final double DRIVE_KA = 0.17;
@@ -70,13 +69,13 @@ public final class Constants {
     public static final boolean IS_OPEN_LOOP = false;
 
     public static final double MAX_VOLTAGE_V = 12.0;
-    public static final double MAX_SPEED = Units.feetToMeters(13);
+    public static final double MAX_SPEED = Units.feetToMeters(13.7);
 
     public static final double MAX_ROT_SPEED = 2 * Math.PI;
     // Max Acceleration in M/s^2
-    public static final double MAX_ACCELERATION = 3.0;
+    // public static final double MAX_ACCELERATION = Units.feetToMeters(6);
     // Max angular acceleration in Rad/S^2
-    public static final double MAX_ANGULAR_ACCELERATION = 1.5;
+    // public static final double MAX_ANGULAR_ACCELERATION = 1.5;
 
     public static final double DRIVE_BASE_RADIUS = 0.43;
 
@@ -288,10 +287,10 @@ public final class Constants {
             DriveConstants.DRIVE_BASE_RADIUS,
             new ReplanningConfig());
 
-    public static final PathConstraints PATH_CONSTRAINTS =
-        new PathConstraints(
-            DriveConstants.MAX_SPEED, DriveConstants.MAX_ACCELERATION,
-            DriveConstants.MAX_ROT_SPEED, DriveConstants.MAX_ANGULAR_ACCELERATION);
+    // public static final PathConstraints PATH_CONSTRAINTS =
+    //     new PathConstraints(
+    //         DriveConstants.MAX_SPEED, DriveConstants.MAX_ACCELERATION,
+    //         DriveConstants.MAX_ROT_SPEED, DriveConstants.MAX_ANGULAR_ACCELERATION);
 
     public static final double GOAL_END_VELOCITY = 0.0;
     public static final double ROTATION_DELAY_DISTANCE = 0.0;
