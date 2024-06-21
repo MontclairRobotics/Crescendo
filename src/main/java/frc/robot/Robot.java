@@ -99,7 +99,7 @@ public class Robot extends LoggedRobot {
   @Override
   public void teleopPeriodic() {
     
-   System.out.println(RobotContainer.drivetrain.getIsFieldRelative());
+   System.out.println(RobotContainer.shooterLimelight.getVerticalToPriorityID());
   }
 
   @Override

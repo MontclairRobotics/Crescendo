@@ -262,7 +262,7 @@ System.out.println(distance + " " + distanceNorm + " " + Math.acos(distance / di
 
    if (tagArr.length == 1) {
     // System.out.println(tagArr[0].txnc);
-    return tagArr[0].txnc + 1.5;
+    return -tagArr[0].txnc + 1.5;
    // }
    }
    return 0;
@@ -274,7 +274,7 @@ System.out.println(distance + " " + distanceNorm + " " + Math.acos(distance / di
 
    if (tagArr.length == 1) {
     // System.out.println(tagArr[0].tync+0.6);
-    return -tagArr[0].tync+0.6;
+    return tagArr[0].tync+0.6;
    // }
    }
    return 0;
@@ -343,7 +343,7 @@ System.out.println(distance + " " + distanceNorm + " " + Math.acos(distance / di
   public double bestFit() {
     // double  
     // return (0.001717 * (Math.pow(x, 2))) + (-0.6251 * x) + (83.41);
-    return bestFitFromDistance(getDistanceToSpeaker());
+    return bestFitFromDistance(getDistanceToSpeaker()) - 3;
   }
 
   public double bestFitFromDistance(double x) {

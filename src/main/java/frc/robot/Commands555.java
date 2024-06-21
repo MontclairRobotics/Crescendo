@@ -63,8 +63,8 @@ public class Commands555 {
   public static Command zeroGyro() {
     return Commands.runOnce(() -> {
       if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red) {
-        RobotContainer.drivetrain.getSwerveDrive().zeroGyro();
-        // RobotContainer.drivetrain.getSwerveDrive().resetOdometry(new Pose2d(RobotContainer.drivetrain.getSwerveDrive().getPose().getTranslation(), Rotation2d.fromDegrees(180)));
+        //RobotContainer.drivetrain.getSwerveDrive().zeroGyro();
+        RobotContainer.drivetrain.getSwerveDrive().resetOdometry(new Pose2d(RobotContainer.drivetrain.getSwerveDrive().getPose().getTranslation(), Rotation2d.fromDegrees(180)));
       } else {
         RobotContainer.drivetrain.getSwerveDrive().zeroGyro();
       }

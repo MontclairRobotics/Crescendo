@@ -70,6 +70,7 @@ public class RobotContainer {
     auto.setupAutoTab();
     setupDriverTab();
     
+    Shuffleboard.getTab("Debug").addDouble("Distance", () -> {return shooterLimelight.getDistanceToSpeaker();});
 
     drivetrain.setDefaultCommand(
         Commands.run(
@@ -138,11 +139,7 @@ public class RobotContainer {
 
     driverController
         .touchpad()
-        .onTrue(
-            Commands.runOnce(
-                    () -> {
-                      drivetrain.getSwerveDrive().zeroGyro();
-                    })
+        .onTrue(Commands555.zeroGyro()
                 .ignoringDisable(true));
     driverController.PS().onTrue(Commands555.lockDrive());
 
@@ -208,6 +205,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return auto.getAutoCommand();
+    return Commands555.setAutoPose("2");
+    // return auto.getAutoCommand();
   }
 }
