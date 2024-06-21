@@ -114,7 +114,8 @@ public class Drivetrain extends SubsystemBase {
     // orchestra.loadMusic("nationGood.chrp");
 
 
-    getSwerveDrive().getSwerveController().thetaController.setTolerance(DriveConstants.ANGLE_DEADBAND * ((Math.PI ) / 180 ));
+    getSwerveDrive().getSwerveController().thetaController.setTolerance(DriveConstants.ANGLE_DEADBAND * ((Math.PI ) / 180 ), Units.degreesToRadians(4));
+
     // DriveConstants.kp.whenUpdate(getSwerveDrive().getSwerveController().thetaController::setP);
     // DriveConstants.kd.whenUpdate(getSwerveDrive().getSwerveController().thetaController::setD);
     // DriveConstants.ki.whenUpdate(getSwerveDrive().getSwerveController().thetaController::setI);
@@ -240,7 +241,7 @@ public class Drivetrain extends SubsystemBase {
   }
 
   @AutoLogOutput(key = "Drivetrain/isFieldRelative")
-  public boolean getIsFieldRelative(boolean relative) {
+  public boolean getIsFieldRelative() {
     return this.isFieldRelative;
   }
 
@@ -301,11 +302,8 @@ public class Drivetrain extends SubsystemBase {
     double ySpeed = -MathUtil.applyDeadband(controller.getLeftY(), 0.05) * DriveConstants.MAX_SPEED;
 
 
-    /*  TODO: Should this be only for field relative since robot relative direction is always the same relative to the robot? -JR
-    This issue stems from the fact that field relative driving is actually alliance relative while WPILIB, Pathplanner, etc
-    are relative to the blue side 
-    */
-    if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red && isFieldRelative == false)  {
+
+    if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red && isFieldRelative)  {
      
        xSpeed *= -1;
        ySpeed *= -1;

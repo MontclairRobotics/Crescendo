@@ -133,9 +133,9 @@ public class Commands555 {
   }
 
   public static Command unloadNote() {
-    Command alignSprocket = Commands555.setSprocketAngle(ArmConstants.INTAKE_ANGLE);
+    Command alignSprocket = Commands555.setSprocketAngle(ArmConstants.OUTTAKE_ANGLE);
     Command intakeAndTransport = Commands.sequence(alignSprocket,
-        Commands.parallel(Commands555.reverseIntake(), Commands555.transport(-ShooterConstants.TRANSPORT_SPEED)));
+        Commands.parallel(Commands555.reverseIntake(), Commands.sequence(waitForTime(0.5), Commands555.transport(-ShooterConstants.TRANSPORT_SPEED))));
     return intakeAndTransport
         .withName("unload note")
         // .until(() -> {
@@ -147,6 +147,9 @@ public class Commands555 {
         });
 
   }
+
+
+  
 
   public static Command setChassiSpeeds(ChassisSpeeds speeds) {
     return Commands.run(() -> {
@@ -271,14 +274,14 @@ public class Commands555 {
         RobotContainer.drivetrain)
         .until(
             () -> {
-              boolean isAligned = Drivetrain.angleDeadband(
-                  RobotContainer.drivetrain.getWrappedRotation(),
-                      rot.get(), Rotation2d.fromDegrees(DriveConstants.ANGLE_DEADBAND));
+              // boolean isAligned = Drivetrain.angleDeadband(
+              //     RobotContainer.drivetrain.getWrappedRotation(),
+              //         rot.get(), Rotation2d.fromDegrees(DriveConstants.ANGLE_DEADBAND));
               // System.out.println(rot.get().getDegrees());
               // System.out.println(isAligned);
               // System.out.println(RobotContainer.drivetrain.getWrappedRotation().getDegrees());
 
-              return isAligned;
+              return RobotContainer.drivetrain.getSwerveDrive().getSwerveController().thetaController.atSetpoint();
             });
   }
 

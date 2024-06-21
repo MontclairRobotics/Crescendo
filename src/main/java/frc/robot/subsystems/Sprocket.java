@@ -174,7 +174,7 @@ public class Sprocket extends SubsystemBase {
 
   @AutoLogOutput(key = "Sprocket/EncoderRawAngle")
   public double getRawPosition() {
-    return ((absEncoder.getDistance())-278.55); //* ((double) 14/64)) + 79;//76;
+    return ((absEncoder.getDistance())-49.2); //* ((double) 14/64)) + 79;//76;
   }
 
   @AutoLogOutput(key = "Sprocket/IsAtAngle")

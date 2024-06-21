@@ -186,7 +186,8 @@ public final class Constants {
 
     
     public static final double MAX_SPEED = 0.5;
-    public static final double INTAKE_ANGLE = 52;
+    public static final double INTAKE_ANGLE = 40;
+    public static final double OUTTAKE_ANGLE = 35;
     
   }
     
