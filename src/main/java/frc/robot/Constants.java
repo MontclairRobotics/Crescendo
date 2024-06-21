@@ -122,7 +122,7 @@ public final class Constants {
 
     
 
-    public static final int SPROCKET_ABS_ENCODER = 3; //9
+    public static final int SPROCKET_ABS_ENCODER = 2; //9
 
     public static final int CLIMBER_LEFT_LIMIT_SWITCH_PORT = 5;
 

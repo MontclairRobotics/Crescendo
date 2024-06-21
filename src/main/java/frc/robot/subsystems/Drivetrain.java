@@ -28,7 +28,7 @@ import edu.wpi.first.units.Voltage;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.sysid.SysIdRoutineLog;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -77,10 +77,10 @@ public class Drivetrain extends SubsystemBase {
   // private AHRS navX;
 
   public Drivetrain(File directory) {
-
+    velocityFromController = new ChassisSpeeds();
     this.isFieldRelative = true;
 
-    SwerveDriveTelemetry.verbosity = TelemetryVerbosity.NONE;
+    SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
 
     timer.start();
     // })
@@ -125,9 +125,15 @@ public class Drivetrain extends SubsystemBase {
 
     
     // Shuffleboard.getTab("Debug").addDouble("Wrapped Angle", () -> RobotContainer.drivetrain.getWrappedRotation().getDegrees());
-    // Shuffleboard.getTab("Debug").addDouble("Front Left Velocity", () -> {
-    //   return motors.get(0).getVelocity().getValueAsDouble();
-    // });
+    Shuffleboard.getTab("Debug").addDouble("Front Left Velocity", () -> {
+      return swerveDrive.getModules()[0].getDriveMotor().getVelocity();
+    });
+
+
+    // SwerveModuleState[] targetStates = swerveDrive.kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(this.velocityFromController, getWrappedRotation()));
+      
+    //   Logger.recordOutput("Drivetrain/ModuleStates/CurrentStates", targetStates);
+    //   Logger.recordOutput("Drivetrain/ModuleStates/TargetStates", this.swerveDrive.getStates());
     // Shuffleboard.getTab("Debug").addDouble("Front Right Velocity", () -> {
     //   return motors.get(1).getVelocity().getValueAsDouble();
     // });
@@ -208,7 +214,7 @@ public class Drivetrain extends SubsystemBase {
   @Override
   public void periodic() {
     
-    Logger.recordOutput("Drivetrain/ChassisSpeedsFromController", this.velocityFromController);
+    // Logger.recordOutput("Drivetrain/ChassisSpeedsFromController", this.velocityFromController);
    
     
     if (logModuleStates) {
