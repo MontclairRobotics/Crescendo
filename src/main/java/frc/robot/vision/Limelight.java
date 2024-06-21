@@ -343,7 +343,7 @@ System.out.println(distance + " " + distanceNorm + " " + Math.acos(distance / di
   public double bestFit() {
     // double  
     // return (0.001717 * (Math.pow(x, 2))) + (-0.6251 * x) + (83.41);
-    return bestFitFromDistance(getDistanceToSpeaker()) - 3;
+    return bestFitFromDistance(getDistanceToSpeaker()) - 6.5;
   }
 
   public double bestFitFromDistance(double x) {

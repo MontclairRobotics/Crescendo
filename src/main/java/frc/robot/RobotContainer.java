@@ -205,7 +205,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return Commands555.setAutoPose("2");
-    // return auto.getAutoCommand();
+    //return Commands555.setAutoPose("2");
+    return auto.getAutoCommand();
   }
 }
