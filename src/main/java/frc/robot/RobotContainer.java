@@ -5,24 +5,24 @@
 package frc.robot;
 
 import java.io.File;
-
-
-
+import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
 
 import animation2.AllianceAnimation;
 
 import animation2.api.Animation;
 import edu.wpi.first.math.geometry.Rotation2d;
-
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
-
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 
 import frc.robot.Constants.VisionConstants;
@@ -119,19 +119,54 @@ public class RobotContainer {
         .onTrue(Commands555.disableFieldRelative())
         .onFalse(Commands555.enableFieldRelative());
     
+    
+    
+    
+
+    // driverController
+    //     .triangle()
+    //     .onTrue(Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(0), false));
+    // driverController
+    //     .circle()
+    //     .onTrue(Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(-90), false));
+    // driverController
+    //     .cross()
+    //     .onTrue(Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(180), false));
+    // driverController
+    //     .square()
+    //     .onTrue(Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(90), false));
+
+
+    BooleanSupplier isOnBlueAlliance = () -> DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue;
 
     driverController
-        .triangle()
-        .onTrue(Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(0), false));
+      .triangle()
+      .onTrue(new ConditionalCommand(
+        Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(0), false), 
+        Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(180), false), 
+        isOnBlueAlliance));
+      
     driverController
-        .circle()
-        .onTrue(Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(-90), false));
+      .circle()
+      .onTrue(new ConditionalCommand(
+        Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(-90), false), 
+        Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(90), false), 
+        isOnBlueAlliance));
+    
     driverController
-        .cross()
-        .onTrue(Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(180), false));
+      .cross()
+      .onTrue(new ConditionalCommand(
+        Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(180), false), 
+        Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(0), false), 
+        isOnBlueAlliance));
+
     driverController
         .square()
-        .onTrue(Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(90), false));
+        .onTrue(new ConditionalCommand(
+          Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(90), false), 
+          Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(-90), false),
+          isOnBlueAlliance));
+
 
     driverController.R2().and(() -> shooterLimelight.hasValidTarget()).whileTrue(Commands555.scoreMode());
     driverController.L1().whileTrue(Commands555.alignToLimelightTarget(shooterLimelight, DetectionType.APRIL_TAG));
