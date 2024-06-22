@@ -24,16 +24,16 @@ public class Robot extends LoggedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
-  private PowerDistribution pd;
+  
 
   @Override
   public void robotInit() {
     // Logger.recordMetadata("ProjectName", "Katherine Tchaikovsky Swift");
 
     if (isReal()) {
-      Logger.addDataReceiver(new WPILOGWriter()); // Log to a USB stick ("/U/logs")
-      Logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
-      pd = new PowerDistribution(1, ModuleType.kRev); // Enables power distribution logging
+      //Logger.addDataReceiver(new WPILOGWriter()); // Log to a USB stick ("/U/logs")
+      //Logger.addDataReceiver(new NT4Publisher()); // Publish data to NetworkTables
+     
       
     } else {
       // setUseTiming(false); // Run as fast as possible
@@ -99,7 +99,7 @@ public class Robot extends LoggedRobot {
   @Override
   public void teleopPeriodic() {
     
-   System.out.println(RobotContainer.shooterLimelight.getVerticalToPriorityID());
+  //  System.out.println(RobotContainer.shooterLimelight.getVerticalToPriorityID());
   }
 
   @Override

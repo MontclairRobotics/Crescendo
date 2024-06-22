@@ -80,7 +80,7 @@ public class Drivetrain extends SubsystemBase {
     velocityFromController = new ChassisSpeeds();
     this.isFieldRelative = true;
 
-    SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
+    SwerveDriveTelemetry.verbosity = TelemetryVerbosity.NONE;
 
     timer.start();
     // })
@@ -98,8 +98,8 @@ public class Drivetrain extends SubsystemBase {
       
     for (int i = 0; i < modules.length; i++) {
       modules[i].getAngleMotor().setMotorBrake(true);
-      TalonFX driveMotor = (TalonFX) modules[i].getDriveMotor().getMotor();
-      driveMotor.getConfigurator().apply(DriveConstants.DRIVE_CONFIG);
+      //TalonFX driveMotor = (TalonFX) modules[i].getDriveMotor().getMotor();
+      //driveMotor.getConfigurator().apply(DriveConstants.DRIVE_CONFIG);
     }
     // ArrayList<TalonFX> motors = new ArrayList<TalonFX>();
     // motors.add((TalonFX) modules[0].getDriveMotor().getMotor());

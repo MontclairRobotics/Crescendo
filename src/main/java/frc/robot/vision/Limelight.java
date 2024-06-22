@@ -213,19 +213,19 @@ System.out.println(distance + " " + distanceNorm + " " + Math.acos(distance / di
   @Override
   public void periodic() {
     
-    SwerveDrive drivetrain = RobotContainer.drivetrain.getSwerveDrive();
+    // SwerveDrive drivetrain = RobotContainer.drivetrain.getSwerveDrive();
 
-    LimelightHelpers.SetRobotOrientation(cameraName, 
-    drivetrain.getOdometryHeading().getDegrees(), 
-    0, 0, 0, 0, 0);
+    // LimelightHelpers.SetRobotOrientation(cameraName, 
+    // drivetrain.getOdometryHeading().getDegrees(), 
+    // 0, 0, 0, 0, 0);
 
-    PoseEstimate estimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(cameraName);
+    // PoseEstimate estimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(cameraName);
     
-    double angularVelocity = drivetrain.getFieldVelocity().omegaRadiansPerSecond;
+    // double angularVelocity = drivetrain.getFieldVelocity().omegaRadiansPerSecond;
 
-    if (Math.abs(angularVelocity) <= VisionConstants.POSE_ANGULAR_VELOCITY_CUTOFF || estimate.tagCount == 0) {
-      drivetrain.addVisionMeasurement(estimate.pose, Timer.getFPGATimestamp(), VisionConstants.IDEAL_VISION_STD_DEVS);
-    }
+    // if (Math.abs(angularVelocity) <= VisionConstants.POSE_ANGULAR_VELOCITY_CUTOFF || estimate.tagCount == 0) {
+    //   drivetrain.addVisionMeasurement(estimate.pose, Timer.getFPGATimestamp(), VisionConstants.IDEAL_VISION_STD_DEVS);
+    // }
      
     // }
     

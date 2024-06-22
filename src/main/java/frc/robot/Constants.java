@@ -168,7 +168,7 @@ public final class Constants {
     public static final double ENCODER_MIN_ANGLE = 26;
     public static final double ENCODER_MAX_ANGLE = 63;
 
-    public static final double SPEAKER_SCORE_ANGLE = 58;
+    public static final double SPEAKER_SCORE_ANGLE = 58 - 6.5;
     public static final double AMP_SCORE_ANGLE = 62;
 
 
