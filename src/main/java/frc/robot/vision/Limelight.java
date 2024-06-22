@@ -201,10 +201,6 @@ System.out.println(distance + " " + distanceNorm + " " + Math.acos(distance / di
 
   }
 
-
-
-  
-
   public void setDefaultPipeline() {
     // if (DriverStation.isTeleop()) {
     //   setPipelineTo(DetectionType.DRIVER);
@@ -230,14 +226,7 @@ System.out.println(distance + " " + distanceNorm + " " + Math.acos(distance / di
     if (Math.abs(angularVelocity) <= VisionConstants.POSE_ANGULAR_VELOCITY_CUTOFF || estimate.tagCount == 0) {
       drivetrain.addVisionMeasurement(estimate.pose, Timer.getFPGATimestamp(), VisionConstants.IDEAL_VISION_STD_DEVS);
     }
-    
-    
-    
-   
-        
-
-
-      
+     
     // }
     
     if (DriverStation.isDisabled()) {

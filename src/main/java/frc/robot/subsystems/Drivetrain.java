@@ -221,8 +221,8 @@ public class Drivetrain extends SubsystemBase {
     if (logModuleStates) {
       SwerveModuleState[] targetStates = swerveDrive.kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(this.velocityFromController, getWrappedRotation()));
       
-      Logger.recordOutput("Drivetrain/ModuleStates/CurrentStates", targetStates);
-      Logger.recordOutput("Drivetrain/ModuleStates/TargetStates", this.swerveDrive.getStates());
+      Logger.recordOutput("Drivetrain/ModuleStates/TargetStates", targetStates);
+      Logger.recordOutput("Drivetrain/ModuleStates/CurrentStates", this.swerveDrive.getStates());
       
     }
     

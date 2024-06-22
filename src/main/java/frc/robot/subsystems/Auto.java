@@ -196,8 +196,6 @@ public class Auto extends SubsystemBase {
     else if (autoString.charAt(0) == '3' || autoString.charAt(0) == '4') lane = Constants.AutoConstants.LANE3;
     else return false;
     
-    
-
     // loops through the string
     for (int i = 0; i < autoString.length(); i++) {
 
@@ -238,8 +236,6 @@ public class Auto extends SubsystemBase {
     NetworkTableInstance inst = NetworkTableInstance.getDefault();
     NetworkTable ntTable = inst.getTable("Shuffleboard").getSubTable("Auto");
 
-    
-
     ntTable.addListener(
         "Enter Command",
         EnumSet.of(Kind.kValueAll),
@@ -254,8 +250,6 @@ public class Auto extends SubsystemBase {
          validateAndCreatePaths();
         });    
     
-    
-
   }
 
   public List<State> convertStatesToStates(List<PathPlannerTrajectory.State> ppStates) {
