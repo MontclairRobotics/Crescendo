@@ -169,7 +169,7 @@ public final class Constants {
     public static final double ENCODER_MAX_ANGLE = 63;
 
     public static final double SPEAKER_SCORE_ANGLE = 58 - 6.5;
-    public static final double AMP_SCORE_ANGLE = 62;
+    public static final double AMP_SCORE_ANGLE = 62-6.5; //adjusting for the idk
 
 
     public static final Tunable<Boolean> LEFT_INVERT = Tunable.of(true, "arm.invert.left");

@@ -210,6 +210,10 @@ System.out.println(distance + " " + distanceNorm + " " + Math.acos(distance / di
     setPipelineTo(defaultPipe);
   }
 
+  public double getTXRaw() {
+    return LimelightHelpers.getTX(cameraName);
+  }
+
   @Override
   public void periodic() {
     
@@ -229,6 +233,7 @@ System.out.println(distance + " " + distanceNorm + " " + Math.acos(distance / di
      
     // }
     
+
     if (DriverStation.isDisabled()) {
       if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red) {
         LimelightHelpers.setPriorityTagID(cameraName, 4); //4

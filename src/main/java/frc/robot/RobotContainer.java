@@ -189,6 +189,8 @@ public class RobotContainer {
       ControllerTools.getDPad(DPad.RIGHT, driverController).onTrue(Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(120), false));
       ControllerTools.getDPad(DPad.UP, driverController).onTrue(Commands555.goToAngleFieldRelative(Rotation2d.fromDegrees(0), false));
     }
+
+    ControllerTools.getDPad(DPad.DOWN, driverController).whileTrue(Commands555.alignToAmp());
     
                     
   }

@@ -206,7 +206,9 @@ public class Shooter extends SubsystemBase {
    
   }
 
-
+  // public void translateToAmp(double forwardVelocity){
+  //   Debouncer hasEnded = new Debouncer(debounceTime:0.1, DebounceTpe.k)
+  // }
   
 
   public void transportStart(double transportSpeed) {
